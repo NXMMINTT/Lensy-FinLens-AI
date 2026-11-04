@@ -1,16 +1,24 @@
-import { Mali, Noto_Sans_Thai } from "next/font/google";
+import { Anuphan, Mali, Sarabun } from "next/font/google";
 
-export const notoSansThai = Noto_Sans_Thai({
+/** Body text (FinLens brief: Sarabun for content). */
+export const sarabun = Sarabun({
   subsets: ["thai", "latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-sans",
 });
 
-/** Handwritten notes, stickers and doodle labels. */
+/** Headings (FinLens brief: Anuphan for titles). */
+export const anuphan = Anuphan({
+  subsets: ["thai", "latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-heading",
+});
+
+/** Handwritten notes, stickers and doodle labels (kept from the U-Ledger reference UI). */
 export const mali = Mali({
   subsets: ["thai", "latin"],
   weight: ["500", "600", "700"],
   variable: "--font-hand",
 });
 
-export const fontVariables = `${notoSansThai.variable} ${mali.variable}`;
+export const fontVariables = `${sarabun.variable} ${anuphan.variable} ${mali.variable}`;

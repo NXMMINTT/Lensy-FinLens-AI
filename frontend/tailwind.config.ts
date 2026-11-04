@@ -56,6 +56,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        heading: ["var(--font-heading)", "var(--font-sans)", "system-ui", "sans-serif"],
         hand: ["var(--font-hand)", "var(--font-sans)", "cursive"],
       },
       keyframes: {

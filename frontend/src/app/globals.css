@@ -67,6 +67,10 @@ html.dark {
   color: rgb(var(--page-fg));
 }
 
+h1, h2, h3, h4 {
+  font-family: var(--font-heading), var(--font-sans), system-ui, sans-serif;
+}
+
 body {
   background-color: rgb(var(--page));
   color: rgb(var(--page-fg));

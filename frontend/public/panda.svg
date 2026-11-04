@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-labelledby="t">
+  <title id="t">น้องแพนด้าแดง</title>
+  <!-- Placeholder mascot: a green red panda. Replace this file with the team's artwork. -->
+  <!-- ears -->
+  <path d="M38 70 L46 22 L86 50 Z" fill="#1A7637"/>
+  <path d="M162 70 L154 22 L114 50 Z" fill="#1A7637"/>
+  <path d="M48 58 L52 34 L74 50 Z" fill="#D1F08F"/>
+  <path d="M152 58 L148 34 L126 50 Z" fill="#D1F08F"/>
+  <!-- head -->
+  <ellipse cx="100" cy="108" rx="74" ry="64" fill="#54D110"/>
+  <!-- face mask -->
+  <path d="M100 76 C70 76 46 96 46 122 C46 150 72 166 100 166 C128 166 154 150 154 122 C154 96 130 76 100 76 Z" fill="#F7F5F7"/>
+  <!-- eye patches (red panda tear marks) -->
+  <path d="M62 98 C54 112 58 138 72 146 C78 128 80 110 74 98 Z" fill="#1A7637"/>
+  <path d="M138 98 C146 112 142 138 128 146 C122 128 120 110 126 98 Z" fill="#1A7637"/>
+  <!-- eyes -->
+  <circle cx="78" cy="112" r="9" fill="#0F3D2A"/>
+  <circle cx="122" cy="112" r="9" fill="#0F3D2A"/>
+  <circle cx="81" cy="109" r="3" fill="#FFFFFF"/>
+  <circle cx="125" cy="109" r="3" fill="#FFFFFF"/>
+  <!-- brows -->
+  <ellipse cx="74" cy="90" rx="9" ry="4" fill="#F7F5F7"/>
+  <ellipse cx="126" cy="90" rx="9" ry="4" fill="#F7F5F7"/>
+  <!-- nose & mouth -->
+  <ellipse cx="100" cy="132" rx="8" ry="6" fill="#0F3D2A"/>
+  <path d="M100 138 Q100 146 92 148 M100 138 Q100 146 108 148" stroke="#0F3D2A" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- cheeks -->
+  <circle cx="64" cy="140" r="7" fill="#C9E6DF"/>
+  <circle cx="136" cy="140" r="7" fill="#C9E6DF"/>
+</svg>
