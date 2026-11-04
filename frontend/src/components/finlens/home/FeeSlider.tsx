@@ -25,7 +25,7 @@ export function FeeSlider() {
   const diff = rows[1].r.feeCost - rows[0].r.feeCost;
 
   return (
-    <section aria-labelledby="slider-title" className="px-5 py-16 md:px-6">
+    <section id="try" aria-labelledby="slider-title" className="scroll-mt-20 px-5 py-16 md:px-6">
       <div className="mx-auto grid max-w-[1100px] items-center gap-10 rounded-[28px] border border-line bg-surface p-6 shadow-[0_10px_30px_rgba(20,46,34,.06)] md:p-10 lg:grid-cols-[1fr_1.15fr]">
         <div className="flex flex-col gap-4">
           <span className="self-start rounded-md bg-brand-soft px-2.5 py-1 text-[14px] font-bold text-brand">ลองเลื่อนดู</span>

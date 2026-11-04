@@ -8,11 +8,20 @@ import { useTheme } from "@/lib/theme";
 
 import { FinLensLogo } from "./Logo";
 
-const NAV = [
+/** Promo page: jump to sections of the home page. */
+const NAV_LANDING = [
+  { href: "/#features", label: "ฟีเจอร์" },
+  { href: "/#try", label: "ลองคำนวณ" },
+  { href: "/#how", label: "วิธีใช้" },
+  { href: "/#pricing", label: "ราคา" },
+  { href: "/#faq", label: "ถามบ่อย" },
+];
+
+/** Dashboard (signed in): the app pages. */
+const NAV_APP = [
   { href: "/funds", label: "กองทุน" },
   { href: "/compare", label: "เทียบต้นทุน" },
   { href: "/chat", label: "ถาม Lensy" },
-  { href: "/#pricing", label: "ราคา" },
 ];
 
 function ThemeToggle() {
@@ -58,11 +67,11 @@ export function LandingHeader({ signedIn = false }: { signedIn?: boolean } = {})
           <FinLensLogo height={34} />
         </Link>
         <nav aria-label="เมนูหลัก" className="hidden text-base md:flex">
-          {NAV.map((n) => (
+          {(signedIn ? NAV_APP : NAV_LANDING).map((n) => (
             <Link
               key={n.href}
               href={n.href}
-              aria-current={path === n.href || path.startsWith(`${n.href}/`) ? "page" : undefined}
+              aria-current={signedIn && (path === n.href || path.startsWith(`${n.href}/`)) ? "page" : undefined}
               className="inline-flex min-h-[44px] items-center px-3.5 font-medium text-ink-body aria-[current=page]:font-bold aria-[current=page]:text-brand no-underline hover:text-brand"
             >
               {n.label}
@@ -73,10 +82,10 @@ export function LandingHeader({ signedIn = false }: { signedIn?: boolean } = {})
           <ThemeToggle />
           {signedIn && <LogoutButton />}
           <Link
-            href="/chat"
+            href={signedIn ? "/chat" : "/funds"}
             className={`${signedIn ? "hidden sm:inline-flex" : "inline-flex"} min-h-[44px] items-center rounded-full bg-brand px-5 font-bold text-white no-underline hover:bg-brand-dark`}
           >
-            คุยกับ Lensy
+            {signedIn ? "คุยกับ Lensy" : "เข้าใช้งาน"}
           </Link>
         </div>
       </div>
