@@ -1,0 +1,297 @@
+{
+  "code": "KFUS-A",
+  "nameTh": {
+    "value": "กองทุนเปิดกรุงศรียูเอสอิควิตี้",
+    "page": 1,
+    "quote": "กองทุนเปิดกรุงศรียูเอสอิควิตี้-สะสมมูลค่า",
+    "source": "factsheet"
+  },
+  "amc": {
+    "value": "บริษัทหลักทรัพย์จัดการกองทุน กรุงศรี จํากัด",
+    "page": 1,
+    "quote": "บริษัทหลักทรัพย์จัดการกองทุน กรุงศรี จํากัด",
+    "source": "factsheet"
+  },
+  "type": {
+    "value": "กองทุนรวมตราสารทุน/ กองทุนรวมฟีดเดอร์ (Feeder Fund)",
+    "page": 1,
+    "quote": "กองทุนรวมตราสารทุน/ กองทุนรวมฟีดเดอร์ (Feeder Fund)",
+    "source": "factsheet"
+  },
+  "isFeeder": {
+    "value": true,
+    "page": 1,
+    "quote": "กองทุนรวมตราสารทุน/ กองทุนรวมฟีดเดอร์ (Feeder Fund)",
+    "source": "factsheet"
+  },
+  "masterFundName": {
+    "value": "GQG Partners US Equity Fund, Class I USD Accumulating",
+    "page": 1,
+    "quote": "GQG Partners US Equity Fund, Class I USD Accumulating",
+    "source": "factsheet"
+  },
+  "riskLevel": {
+    "value": 6,
+    "page": 1,
+    "quote": "2 3 4 5 71 6 8ตํ่า\nระดับความเสี่ยง\nสูง\nเสี่ยงสูง",
+    "source": "factsheet"
+  },
+  "asOfDate": {
+    "value": "2026-09-30",
+    "page": 1,
+    "quote": "ข้อมูล ณ วันที่ 30 กันยายน 2569บริษัทหลักทรัพย์จัดการกองทุน กรุงศรี จํากัด",
+    "source": "factsheet"
+  },
+  "fees": {
+    "frontEnd": {
+      "value": 1.5,
+      "page": 2,
+      "quote": "การขาย ไม่เกิน 1.50 1.50",
+      "source": "factsheet"
+    },
+    "backEnd": {
+      "value": 0,
+      "page": 2,
+      "quote": "การรับซื้อคืน ไม่มี ไม่มี",
+      "source": "factsheet"
+    },
+    "switching": {
+      "value": 1.5,
+      "page": 2,
+      "quote": "การสับเปลี่ยนหน่วยลงทุนเข้า ไม่เกิน 1.50 1.50",
+      "source": "factsheet"
+    },
+    "management": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "ter": {
+      "value": 1.5402,
+      "page": 2,
+      "quote": "รวมค่าใช้จ่าย 3.5845 1.5402",
+      "source": "factsheet"
+    },
+    "masterFundExpense": {
+      "value": 0.55,
+      "page": 5,
+      "quote": "ค่าธรรมเนียมและค่าใช้จ่ายทั้งหมด 0.55%",
+      "source": "prospectus"
+    },
+    "otherExpenses": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "terIncludesMasterFund": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "prospectus"
+    }
+  },
+  "risk": {
+    "fxHedging": {
+      "value": "discretionary",
+      "page": 1,
+      "quote": "ตามดุลยพินิจของผู้จัดการกองทุน",
+      "source": "factsheet"
+    },
+    "top5Pct": {
+      "value": 38.12,
+      "page": 2,
+      "quote": "NVIDIA Corporation 9.46\nMicrosoft Corporation 8.49\nAlphabet Inc. 7.17\nAmazon.com, Inc. 7.11\nApple Inc. 4.84",
+      "source": "factsheet"
+    },
+    "top10Pct": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "topCountry": {
+      "value": {
+        "name": "United States",
+        "pct": 94.8
+      },
+      "page": 2,
+      "quote": "United States 94.80",
+      "source": "factsheet"
+    },
+    "topSector": {
+      "value": {
+        "name": "Info Tech",
+        "pct": 50.07
+      },
+      "page": 2,
+      "quote": "Info Tech 50.07",
+      "source": "factsheet"
+    }
+  },
+  "redemption": {
+    "settlementDays": {
+      "value": 4,
+      "page": 2,
+      "quote": "โดยทั่วไปจะได้\nรับเงิน 4 วันทําการนับถัดจากวันทํารายการขายคืน\n(T+4)",
+      "source": "factsheet"
+    },
+    "frequency": {
+      "value": "ทุกวันทําการซื้อขาย",
+      "page": 8,
+      "quote": "ท่านสามารถสั่งขายคืนได้ ทุกวันทําการซื้อขายของกองทุน ภายในเวลา 15.30 น.",
+      "source": "prospectus"
+    },
+    "lockUp": {
+      "value": "50 หน่วย",
+      "page": 2,
+      "quote": "ยอดคงเหลือขั้นตํ่า: 50 หน่วย",
+      "source": "factsheet"
+    }
+  },
+  "pastReturns": [
+    {
+      "period": "ytd",
+      "fund": {
+        "value": 3.01,
+        "page": 1,
+        "quote": "กองทุน 3.01 2.82 -4.15 0.25",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 13.52,
+        "page": 1,
+        "quote": "ดัชนีชี้วัด 13.52 4.99 0.09 8.92",
+        "source": "factsheet"
+      }
+    },
+    {
+      "period": "3m",
+      "fund": {
+        "value": 2.82,
+        "page": 1,
+        "quote": "กองทุน 3.01 2.82 -4.15 0.25",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 4.99,
+        "page": 1,
+        "quote": "ดัชนีชี้วัด 13.52 4.99 0.09 8.92",
+        "source": "factsheet"
+      }
+    },
+    {
+      "period": "6m",
+      "fund": {
+        "value": -4.15,
+        "page": 1,
+        "quote": "กองทุน 3.01 2.82 -4.15 0.25",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 0.09,
+        "page": 1,
+        "quote": "ดัชนีชี้วัด 13.52 4.99 0.09 8.92",
+        "source": "factsheet"
+      }
+    },
+    {
+      "period": "1y",
+      "fund": {
+        "value": 0.25,
+        "page": 1,
+        "quote": "กองทุน 3.01 2.82 -4.15 0.25",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 8.92,
+        "page": 1,
+        "quote": "ดัชนีชี้วัด 13.52 4.99 0.09 8.92",
+        "source": "factsheet"
+      }
+    },
+    {
+      "period": "3y",
+      "fund": {
+        "value": 6.71,
+        "page": 1,
+        "quote": "กองทุน 6.71 -10.89 -1.83 2.12",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 9.77,
+        "page": 1,
+        "quote": "ดัชนีชี้วัด 9.77 -6.44 2.38 5.32",
+        "source": "factsheet"
+      }
+    },
+    {
+      "period": "5y",
+      "fund": {
+        "value": -10.89,
+        "page": 1,
+        "quote": "กองทุน 6.71 -10.89 -1.83 2.12",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": -6.44,
+        "page": 1,
+        "quote": "ดัชนีชี้วัด 9.77 -6.44 2.38 5.32",
+        "source": "factsheet"
+      }
+    },
+    {
+      "period": "10y",
+      "fund": {
+        "value": -1.83,
+        "page": 1,
+        "quote": "กองทุน 6.71 -10.89 -1.83 2.12",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 2.38,
+        "page": 1,
+        "quote": "ดัชนีชี้วัด 9.77 -6.44 2.38 5.32",
+        "source": "factsheet"
+      }
+    },
+    {
+      "period": "sinceInception",
+      "fund": {
+        "value": 2.12,
+        "page": 1,
+        "quote": "กองทุน 6.71 -10.89 -1.83 2.12",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 5.32,
+        "page": 1,
+        "quote": "ดัชนีชี้วัด 9.77 -6.44 2.38 5.32",
+        "source": "factsheet"
+      }
+    }
+  ],
+  "meta": {
+    "status": "pending",
+    "isSample": false,
+    "extractedAt": "2026-11-04T12:14:14.889Z",
+    "model": "gemini-3.5-flash-lite",
+    "sourceFiles": [
+      {
+        "file": "docs/pdfs/KFUS-A/factsheet.pdf",
+        "source": "factsheet"
+      },
+      {
+        "file": "docs/pdfs/KFUS-A/prospectus.pdf",
+        "source": "prospectus"
+      }
+    ],
+    "verifiedBy": null,
+    "notes": [
+      "fees.backEnd: ตัวเลข 0 ไม่อยู่ในข้อความอ้างอิง ตรวจให้แน่ใจ",
+      "fees.management: ได้ค่า 1.3375 แต่หาข้อความอ้างอิงในเอกสารไม่เจอ ตั้งเป็น null (ตรวจในเอกสารเอง)",
+      "risk.top5Pct: ตัวเลข 38.12 ไม่อยู่ในข้อความอ้างอิง ตรวจให้แน่ใจ"
+    ]
+  }
+}

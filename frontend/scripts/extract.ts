@@ -59,7 +59,8 @@ async function main() {
   console.log(`กอง ${code}: ส่ง ${docs.length} เอกสารให้ ${model} (${baseURL})`);
 
   // Ask in small batches: smaller models keep the value + doc + page + quote format better.
-  const docText = documentsText(docs);
+  // only the prospectus pages about fees/costs/currency/redemption/risk (saves most of the tokens)
+  const docText = documentsText(docs, { onlyRelevant: true });
   const answers: unknown[] = [];
   let usedModel = model;
   const usage = { prompt_tokens: 0, completion_tokens: 0 };

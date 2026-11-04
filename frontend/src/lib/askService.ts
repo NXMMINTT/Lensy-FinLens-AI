@@ -47,7 +47,7 @@ export async function answerQuestion(funds: Fund[], question: string): Promise<A
     for (const f of funds) {
       const docs = await pdfDocs(f.code);
       pdfPages[f.code] = docs;
-      if (docs.length) pdfText += `\n[กอง ${f.code}]\n${documentsText(docs)}`;
+      if (docs.length) pdfText += `\n[กอง ${f.code}]\n${documentsText(docs, { onlyRelevant: true })}`;
     }
     if (pdfText.length > MAX_PDF_CHARS) pdfText = pdfText.slice(0, MAX_PDF_CHARS);
     const { data } = await chatJson(ASK_SYSTEM, askPrompt(funds, question, pdfText));

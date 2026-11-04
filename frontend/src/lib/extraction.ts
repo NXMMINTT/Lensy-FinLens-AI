@@ -70,16 +70,42 @@ export const FIELDS: FieldDef[] = [...general, ...fees, ...risk, ...redemption, 
 export type ExtractionDoc = { file: string; source: DocSource; pages: string[] };
 
 /** All documents as page-marked text, so the model can say where each value is. */
-export function documentsText(docs: ExtractionDoc[]): string {
+export function documentsText(docs: ExtractionDoc[], opts: { onlyRelevant?: boolean } = {}): string {
   return docs
-    .map((d, i) =>
-      [
-        `<<<เอกสาร ${i}: ${d.source === "factsheet" ? "Fund Fact Sheet" : "หนังสือชี้ชวน"}>>>`,
-        ...d.pages.map((t, p) => `=== เอกสาร ${i} หน้า ${p + 1} ===\n${t.trim()}`),
+    .map((d, i) => {
+      const all = d.pages.map((t, p) => ({ t, p }));
+      const keep = opts.onlyRelevant && d.source === "prospectus" ? new Set(relevantPageIndexes(d.pages)) : null;
+      const pages = keep ? all.filter(({ p }) => keep.has(p)) : all;
+      return [
+        `<<<เอกสาร ${i}: ${d.source === "factsheet" ? "Fund Fact Sheet" : "หนังสือชี้ชวน"}${keep ? ` (เฉพาะหน้าที่เกี่ยวกับค่าใช้จ่าย ความเสี่ยง และการขายคืน)` : ""}>>>`,
+        ...pages.map(({ t, p }) => `=== เอกสาร ${i} หน้า ${p + 1} ===\n${t.trim()}`),
         `<<<จบเอกสาร ${i}>>>`,
-      ].join("\n"),
-    )
+      ].join("\n");
+    })
     .join("\n\n");
+}
+
+// Keywords for the useful parts of a long prospectus, with weights. Thai text from PDFs often loses
+// tone marks, so each Thai word is matched with and without them.
+const SIGNALS: [RegExp, number][] = [
+  [/กองทุนหลัก|master fund|underlying fund/gi, 3],
+  [/ongoing charge|total expense|ter\b|ค่าใช้จ่ายรวม|คาใชจายรวม/gi, 4],
+  [/ค่าธรรมเนียม|คาธรรมเนียม|management fee/gi, 2],
+  [/ค่าใช้จ่าย|คาใชจาย|expense/gi, 1],
+  [/ป้องกันความเสี่ยง|ปองกันความเสี่ยง|ปองกันความเสี|อัตราแลกเปลี่ยน|อัตราแลกเปลี|hedg/gi, 2],
+  [/รับซื้อคืน|ขายคืน|redemption|t\s*\+\s*\d/gi, 1],
+  [/\d+(\.\d+)?\s*%/g, 0.5],
+];
+
+/** Page indexes (0-based) of a prospectus worth sending: the top-scoring pages, in page order. */
+export function relevantPageIndexes(pages: string[], max = 10): number[] {
+  return pages
+    .map((t, i) => ({ i, score: SIGNALS.reduce((s, [re, w]) => s + (t.match(re)?.length ?? 0) * w, 0) }))
+    .filter((x) => x.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, max)
+    .map((x) => x.i)
+    .sort((a, b) => a - b);
 }
 
 export const EXTRACTION_SYSTEM =
