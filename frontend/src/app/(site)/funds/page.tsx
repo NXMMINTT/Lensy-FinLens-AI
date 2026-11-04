@@ -4,6 +4,7 @@ import Link from "next/link";
 import { AppShell } from "@/components/finlens/app/AppShell";
 import { FundBrowser } from "@/components/finlens/app/FundBrowser";
 import { Disclaimer } from "@/components/finlens/Disclaimer";
+import { MascotDecor } from "@/components/finlens/Decor";
 import { Lensy } from "@/components/finlens/Lensy";
 import { toFundSummary } from "@/lib/fundSummary";
 import { getVerifiedFunds } from "@/lib/funds";
@@ -30,7 +31,10 @@ export default function FundsPage() {
           <p className="m-0 opacity-90">เลือกกองเพื่อดูค่าใช้จ่ายทุกชั้น ความเสี่ยงที่อาจมองข้าม และเงื่อนไขการขายคืน ทุกตัวเลขกดดูข้อความในเอกสารได้</p>
           <p className="m-0 text-[14px] opacity-80">ⓘ ข้อมูลเพื่อความเข้าใจ ไม่ใช่คำแนะนำการลงทุน</p>
         </div>
-        <Lensy pose="magnifier" size={130} className="max-sm:hidden" />
+        <span className="relative mr-4 max-sm:hidden">
+          <Lensy pose="magnifier" size={130} />
+          <MascotDecor light />
+        </span>
       </header>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_300px]">

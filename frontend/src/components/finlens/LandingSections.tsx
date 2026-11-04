@@ -7,6 +7,7 @@ import { pct, SAMPLE_ACTIVE as F, sampleAnnualCost } from "@/lib/sampleFunds";
 import { AnswerCard } from "./chat";
 import { Disclaimer } from "./Disclaimer";
 import { DocumentLens } from "./home/DocumentLens";
+import { HeroDecor, HeroTextDecor, MascotDecor, TitleDecor } from "./Decor";
 import { Lensy, LensyFace } from "./Lensy";
 import { FinLensLogo } from "./Logo";
 
@@ -16,7 +17,8 @@ export function Hero() {
   return (
     <section aria-labelledby="hero-title" className="relative bg-surface">
       <div className="mx-auto grid max-w-[1200px] items-center gap-x-10 gap-y-12 px-5 pb-16 pt-10 md:px-6 lg:min-h-[min(calc(100svh-66px),780px)] lg:grid-cols-[1.05fr_1fr] lg:py-10">
-        <div className="flex min-w-0 flex-col gap-5">
+        <div className="relative flex min-w-0 flex-col gap-5">
+          <HeroTextDecor />
           <span className="self-start rounded-md border border-brand/30 bg-surface px-3 py-1 text-[14px] font-semibold text-brand">
             🔍 ผู้ช่วยอ่านเอกสารกองทุนรวม ใน LINE
           </span>
@@ -39,6 +41,7 @@ export function Hero() {
         </div>
         <div className="relative flex justify-center px-2 lg:justify-end">
           <span aria-hidden="true" className="pointer-events-none absolute left-1/2 top-1/2 h-[min(520px,95vw)] w-[min(520px,95vw)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-brand-soft via-brand-tint to-surface lg:left-[55%]" />
+          <HeroDecor />
           <DocumentLens />
         </div>
       </div>
@@ -101,7 +104,8 @@ export function HowItWorks() {
   return (
     <section id="how" aria-labelledby="how-title" className="scroll-mt-20 bg-surface px-5 py-16 md:px-6">
       <div className="mx-auto flex max-w-[1100px] flex-col gap-8">
-        <h2 id="how-title" className="m-0 text-center text-[30px] font-bold md:text-[40px]">
+        <h2 id="how-title" className="relative m-0 self-center text-center text-[30px] font-bold md:text-[40px]">
+          <TitleDecor />
           ใช้ง่าย <span className="marker-green">3 ขั้น</span>
         </h2>
         <ol className="m-0 grid list-none gap-5 p-0 md:grid-cols-3">
@@ -127,7 +131,10 @@ export function Promises() {
   return (
     <section aria-labelledby="promise-title" className="bg-navy px-5 py-16 text-white md:px-6">
       <div className="mx-auto grid max-w-[1100px] items-center gap-10 lg:grid-cols-[auto_1fr]">
-        <Lensy pose="shield" size={170} className="mx-auto max-sm:!h-[120px] max-sm:!w-[120px]" />
+        <span className="relative mx-auto">
+          <Lensy pose="shield" size={170} className="max-sm:!h-[120px] max-sm:!w-[120px]" />
+          <MascotDecor light />
+        </span>
         <div className="flex flex-col gap-6">
           <h2 id="promise-title" className="m-0 text-[30px] font-bold md:text-[38px]">
             สัญญาของน้อง Lensy
@@ -178,7 +185,8 @@ export function PricingTable() {
     <section id="pricing" aria-labelledby="pricing-title" className="scroll-mt-20 px-5 py-16 md:px-6">
       <div className="mx-auto flex max-w-[900px] flex-col gap-8">
         <div className="text-center">
-          <h2 id="pricing-title" className="m-0 text-[30px] font-bold md:text-[40px]">
+          <h2 id="pricing-title" className="relative m-0 inline-block text-[30px] font-bold md:text-[40px]">
+            <TitleDecor />
             ฟีเจอร์หลัก<span className="marker-green">ใช้ฟรี</span>
           </h2>
           <p className="m-0 mt-2 text-ink-muted">Premium สำหรับคนที่อยากดูทั้งพอร์ต · ช่วงเดโมยังไม่เปิดรับชำระเงิน</p>
@@ -249,7 +257,10 @@ export function FaqAccordion() {
             คำถามที่พบบ่อย
           </h2>
           <p className="m-0 text-ink-muted">ไม่เจอคำตอบ ถามน้อง Lensy ใน LINE ได้เลยค่ะ</p>
-          <Lensy pose="question" size={150} className="mt-2 max-lg:hidden" />
+          <span className="relative mt-2 max-lg:hidden">
+            <Lensy pose="question" size={150} />
+            <MascotDecor />
+          </span>
         </div>
         <div className="flex flex-col gap-3">
           {FAQ.map(([q, a]) => (
@@ -290,7 +301,10 @@ export function StartCta() {
           <p className="m-0 opacity-90">เพิ่มเพื่อนใน LINE แล้วพิมพ์ชื่อกองทุนได้เลยค่ะ</p>
           <LineAddFriendButton label="เพิ่มเพื่อนน้อง Lensy" className="mt-2 self-start" />
         </div>
-        <Lensy pose="wave" size={170} className="animate-bob max-sm:hidden" />
+        <span className="relative max-sm:hidden">
+          <Lensy pose="wave" size={170} className="animate-bob" />
+          <MascotDecor light />
+        </span>
       </div>
     </section>
   );

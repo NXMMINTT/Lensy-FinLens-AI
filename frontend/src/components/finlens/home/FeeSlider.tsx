@@ -7,6 +7,7 @@ import { baht, pct } from "@/lib/money";
 import { DEFAULT_ANNUAL_RETURN, MAX_YEARS, MIN_YEARS, trueCost } from "@/lib/trueCost";
 
 import { Lensy } from "../Lensy";
+import { MascotDecor } from "../Decor";
 
 /** Two hypothetical yearly costs (not real funds) to show how a small % becomes real baht. */
 const COSTS = [0.01, 0.02] as const;
@@ -34,7 +35,10 @@ export function FeeSlider() {
             แต่เป็นเงินเท่าไหร่?
           </h2>
           <p className="m-0 text-ink-body">ค่าใช้จ่ายรายปีถูกหักทุกปี และทบไปเรื่อย ๆ ตัวเลขเล็ก ๆ จึงกลายเป็นเงินก้อนได้</p>
-          <Lensy pose="coins" size={120} className="max-lg:hidden" />
+          <span className="relative self-start max-lg:hidden">
+            <Lensy pose="coins" size={120} />
+            <MascotDecor />
+          </span>
         </div>
 
         <div className="flex flex-col gap-5">

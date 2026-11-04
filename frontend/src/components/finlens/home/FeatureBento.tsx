@@ -4,6 +4,7 @@ import { baht, pct, RISK_TAG, SAMPLE_ACTIVE, SAMPLE_CALC, SAMPLE_INDEX, SAMPLE_R
 import { PageRef } from "../chat";
 import { Lensy, LensyFace, type LensyPose } from "../Lensy";
 import { SampleBadge } from "../SampleBadge";
+import { TitleDecor } from "../Decor";
 
 function Card({
   name,
@@ -127,7 +128,8 @@ export function FeatureBento() {
     <section id="features" aria-labelledby="features-title" className="scroll-mt-20 px-5 py-16 md:px-6">
       <div className="mx-auto flex max-w-[1100px] flex-col gap-8">
         <div className="flex flex-col gap-2 text-center">
-          <h2 id="features-title" className="m-0 text-[30px] font-bold md:text-[40px]">
+          <h2 id="features-title" className="relative m-0 self-center text-[30px] font-bold md:text-[40px]">
+            <TitleDecor />
             น้อง Lensy <span className="marker-green">ส่องให้ 4 เรื่อง</span>
           </h2>
           <p className="m-0 text-ink-muted">ทุกตัวเลขบอกเลขหน้าในเอกสาร เปิดตรวจเองได้</p>

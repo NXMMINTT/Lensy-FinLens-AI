@@ -111,6 +111,15 @@ button:focus:not(:focus-visible) {
   animation: ubot-blink 4.5s infinite;
 }
 
+/* FinLens sparkles: slow twinkle */
+@keyframes sparkle {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  50% { transform: scale(0.72) rotate(12deg); opacity: 0.55; }
+}
+.animate-sparkle {
+  animation: sparkle 3.2s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
     animation: none !important;
