@@ -1,0 +1,25 @@
+# MVP tax rules for U-Ledger AI (Thailand).
+# NOTE: simplified for demo purposes — verify against current Revenue Department
+# rules before using for real tax filing.
+
+vat:
+  annual_threshold: 1800000
+  rate: 0.07
+  warning_levels:
+    - { level: "near", min_ratio: 0.80 }
+    - { level: "high", min_ratio: 0.90 }
+
+personal_income_tax:
+  # Flat-rate expense deduction (มาตรา 40(8)) — percentage of gross income.
+  flat_rate_expense_ratio: 0.60
+  personal_allowance: 60000
+  # Progressive brackets: [floor, ceiling_or_null, rate]
+  brackets:
+    - { floor: 0, ceiling: 150000, rate: 0.00 }
+    - { floor: 150000, ceiling: 300000, rate: 0.05 }
+    - { floor: 300000, ceiling: 500000, rate: 0.10 }
+    - { floor: 500000, ceiling: 750000, rate: 0.15 }
+    - { floor: 750000, ceiling: 1000000, rate: 0.20 }
+    - { floor: 1000000, ceiling: 2000000, rate: 0.25 }
+    - { floor: 2000000, ceiling: 5000000, rate: 0.30 }
+    - { floor: 5000000, ceiling: null, rate: 0.35 }

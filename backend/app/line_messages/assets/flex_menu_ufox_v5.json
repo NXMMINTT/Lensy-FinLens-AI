@@ -1,0 +1,179 @@
+{
+  "type": "bubble",
+  "size": "mega",
+  "hero": {
+    "type": "image",
+    "url": "https://raw.githubusercontent.com/earth201215/line-photo/main/U-Fox_Crypto_Sky_Mascot_Banner.png",
+    "size": "full",
+    "aspectRatio": "1040:294",
+    "aspectMode": "cover"
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "paddingAll": "0px",
+    "contents": [
+      {
+        "type": "box",
+        "layout": "vertical",
+        "paddingAll": "14px",
+        "paddingBottom": "8px",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "backgroundColor": "#E8F1FF",
+            "cornerRadius": "12px",
+            "paddingAll": "12px",
+            "alignItems": "center",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "💬",
+                "size": "md",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "วันนี้อยากให้ผมช่วยเรื่องอะไรดีครับ?",
+                "size": "sm",
+                "weight": "bold",
+                "color": "#1A5FBB",
+                "wrap": true,
+                "flex": 1
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "margin": "md",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "spacing": "sm",
+                "contents": [
+                  {
+                    "type": "box", "layout": "vertical", "flex": 1,
+                    "backgroundColor": "#EBF4FF", "cornerRadius": "14px", "paddingAll": "13px",
+                    "alignItems": "center", "spacing": "xs",
+                    "action": { "type": "postback", "label": "บันทึกรายรับ", "data": "action=add_income", "displayText": "บันทึกรายรับ" },
+                    "contents": [
+                      { "type": "text", "text": "💰", "size": "xl", "align": "center" },
+                      { "type": "text", "text": "บันทึกรายรับ", "size": "sm", "weight": "bold", "color": "#1B2559", "align": "center" },
+                      { "type": "text", "text": "เพิ่มรายรับเลย", "size": "xxs", "color": "#8A91A3", "align": "center", "wrap": true }
+                    ]
+                  },
+                  {
+                    "type": "box", "layout": "vertical", "flex": 1,
+                    "backgroundColor": "#FFF0F3", "cornerRadius": "14px", "paddingAll": "13px",
+                    "alignItems": "center", "spacing": "xs",
+                    "action": { "type": "postback", "label": "บันทึกรายจ่าย", "data": "action=add_expense", "displayText": "บันทึกรายจ่าย" },
+                    "contents": [
+                      { "type": "text", "text": "💸", "size": "xl", "align": "center" },
+                      { "type": "text", "text": "บันทึกรายจ่าย", "size": "sm", "weight": "bold", "color": "#1B2559", "align": "center" },
+                      { "type": "text", "text": "จดได้ทันที", "size": "xxs", "color": "#8A91A3", "align": "center", "wrap": true }
+                    ]
+                  },
+                  {
+                    "type": "box", "layout": "vertical", "flex": 1,
+                    "backgroundColor": "#ECFAF3", "cornerRadius": "14px", "paddingAll": "13px",
+                    "alignItems": "center", "spacing": "xs",
+                    "action": { "type": "postback", "label": "สรุปภาพรวม", "data": "action=summary", "displayText": "สรุปภาพรวม" },
+                    "contents": [
+                      { "type": "text", "text": "📊", "size": "xl", "align": "center" },
+                      { "type": "text", "text": "สรุปภาพรวม", "size": "sm", "weight": "bold", "color": "#1B2559", "align": "center" },
+                      { "type": "text", "text": "รายรับ-รายจ่าย", "size": "xxs", "color": "#8A91A3", "align": "center", "wrap": true }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "spacing": "sm",
+                "contents": [
+                  {
+                    "type": "box", "layout": "vertical", "flex": 1,
+                    "backgroundColor": "#FFF8ED", "cornerRadius": "14px", "paddingAll": "13px",
+                    "alignItems": "center", "spacing": "xs",
+                    "action": { "type": "postback", "label": "จัดการสินค้า", "data": "action=manage_products", "displayText": "จัดการสินค้า" },
+                    "contents": [
+                      { "type": "text", "text": "📦", "size": "xl", "align": "center" },
+                      { "type": "text", "text": "จัดการสินค้า", "size": "sm", "weight": "bold", "color": "#1B2559", "align": "center" },
+                      { "type": "text", "text": "เช็คสต็อก", "size": "xxs", "color": "#8A91A3", "align": "center", "wrap": true }
+                    ]
+                  },
+                  {
+                    "type": "box", "layout": "vertical", "flex": 1,
+                    "backgroundColor": "#EEF8FF", "cornerRadius": "14px", "paddingAll": "13px",
+                    "alignItems": "center", "spacing": "xs",
+                    "action": { "type": "postback", "label": "ดูตลาดคู่แข่ง", "data": "action=market_trends", "displayText": "ดูตลาดคู่แข่ง" },
+                    "contents": [
+                      { "type": "text", "text": "🌏", "size": "xl", "align": "center" },
+                      { "type": "text", "text": "ดูตลาดคู่แข่ง", "size": "sm", "weight": "bold", "color": "#1B2559", "align": "center" },
+                      { "type": "text", "text": "เทรนด์โลก", "size": "xxs", "color": "#8A91A3", "align": "center", "wrap": true }
+                    ]
+                  },
+                  {
+                    "type": "box", "layout": "vertical", "flex": 1,
+                    "backgroundColor": "#FFFBEA", "cornerRadius": "14px", "paddingAll": "13px",
+                    "alignItems": "center", "spacing": "xs",
+                    "action": { "type": "postback", "label": "อัปเกรด", "data": "action=upgrade", "displayText": "อัปเกรด" },
+                    "contents": [
+                      { "type": "text", "text": "👑", "size": "xl", "align": "center" },
+                      { "type": "text", "text": "อัปเกรด", "size": "sm", "weight": "bold", "color": "#1B2559", "align": "center" },
+                      { "type": "text", "text": "ฟีเจอร์พรีเมียม", "size": "xxs", "color": "#8A91A3", "align": "center", "wrap": true }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "horizontal",
+    "spacing": "sm",
+    "paddingAll": "10px",
+    "backgroundColor": "#F4F7FF",
+    "contents": [
+      {
+        "type": "box", "layout": "horizontal", "flex": 1,
+        "backgroundColor": "#E5E9F5", "cornerRadius": "10px", "paddingAll": "10px",
+        "alignItems": "center", "justifyContent": "center", "spacing": "xs",
+        "action": { "type": "postback", "label": "ตั้งค่า", "data": "action=settings", "displayText": "ตั้งค่า" },
+        "contents": [
+          { "type": "text", "text": "⚙️", "size": "sm" },
+          { "type": "text", "text": "ตั้งค่า", "size": "xs", "weight": "bold", "color": "#4C566E" }
+        ]
+      },
+      {
+        "type": "box", "layout": "horizontal", "flex": 1,
+        "backgroundColor": "#E5E9F5", "cornerRadius": "10px", "paddingAll": "10px",
+        "alignItems": "center", "justifyContent": "center", "spacing": "xs",
+        "action": { "type": "postback", "label": "วิธีใช้", "data": "action=how_to_use", "displayText": "วิธีใช้" },
+        "contents": [
+          { "type": "text", "text": "❓", "size": "sm" },
+          { "type": "text", "text": "วิธีใช้", "size": "xs", "weight": "bold", "color": "#4C566E" }
+        ]
+      },
+      {
+        "type": "box", "layout": "horizontal", "flex": 1,
+        "backgroundColor": "#E5E9F5", "cornerRadius": "10px", "paddingAll": "10px",
+        "alignItems": "center", "justifyContent": "center", "spacing": "xs",
+        "action": { "type": "postback", "label": "คุยกับทีมงาน", "data": "action=contact_support", "displayText": "คุยกับทีมงาน" },
+        "contents": [
+          { "type": "text", "text": "💬", "size": "sm" },
+          { "type": "text", "text": "คุยกับเรา", "size": "xs", "weight": "bold", "color": "#4C566E" }
+        ]
+      }
+    ]
+  }
+}

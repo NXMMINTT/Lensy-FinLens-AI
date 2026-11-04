@@ -1,0 +1,87 @@
+[
+  {
+    "product_id": "P001",
+    "product_name": "น้ำพริกเผา",
+    "my_cost_price": 55,
+    "my_selling_price": 120,
+    "competitors": [
+      { "platform_id": "shopee_th", "platform": "Shopee", "seller": "ร้านแม่สมศรี", "price": 95, "currency": "THB", "stock": "มีสินค้า" },
+      { "platform_id": "weloveshopping", "platform": "WeLoveShopping", "seller": "ครัวไทยออนไลน์", "price": 105, "currency": "THB", "stock": "มีสินค้า" },
+      { "platform_id": "tiktok_shop_th", "platform": "TikTok Shop", "seller": "น้ำพริกไทยแท้", "price": 110, "currency": "THB", "stock": "มีสินค้า" },
+      { "platform_id": "line_shopping", "platform": "LINE SHOPPING", "seller": "ร้านป้าแดง", "price": 115, "currency": "THB", "stock": "มีสินค้า" },
+      { "platform_id": "shopee_th", "platform": "Shopee", "seller": "ครัวคุณยาย", "price": 130, "currency": "THB", "stock": "มีสินค้า" },
+      { "platform_id": "lazada_th", "platform": "Lazada", "seller": "Thai Food Market", "price": 105, "currency": "THB", "stock": "สินค้าหมด" },
+      { "platform_id": "amazon_us", "platform": "Amazon", "seller": "Thai Spice Co.", "price": 5.99, "currency": "USD", "stock": "มีสินค้า" },
+      { "platform_id": "rakuten", "platform": "Rakuten", "seller": "タイ食品ストア", "price": 980, "currency": "JPY", "stock": "มีสินค้า" }
+    ],
+    "price_distribution_thb": { "min": 95, "p25": 105, "median": 107.5, "p75": 115, "max": 130 }
+  },
+  {
+    "product_id": "P002",
+    "product_name": "ชาไทยผง",
+    "my_cost_price": 70,
+    "my_selling_price": 159,
+    "competitors": [
+      { "platform_id": "shopee_th", "platform": "Shopee", "seller": "ชาไทยต้นตำรับ", "price": 135, "currency": "THB", "stock": "มีสินค้า" },
+      { "platform_id": "tiktok_shop_th", "platform": "TikTok Shop", "seller": "ชาไทยเข้มข้น", "price": 149, "currency": "THB", "stock": "มีสินค้า" },
+      { "platform_id": "line_shopping", "platform": "LINE SHOPPING", "seller": "ร้านชาเหนือ", "price": 159, "currency": "THB", "stock": "มีสินค้า" },
+      { "platform_id": "lazada_th", "platform": "Lazada", "seller": "Cha Thai House", "price": 169, "currency": "THB", "stock": "มีสินค้า" },
+      { "platform_id": "central_online", "platform": "Central Online (JD Central)", "seller": "Central Tea", "price": 185, "currency": "THB", "stock": "มีสินค้า" },
+      { "platform_id": "weloveshopping", "platform": "WeLoveShopping", "seller": "ชาไทยออนไลน์", "price": 155, "currency": "THB", "stock": "สินค้าหมด" },
+      { "platform_id": "shopee_vn", "platform": "Shopee Vietnam", "seller": "Tra Thai Store", "price": 5.5, "currency": "USD", "stock": "มีสินค้า" },
+      { "platform_id": "bol_com", "platform": "Bol.com", "seller": "Thai Tea NL", "price": 4.95, "currency": "EUR", "stock": "มีสินค้า" }
+    ],
+    "price_distribution_thb": { "min": 135, "p25": 149, "median": 157, "p75": 169, "max": 185 }
+  },
+  {
+    "product_id": "P003",
+    "product_name": "ผ้าขาวม้าทอมือ",
+    "my_cost_price": 150,
+    "my_selling_price": 290,
+    "competitors": [
+      { "platform_id": "shopee_th", "platform": "Shopee", "seller": "ผ้าทอบ้านนา", "price": 250, "currency": "THB", "stock": "มีสินค้า" },
+      { "platform_id": "facebook_marketplace_th", "platform": "Facebook Marketplace", "seller": "กลุ่มผ้าทอมือ", "price": 270, "currency": "THB", "stock": "มีสินค้า" },
+      { "platform_id": "line_shopping", "platform": "LINE SHOPPING", "seller": "ร้านผ้าพื้นเมือง", "price": 290, "currency": "THB", "stock": "มีสินค้า" },
+      { "platform_id": "lazada_th", "platform": "Lazada", "seller": "Thai Weave", "price": 310, "currency": "THB", "stock": "มีสินค้า" },
+      { "platform_id": "central_online", "platform": "Central Online (JD Central)", "seller": "Central Craft", "price": 330, "currency": "THB", "stock": "มีสินค้า" },
+      { "platform_id": "tiktok_shop_th", "platform": "TikTok Shop", "seller": "ผ้าขาวม้าช็อป", "price": 275, "currency": "THB", "stock": "สินค้าหมด" },
+      { "platform_id": "amazon_us", "platform": "Amazon", "seller": "Thai Textile Co.", "price": 12.99, "currency": "USD", "stock": "มีสินค้า" },
+      { "platform_id": "rakuten", "platform": "Rakuten", "seller": "タイ織物ストア", "price": 1980, "currency": "JPY", "stock": "มีสินค้า" }
+    ],
+    "price_distribution_thb": { "min": 250, "p25": 270, "median": 282.5, "p75": 310, "max": 330 }
+  },
+  {
+    "product_id": "P004",
+    "product_name": "กล้วยตาก",
+    "my_cost_price": 40,
+    "my_selling_price": 89,
+    "competitors": [
+      { "platform_id": "tiktok_shop_th", "platform": "TikTok Shop", "seller": "กล้วยตากหนึบ", "price": 69, "currency": "THB", "stock": "มีสินค้า" },
+      { "platform_id": "shopee_th", "platform": "Shopee", "seller": "สวนกล้วยตาก", "price": 75, "currency": "THB", "stock": "มีสินค้า" },
+      { "platform_id": "weloveshopping", "platform": "WeLoveShopping", "seller": "ของฝากไทย", "price": 85, "currency": "THB", "stock": "มีสินค้า" },
+      { "platform_id": "lazada_th", "platform": "Lazada", "seller": "Banana Thai", "price": 95, "currency": "THB", "stock": "มีสินค้า" },
+      { "platform_id": "central_online", "platform": "Central Online (JD Central)", "seller": "Central Grocery", "price": 109, "currency": "THB", "stock": "มีสินค้า" },
+      { "platform_id": "line_shopping", "platform": "LINE SHOPPING", "seller": "ร้านป้านา", "price": 79, "currency": "THB", "stock": "สินค้าหมด" },
+      { "platform_id": "tokopedia", "platform": "Tokopedia", "seller": "Pisang Thai", "price": 32000, "currency": "IDR", "stock": "มีสินค้า" },
+      { "platform_id": "shopee_vn", "platform": "Shopee Vietnam", "seller": "Chuoi Thai", "price": 2.4, "currency": "USD", "stock": "มีสินค้า" }
+    ],
+    "price_distribution_thb": { "min": 69, "p25": 75, "median": 82, "p75": 95, "max": 109 }
+  },
+  {
+    "product_id": "P005",
+    "product_name": "สบู่สมุนไพร",
+    "my_cost_price": 25,
+    "my_selling_price": 65,
+    "competitors": [
+      { "platform_id": "tiktok_shop_th", "platform": "TikTok Shop", "seller": "สบู่หอมสมุนไพร", "price": 49, "currency": "THB", "stock": "มีสินค้า" },
+      { "platform_id": "shopee_th", "platform": "Shopee", "seller": "สบู่สมุนไพรไทย", "price": 55, "currency": "THB", "stock": "มีสินค้า" },
+      { "platform_id": "line_shopping", "platform": "LINE SHOPPING", "seller": "ร้านสบู่สมุนไพร", "price": 62, "currency": "THB", "stock": "มีสินค้า" },
+      { "platform_id": "central_online", "platform": "Central Online (JD Central)", "seller": "Central Beauty", "price": 69, "currency": "THB", "stock": "มีสินค้า" },
+      { "platform_id": "lazada_th", "platform": "Lazada", "seller": "Herbal Soap TH", "price": 79, "currency": "THB", "stock": "มีสินค้า" },
+      { "platform_id": "facebook_marketplace_th", "platform": "Facebook Marketplace", "seller": "ตลาดสบู่", "price": 59, "currency": "THB", "stock": "สินค้าหมด" },
+      { "platform_id": "shopee_vn", "platform": "Shopee Vietnam", "seller": "Xa Phong Thai", "price": 1.8, "currency": "USD", "stock": "มีสินค้า" },
+      { "platform_id": "noon", "platform": "Noon", "seller": "Thai Herbal Soap", "price": 7.5, "currency": "AED", "stock": "มีสินค้า" }
+    ],
+    "price_distribution_thb": { "min": 49, "p25": 55, "median": 60.5, "p75": 69, "max": 79 }
+  }
+]

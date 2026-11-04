@@ -1,0 +1,152 @@
+{
+  "type": "bubble",
+  "size": "giga",
+  "header": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "text",
+        "text": "สวัสดีครับ! 👋",
+        "weight": "bold",
+        "size": "xl",
+        "color": "#1F2937"
+      },
+      {
+        "type": "text",
+        "text": "ผม U-Fox",
+        "weight": "bold",
+        "size": "xxl",
+        "color": "#3B82F6",
+        "margin": "sm"
+      },
+      {
+        "type": "text",
+        "text": "ผู้ช่วยจัดการเงินของคุณครับ",
+        "size": "md",
+        "color": "#6B7280",
+        "wrap": true,
+        "margin": "sm"
+      }
+    ],
+    "paddingAll": "20px",
+    "backgroundColor": "#EFF6FF"
+  },
+  "hero": {
+    "type": "image",
+    "url": "https://i.imgur.com/your-u-fox-image.png",
+    "size": "full",
+    "aspectRatio": "20:13",
+    "aspectMode": "cover",
+    "action": {
+      "type": "uri",
+      "uri": "https://your-liff-app-url.com/"
+    }
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "text",
+        "text": "วันนี้อยากให้ผมช่วยเรื่องอะไรดีครับ?",
+        "align": "center",
+        "size": "sm",
+        "color": "#4B5563",
+        "margin": "md",
+        "weight": "bold"
+      },
+      {
+        "type": "separator",
+        "margin": "lg",
+        "color": "#E5E7EB"
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "margin": "lg",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "button",
+            "style": "secondary",
+            "action": {
+              "type": "uri",
+              "label": "บันทึกรายรับ",
+              "uri": "https://your-liff-app-url.com/income"
+            },
+            "color": "#DBEAFE"
+          },
+          {
+            "type": "button",
+            "style": "secondary",
+            "action": {
+              "type": "uri",
+              "label": "บันทึกรายจ่าย",
+              "uri": "https://your-liff-app-url.com/expense"
+            },
+            "color": "#FCE7F3"
+          }
+        ]
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "margin": "sm",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "button",
+            "style": "secondary",
+            "action": {
+              "type": "uri",
+              "label": "สรุปภาพรวม",
+              "uri": "https://your-liff-app-url.com/dashboard"
+            },
+            "color": "#FEF3C7"
+          },
+          {
+            "type": "button",
+            "style": "secondary",
+            "action": {
+              "type": "uri",
+              "label": "จัดการสินค้า",
+              "uri": "https://your-liff-app-url.com/inventory"
+            },
+            "color": "#E0E7FF"
+          }
+        ]
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "margin": "sm",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "button",
+            "style": "secondary",
+            "action": {
+              "type": "uri",
+              "label": "ดูตลาดคู่แข่ง",
+              "uri": "https://your-liff-app-url.com/market-radar"
+            },
+            "color": "#F3F4F6"
+          },
+          {
+            "type": "button",
+            "style": "primary",
+            "action": {
+              "type": "uri",
+              "label": "อัปเกรดแพ็กเกจ",
+              "uri": "https://your-liff-app-url.com/premium"
+            },
+            "color": "#F59E0B"
+          }
+        ]
+      }
+    ],
+    "backgroundColor": "#FFFFFF",
+    "paddingAll": "20px"
+  }
+}

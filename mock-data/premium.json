@@ -1,0 +1,137 @@
+{
+  "mock_today": "2026-10-15",
+  "plans": [
+    {
+      "plan_id": "free",
+      "name": "Free",
+      "price_thb_per_month": 0,
+      "features": ["my_business"]
+    },
+    {
+      "plan_id": "premium_monthly",
+      "name": "Premium",
+      "price_thb_per_month": 199,
+      "trial_days": 7,
+      "billing_cycle_days": 30,
+      "grace_period_days": 3,
+      "features": [
+        "my_business",
+        "market_radar",
+        "competitor_prices",
+        "market_trend",
+        "keyword_volume",
+        "eu_arbitrage",
+        "ubot_insights"
+      ]
+    }
+  ],
+  "status_rules": {
+    "free": "ยังไม่เคยสมัคร ใช้ได้แค่ Tab 1 / กด Start trial ได้ 1 ครั้งต่อบัญชี",
+    "trialing": "อยู่ในช่วงทดลอง 7 วัน (trial_start ถึง trial_end) ใช้ Premium ได้เต็ม ไม่ตัดเงิน",
+    "active": "หมด trial แล้วตัดเงินสำเร็จ ต่ออายุทุก 30 วันตาม current_period_end",
+    "past_due": "ตัดเงินไม่ผ่าน ยังใช้ Premium ได้อีก 3 วัน (grace_period_end) ถ้ายังไม่จ่ายจะกลายเป็น expired",
+    "canceled": "ผู้ใช้กดยกเลิก ยังใช้ได้ถึง current_period_end แล้วกลายเป็น expired ไม่ตัดเงินรอบถัดไป",
+    "expired": "หมดสิทธิ์ Premium กลับไปเป็น Free ล็อก Tab 2 / start trial ซ้ำไม่ได้ ต้อง Subscribe ตรง"
+  },
+  "transitions": [
+    { "from": "free", "event": "start_trial", "to": "trialing" },
+    { "from": "trialing", "event": "trial_end + payment_success", "to": "active" },
+    { "from": "trialing", "event": "trial_end + payment_failed", "to": "past_due" },
+    { "from": "trialing", "event": "cancel", "to": "canceled" },
+    { "from": "active", "event": "period_end + payment_success", "to": "active" },
+    { "from": "active", "event": "period_end + payment_failed", "to": "past_due" },
+    { "from": "active", "event": "cancel", "to": "canceled" },
+    { "from": "past_due", "event": "payment_success", "to": "active" },
+    { "from": "past_due", "event": "grace_period_end", "to": "expired" },
+    { "from": "canceled", "event": "period_end", "to": "expired" },
+    { "from": "canceled", "event": "resume", "to": "active" },
+    { "from": "expired", "event": "subscribe", "to": "active" }
+  ],
+  "current_user": {
+    "user_id": "U001",
+    "shop_name": "ร้านป้าแดงของฝาก",
+    "plan_id": "premium_monthly",
+    "status": "trialing",
+    "has_used_trial": true,
+    "trial_start": "2026-10-12",
+    "trial_end": "2026-10-19",
+    "days_left_in_trial": 4,
+    "current_period_start": null,
+    "current_period_end": null,
+    "grace_period_end": null,
+    "cancel_at_period_end": false,
+    "next_billing_date": "2026-10-19",
+    "next_billing_amount_thb": 199,
+    "payment_method": { "type": "promptpay", "label": "PromptPay ••• 5678" },
+    "is_premium": true,
+    "banner": {
+      "type": "info",
+      "message": "เหลือเวลาทดลองใช้ Premium อีก 4 วัน ระบบจะเริ่มเก็บเงิน 199 บาท/เดือน ในวันที่ 19 ต.ค. 2026"
+    }
+  },
+  "demo_users": [
+    {
+      "user_id": "U002",
+      "shop_name": "ร้านใหม่ยังไม่ทดลอง",
+      "plan_id": "free",
+      "status": "free",
+      "has_used_trial": false,
+      "is_premium": false,
+      "banner": { "type": "upsell", "message": "ปลดล็อก Market Radar ทดลองใช้ฟรี 7 วัน" }
+    },
+    {
+      "user_id": "U003",
+      "shop_name": "ร้านสบู่สมุนไพรบ้านสวน",
+      "plan_id": "premium_monthly",
+      "status": "active",
+      "has_used_trial": true,
+      "trial_start": "2026-09-01",
+      "trial_end": "2026-09-08",
+      "current_period_start": "2026-10-08",
+      "current_period_end": "2026-11-07",
+      "next_billing_date": "2026-11-07",
+      "next_billing_amount_thb": 199,
+      "is_premium": true,
+      "banner": null
+    },
+    {
+      "user_id": "U004",
+      "shop_name": "ร้านผ้าทอเชียงใหม่",
+      "plan_id": "premium_monthly",
+      "status": "past_due",
+      "has_used_trial": true,
+      "current_period_start": "2026-09-14",
+      "current_period_end": "2026-10-14",
+      "grace_period_end": "2026-10-17",
+      "is_premium": true,
+      "banner": { "type": "warning", "message": "ชำระเงินไม่สำเร็จ กรุณาอัปเดตการชำระเงินภายใน 17 ต.ค. ก่อนถูกล็อก Premium" }
+    },
+    {
+      "user_id": "U005",
+      "shop_name": "ร้านน้ำพริกแม่ศรี",
+      "plan_id": "premium_monthly",
+      "status": "canceled",
+      "has_used_trial": true,
+      "current_period_start": "2026-10-01",
+      "current_period_end": "2026-10-31",
+      "cancel_at_period_end": true,
+      "is_premium": true,
+      "banner": { "type": "info", "message": "ยกเลิกแล้ว ใช้ Premium ได้ถึง 31 ต.ค. 2026 กด Resume เพื่อใช้ต่อ" }
+    },
+    {
+      "user_id": "U006",
+      "shop_name": "ร้านหมดอายุ",
+      "plan_id": "free",
+      "status": "expired",
+      "has_used_trial": true,
+      "current_period_end": "2026-10-01",
+      "is_premium": false,
+      "banner": { "type": "upsell", "message": "Premium หมดอายุแล้ว สมัครใหม่ 199 บาท/เดือน เพื่อปลดล็อก Market Radar" }
+    }
+  ],
+  "billing_history": [
+    { "invoice_id": "INV-2026-0901", "user_id": "U003", "date": "2026-09-08", "amount_thb": 199, "status": "paid" },
+    { "invoice_id": "INV-2026-1008", "user_id": "U003", "date": "2026-10-08", "amount_thb": 199, "status": "paid" },
+    { "invoice_id": "INV-2026-1014", "user_id": "U004", "date": "2026-10-14", "amount_thb": 199, "status": "failed" }
+  ]
+}

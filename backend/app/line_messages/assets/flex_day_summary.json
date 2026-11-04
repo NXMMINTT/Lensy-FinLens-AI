@@ -1,0 +1,558 @@
+{
+  "type": "bubble",
+  "size": "mega",
+  "hero": {
+    "type": "image",
+    "url": "https://raw.githubusercontent.com/earth201215/line-photo/main/banner-summary-blue.jpg",
+    "size": "full",
+    "aspectRatio": "1040:294",
+    "aspectMode": "cover"
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "paddingAll": "20px",
+    "paddingBottom": "4px",
+    "contents": [
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "alignItems": "center",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "flex": 0,
+            "backgroundColor": "#E8F0FE",
+            "cornerRadius": "12px",
+            "paddingTop": "3px",
+            "paddingBottom": "3px",
+            "paddingStart": "10px",
+            "paddingEnd": "10px",
+            "contents": [
+              {
+                "type": "text",
+                "text": "16 ต.ค. 2569",
+                "size": "xs",
+                "weight": "bold",
+                "color": "#1D4ED8"
+              }
+            ]
+          },
+          {
+            "type": "filler"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "flex": 0,
+            "backgroundColor": "#F1F3F7",
+            "cornerRadius": "12px",
+            "paddingTop": "3px",
+            "paddingBottom": "3px",
+            "paddingStart": "10px",
+            "paddingEnd": "10px",
+            "contents": [
+              {
+                "type": "text",
+                "text": "หน้าเว็บ",
+                "size": "xs",
+                "weight": "bold",
+                "color": "#5B6478"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "กำไรสุทธิวันนี้",
+        "size": "sm",
+        "color": "#8A91A3",
+        "margin": "lg"
+      },
+      {
+        "type": "text",
+        "text": "฿4,200",
+        "size": "3xl",
+        "weight": "bold",
+        "adjustMode": "shrink-to-fit",
+        "color": "#2563EB"
+      },
+      {
+        "type": "text",
+        "text": "อัตรากำไร 35% ของรายรับ",
+        "size": "xxs",
+        "color": "#8A91A3"
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "margin": "lg",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "alignItems": "center",
+            "spacing": "md",
+            "backgroundColor": "#E7F8EE99",
+            "cornerRadius": "14px",
+            "paddingAll": "10px",
+            "paddingStart": "12px",
+            "paddingEnd": "14px",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "vertical",
+                "flex": 0,
+                "width": "30px",
+                "height": "30px",
+                "cornerRadius": "9px",
+                "backgroundColor": "#16A34A",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "↑",
+                    "size": "sm",
+                    "weight": "bold",
+                    "color": "#FFFFFF",
+                    "align": "center"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": "รายรับ",
+                "size": "sm",
+                "color": "#1B2559",
+                "flex": 1
+              },
+              {
+                "type": "text",
+                "text": "฿12,000",
+                "size": "md",
+                "weight": "bold",
+                "color": "#16A34A",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "alignItems": "center",
+            "spacing": "md",
+            "backgroundColor": "#FDECF099",
+            "cornerRadius": "14px",
+            "paddingAll": "10px",
+            "paddingStart": "12px",
+            "paddingEnd": "14px",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "vertical",
+                "flex": 0,
+                "width": "30px",
+                "height": "30px",
+                "cornerRadius": "9px",
+                "backgroundColor": "#E8335A",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "↓",
+                    "size": "sm",
+                    "weight": "bold",
+                    "color": "#FFFFFF",
+                    "align": "center"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": "รายจ่าย",
+                "size": "sm",
+                "color": "#1B2559",
+                "flex": 1
+              },
+              {
+                "type": "text",
+                "text": "฿7,800",
+                "size": "md",
+                "weight": "bold",
+                "color": "#E8335A",
+                "flex": 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "margin": "lg",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "flex": 1,
+            "backgroundColor": "#F8FAFF",
+            "cornerRadius": "14px",
+            "paddingAll": "12px",
+            "alignItems": "center",
+            "contents": [
+              {
+                "type": "text",
+                "text": "🛒",
+                "size": "lg"
+              },
+              {
+                "type": "text",
+                "text": "8",
+                "size": "xl",
+                "weight": "bold",
+                "color": "#2563EB",
+                "margin": "xs"
+              },
+              {
+                "type": "text",
+                "text": "ออเดอร์",
+                "size": "xxs",
+                "color": "#8A91A3"
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "flex": 1,
+            "backgroundColor": "#F8FAFF",
+            "cornerRadius": "14px",
+            "paddingAll": "12px",
+            "alignItems": "center",
+            "contents": [
+              {
+                "type": "text",
+                "text": "📦",
+                "size": "lg"
+              },
+              {
+                "type": "text",
+                "text": "23",
+                "size": "xl",
+                "weight": "bold",
+                "color": "#2563EB",
+                "margin": "xs"
+              },
+              {
+                "type": "text",
+                "text": "ชิ้น",
+                "size": "xxs",
+                "color": "#8A91A3"
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "flex": 1,
+            "backgroundColor": "#F8FAFF",
+            "cornerRadius": "14px",
+            "paddingAll": "12px",
+            "alignItems": "center",
+            "contents": [
+              {
+                "type": "text",
+                "text": "💰",
+                "size": "lg"
+              },
+              {
+                "type": "text",
+                "text": "฿1,500",
+                "size": "sm",
+                "weight": "bold",
+                "color": "#2563EB",
+                "margin": "xs",
+                "adjustMode": "shrink-to-fit"
+              },
+              {
+                "type": "text",
+                "text": "เฉลี่ย/ออเดอร์",
+                "size": "xxs",
+                "color": "#8A91A3"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "สินค้าขายดีวันนี้",
+        "size": "md",
+        "weight": "bold",
+        "color": "#1B2559",
+        "margin": "xl"
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "margin": "md",
+        "spacing": "lg",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "box",
+                    "layout": "vertical",
+                    "flex": 0,
+                    "width": "24px",
+                    "height": "24px",
+                    "cornerRadius": "9px",
+                    "backgroundColor": "#2563EB",
+                    "justifyContent": "center",
+                    "alignItems": "center",
+                    "contents": [
+                      {
+                        "type": "text",
+                        "text": "1",
+                        "size": "sm",
+                        "weight": "bold",
+                        "color": "#FFFFFF",
+                        "align": "center"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "text",
+                    "text": "น้ำพริกตาแดง",
+                    "size": "sm",
+                    "color": "#1B2559",
+                    "flex": 1,
+                    "wrap": true,
+                    "maxLines": 1
+                  },
+                  {
+                    "type": "text",
+                    "text": "5 ชิ้น",
+                    "size": "sm",
+                    "weight": "bold",
+                    "color": "#1B2559",
+                    "flex": 0
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "height": "8px",
+                "cornerRadius": "4px",
+                "backgroundColor": "#DCE7FD",
+                "contents": [
+                  {
+                    "type": "box",
+                    "layout": "vertical",
+                    "width": "70%",
+                    "height": "8px",
+                    "cornerRadius": "4px",
+                    "backgroundColor": "#2563EB",
+                    "contents": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "box",
+                    "layout": "vertical",
+                    "flex": 0,
+                    "width": "24px",
+                    "height": "24px",
+                    "cornerRadius": "9px",
+                    "backgroundColor": "#93B4F6",
+                    "justifyContent": "center",
+                    "alignItems": "center",
+                    "contents": [
+                      {
+                        "type": "text",
+                        "text": "2",
+                        "size": "sm",
+                        "weight": "bold",
+                        "color": "#FFFFFF",
+                        "align": "center"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "text",
+                    "text": "สบู่มะกรูด",
+                    "size": "sm",
+                    "color": "#1B2559",
+                    "flex": 1,
+                    "wrap": true,
+                    "maxLines": 1
+                  },
+                  {
+                    "type": "text",
+                    "text": "3 ชิ้น",
+                    "size": "sm",
+                    "weight": "bold",
+                    "color": "#1B2559",
+                    "flex": 0
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "height": "8px",
+                "cornerRadius": "4px",
+                "backgroundColor": "#DCE7FD",
+                "contents": [
+                  {
+                    "type": "box",
+                    "layout": "vertical",
+                    "width": "43%",
+                    "height": "8px",
+                    "cornerRadius": "4px",
+                    "backgroundColor": "#93B4F6",
+                    "contents": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "box",
+                    "layout": "vertical",
+                    "flex": 0,
+                    "width": "24px",
+                    "height": "24px",
+                    "cornerRadius": "9px",
+                    "backgroundColor": "#93B4F6",
+                    "justifyContent": "center",
+                    "alignItems": "center",
+                    "contents": [
+                      {
+                        "type": "text",
+                        "text": "3",
+                        "size": "sm",
+                        "weight": "bold",
+                        "color": "#FFFFFF",
+                        "align": "center"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "text",
+                    "text": "กระเป๋าผ้าทอ",
+                    "size": "sm",
+                    "color": "#1B2559",
+                    "flex": 1,
+                    "wrap": true,
+                    "maxLines": 1
+                  },
+                  {
+                    "type": "text",
+                    "text": "2 ชิ้น",
+                    "size": "sm",
+                    "weight": "bold",
+                    "color": "#1B2559",
+                    "flex": 0
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "height": "8px",
+                "cornerRadius": "4px",
+                "backgroundColor": "#DCE7FD",
+                "contents": [
+                  {
+                    "type": "box",
+                    "layout": "vertical",
+                    "width": "29%",
+                    "height": "8px",
+                    "cornerRadius": "4px",
+                    "backgroundColor": "#93B4F6",
+                    "contents": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "spacing": "xs",
+    "paddingAll": "16px",
+    "paddingTop": "16px",
+    "contents": [
+      {
+        "type": "button",
+        "style": "primary",
+        "color": "#2563EB",
+        "height": "md",
+        "action": {
+          "type": "postback",
+          "label": "ดูรายงานฉบับเต็ม",
+          "data": "action=day_report&id=DATE",
+          "displayText": "ดูรายงานฉบับเต็ม"
+        }
+      },
+      {
+        "type": "button",
+        "style": "link",
+        "color": "#8A91A3",
+        "height": "sm",
+        "action": {
+          "type": "postback",
+          "label": "ดูสรุปรายเดือน",
+          "data": "action=month_summary&id=DATE",
+          "displayText": "ดูสรุปรายเดือน"
+        }
+      }
+    ]
+  }
+}

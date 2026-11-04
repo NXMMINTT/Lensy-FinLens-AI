@@ -1,0 +1,278 @@
+{
+  "type": "bubble",
+  "size": "mega",
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "paddingAll": "20px",
+    "paddingBottom": "4px",
+    "contents": [
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "alignItems": "center",
+        "contents": [
+          {
+            "type": "text",
+            "text": "ยอดขายสะสมปีนี้",
+            "size": "sm",
+            "color": "#8A91A3",
+            "flex": 1
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "flex": 0,
+            "backgroundColor": "#FFF4D6",
+            "cornerRadius": "12px",
+            "paddingTop": "3px",
+            "paddingBottom": "3px",
+            "paddingStart": "10px",
+            "paddingEnd": "10px",
+            "contents": [
+              {
+                "type": "text",
+                "text": "70%",
+                "size": "xs",
+                "weight": "bold",
+                "color": "#8A5A00"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "฿1,262,000",
+        "size": "3xl",
+        "weight": "bold",
+        "color": "#1B2559",
+        "margin": "sm",
+        "adjustMode": "shrink-to-fit"
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "margin": "md",
+        "height": "10px",
+        "cornerRadius": "5px",
+        "backgroundColor": "#FBE9BC",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "width": "70%",
+            "height": "10px",
+            "cornerRadius": "5px",
+            "backgroundColor": "#F5B82E",
+            "contents": []
+          }
+        ]
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "margin": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": "70% ของเพดาน ฿1,800,000",
+            "size": "xxs",
+            "color": "#8A91A3",
+            "flex": 1
+          },
+          {
+            "type": "text",
+            "text": "เหลืออีก ฿538,000",
+            "size": "xxs",
+            "weight": "bold",
+            "color": "#8A5A00",
+            "flex": 0
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "สิ่งที่ควรเตรียมไว้ค่ะ",
+        "size": "md",
+        "weight": "bold",
+        "color": "#1B2559",
+        "margin": "xl"
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "margin": "md",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "alignItems": "center",
+            "spacing": "md",
+            "backgroundColor": "#FFF4D699",
+            "cornerRadius": "14px",
+            "paddingAll": "10px",
+            "paddingStart": "12px",
+            "paddingEnd": "12px",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "vertical",
+                "flex": 0,
+                "width": "28px",
+                "height": "28px",
+                "cornerRadius": "8px",
+                "backgroundColor": "#F5B82E",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "✓",
+                    "size": "sm",
+                    "weight": "bold",
+                    "color": "#FFFFFF",
+                    "align": "center"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": "เก็บใบเสร็จค่าวัตถุดิบให้ครบ",
+                "size": "sm",
+                "color": "#1B2559",
+                "wrap": true,
+                "flex": 1
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "alignItems": "center",
+            "spacing": "md",
+            "backgroundColor": "#FFF4D699",
+            "cornerRadius": "14px",
+            "paddingAll": "10px",
+            "paddingStart": "12px",
+            "paddingEnd": "12px",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "vertical",
+                "flex": 0,
+                "width": "28px",
+                "height": "28px",
+                "cornerRadius": "8px",
+                "backgroundColor": "#F5B82E",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "✓",
+                    "size": "sm",
+                    "weight": "bold",
+                    "color": "#FFFFFF",
+                    "align": "center"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": "เช็กยอดขายทุกแพลตฟอร์มให้ตรง",
+                "size": "sm",
+                "color": "#1B2559",
+                "wrap": true,
+                "flex": 1
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "alignItems": "center",
+            "spacing": "md",
+            "backgroundColor": "#FFF4D699",
+            "cornerRadius": "14px",
+            "paddingAll": "10px",
+            "paddingStart": "12px",
+            "paddingEnd": "12px",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "vertical",
+                "flex": 0,
+                "width": "28px",
+                "height": "28px",
+                "cornerRadius": "8px",
+                "backgroundColor": "#F5B82E",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "✓",
+                    "size": "sm",
+                    "weight": "bold",
+                    "color": "#FFFFFF",
+                    "align": "center"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": "ถ้าเกินเพดาน จด VAT ภายใน 30 วัน",
+                "size": "sm",
+                "color": "#1B2559",
+                "wrap": true,
+                "flex": 1
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "spacing": "xs",
+    "paddingAll": "16px",
+    "paddingTop": "12px",
+    "contents": [
+      {
+        "type": "button",
+        "style": "primary",
+        "color": "#D18E00",
+        "height": "md",
+        "action": {
+          "type": "postback",
+          "label": "ดูรายละเอียดภาษี",
+          "data": "action=tax_detail&id=TAX",
+          "displayText": "ดูรายละเอียดภาษี"
+        }
+      },
+      {
+        "type": "button",
+        "style": "link",
+        "color": "#8A91A3",
+        "height": "sm",
+        "action": {
+          "type": "postback",
+          "label": "เตือนอีกครั้งเดือนหน้า",
+          "data": "action=tax_snooze&id=TAX",
+          "displayText": "เตือนอีกครั้งเดือนหน้า"
+        }
+      }
+    ]
+  },
+  "hero": {
+    "type": "image",
+    "url": "https://raw.githubusercontent.com/earth201215/line-photo/707df11/banner-tax-yellow.jpg",
+    "size": "full",
+    "aspectRatio": "1040:294",
+    "aspectMode": "cover"
+  }
+}

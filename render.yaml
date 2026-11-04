@@ -1,0 +1,52 @@
+databases:
+  - name: u-ledger-db
+    plan: free
+    databaseName: uledger
+    user: uledger
+
+services:
+  - type: web
+    name: u-ledger-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: ./build.sh
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: u-ledger-db
+          property: connectionString
+      - key: LINE_CHANNEL_SECRET
+        sync: false
+      - key: LINE_CHANNEL_ACCESS_TOKEN
+        sync: false
+      - key: LIFF_ID
+        sync: false
+      - key: KKU_BASE_URL
+        value: https://gen.ai.kku.ac.th/api/v1
+      - key: KKU_API_KEY
+        sync: false
+      - key: KKU_MODEL
+        value: gemini-3.5-flash-lite
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PUBLIC_BASE_URL
+        fromService:
+          name: u-ledger-api
+          type: web
+          property: host
+      - key: FRONTEND_ORIGIN
+        sync: false
+      - key: MACRO_DATA_MODE
+        value: mock
+      - key: ENABLE_VOICE_REPLY
+        value: "true"
+      - key: ELEVENLABS_API_KEY
+        sync: false
+      - key: ELEVENLABS_VOICE_ID
+        sync: false
+      - key: ELEVENLABS_MODEL_ID
+        sync: false
+      - key: PYTHON_VERSION
+        value: "3.12.0"

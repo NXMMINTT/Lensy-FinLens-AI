@@ -1,0 +1,400 @@
+{
+  "type": "bubble",
+  "size": "mega",
+  "hero": {
+    "type": "image",
+    "url": "https://raw.githubusercontent.com/earth201215/line-photo/main/banner-expense.jpg",
+    "size": "full",
+    "aspectRatio": "1040:294",
+    "aspectMode": "cover"
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "paddingAll": "20px",
+    "paddingBottom": "4px",
+    "contents": [
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "alignItems": "center",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "flex": 0,
+            "backgroundColor": "#FDECF0",
+            "cornerRadius": "12px",
+            "paddingTop": "3px",
+            "paddingBottom": "3px",
+            "paddingStart": "10px",
+            "paddingEnd": "10px",
+            "contents": [
+              {
+                "type": "text",
+                "text": "รายจ่าย",
+                "size": "xs",
+                "weight": "bold",
+                "color": "#C21F45"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "ตรวจสอบก่อนบันทึก",
+            "size": "xs",
+            "color": "#8A91A3",
+            "align": "end"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "-฿2,000.00",
+        "size": "3xl",
+        "weight": "bold",
+        "color": "#E8335A",
+        "margin": "md",
+        "adjustMode": "shrink-to-fit",
+        "action": {
+          "type": "postback",
+          "label": "edit amount",
+          "data": "action=edit_amount&type=expense&id=TX_ID"
+        }
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "alignItems": "center",
+        "margin": "sm",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "text",
+            "text": "“ซื้อของเข้าร้าน 2000 บาท”",
+            "size": "xxs",
+            "color": "#8A91A3",
+            "flex": 1,
+            "wrap": true,
+            "maxLines": 2
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "flex": 0,
+            "spacing": "xs",
+            "alignItems": "center",
+            "backgroundColor": "#FDECF0",
+            "cornerRadius": "14px",
+            "paddingTop": "5px",
+            "paddingBottom": "5px",
+            "paddingStart": "10px",
+            "paddingEnd": "12px",
+            "action": {
+              "type": "postback",
+              "label": "edit amount",
+              "data": "action=edit_amount&type=expense&id=TX_ID"
+            },
+            "contents": [
+              {
+                "type": "image",
+                "url": "https://raw.githubusercontent.com/earth201215/line-photo/main/icon-edit-expense.png",
+                "size": "14px",
+                "aspectRatio": "1:1",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "แก้ยอด",
+                "size": "xs",
+                "weight": "bold",
+                "color": "#C21F45",
+                "flex": 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "margin": "lg",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "alignItems": "center",
+            "spacing": "md",
+            "backgroundColor": "#FDECF099",
+            "cornerRadius": "14px",
+            "paddingAll": "10px",
+            "paddingStart": "12px",
+            "paddingEnd": "12px",
+            "action": {
+              "type": "datetimepicker",
+              "label": "date",
+              "data": "action=edit_date&id=TX_ID",
+              "mode": "date",
+              "initial": "2026-10-15"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "vertical",
+                "flex": 0,
+                "width": "34px",
+                "height": "34px",
+                "cornerRadius": "10px",
+                "backgroundColor": "#E8335A",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "image",
+                    "url": "https://raw.githubusercontent.com/earth201215/line-photo/main/icon-calendar-white.png",
+                    "size": "18px",
+                    "aspectRatio": "1:1"
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "flex": 1,
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "วันที่",
+                    "size": "xxs",
+                    "color": "#8A91A3"
+                  },
+                  {
+                    "type": "text",
+                    "text": "15 ต.ค. 2569",
+                    "size": "md",
+                    "weight": "bold",
+                    "color": "#1B2559",
+                    "wrap": true,
+                    "maxLines": 2
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "flex": 0,
+                "backgroundColor": "#FFFFFF",
+                "cornerRadius": "10px",
+                "paddingTop": "4px",
+                "paddingBottom": "4px",
+                "paddingStart": "10px",
+                "paddingEnd": "10px",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "แก้ไข",
+                    "size": "xs",
+                    "weight": "bold",
+                    "color": "#C21F45"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "alignItems": "center",
+            "spacing": "md",
+            "backgroundColor": "#FDECF099",
+            "cornerRadius": "14px",
+            "paddingAll": "10px",
+            "paddingStart": "12px",
+            "paddingEnd": "12px",
+            "action": {
+              "type": "postback",
+              "label": "category",
+              "data": "action=edit_category&id=TX_ID"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "vertical",
+                "flex": 0,
+                "width": "34px",
+                "height": "34px",
+                "cornerRadius": "10px",
+                "backgroundColor": "#E8335A",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "image",
+                    "url": "https://raw.githubusercontent.com/earth201215/line-photo/main/icon-category-white.png",
+                    "size": "18px",
+                    "aspectRatio": "1:1"
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "flex": 1,
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "หมวดหมู่",
+                    "size": "xxs",
+                    "color": "#8A91A3"
+                  },
+                  {
+                    "type": "text",
+                    "text": "ซื้อของเข้าร้าน",
+                    "size": "md",
+                    "weight": "bold",
+                    "color": "#1B2559",
+                    "wrap": true,
+                    "maxLines": 2
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "flex": 0,
+                "backgroundColor": "#FFFFFF",
+                "cornerRadius": "10px",
+                "paddingTop": "4px",
+                "paddingBottom": "4px",
+                "paddingStart": "10px",
+                "paddingEnd": "10px",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "แก้ไข",
+                    "size": "xs",
+                    "weight": "bold",
+                    "color": "#C21F45"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "alignItems": "center",
+            "spacing": "md",
+            "backgroundColor": "#FDECF099",
+            "cornerRadius": "14px",
+            "paddingAll": "10px",
+            "paddingStart": "12px",
+            "paddingEnd": "12px",
+            "action": {
+              "type": "postback",
+              "label": "note",
+              "data": "action=edit_note&id=TX_ID"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "vertical",
+                "flex": 0,
+                "width": "34px",
+                "height": "34px",
+                "cornerRadius": "10px",
+                "backgroundColor": "#E8335A",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "image",
+                    "url": "https://raw.githubusercontent.com/earth201215/line-photo/main/icon-note-white.png",
+                    "size": "18px",
+                    "aspectRatio": "1:1"
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "flex": 1,
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "รายการ",
+                    "size": "xxs",
+                    "color": "#8A91A3"
+                  },
+                  {
+                    "type": "text",
+                    "text": "ซื้อของเข้าร้าน",
+                    "size": "md",
+                    "weight": "bold",
+                    "color": "#1B2559",
+                    "wrap": true,
+                    "maxLines": 2
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "flex": 0,
+                "backgroundColor": "#FFFFFF",
+                "cornerRadius": "10px",
+                "paddingTop": "4px",
+                "paddingBottom": "4px",
+                "paddingStart": "10px",
+                "paddingEnd": "10px",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "แก้ไข",
+                    "size": "xs",
+                    "weight": "bold",
+                    "color": "#C21F45"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "spacing": "xs",
+    "paddingAll": "16px",
+    "paddingTop": "12px",
+    "contents": [
+      {
+        "type": "button",
+        "style": "primary",
+        "color": "#E8335A",
+        "height": "md",
+        "action": {
+          "type": "postback",
+          "label": "✓ ยืนยันบันทึก",
+          "data": "action=confirm&id=TX_ID",
+          "displayText": "ยืนยันบันทึก"
+        }
+      },
+      {
+        "type": "button",
+        "style": "link",
+        "color": "#8A91A3",
+        "height": "sm",
+        "action": {
+          "type": "postback",
+          "label": "ยกเลิก",
+          "data": "action=cancel&id=TX_ID",
+          "displayText": "ยกเลิก"
+        }
+      }
+    ]
+  }
+}

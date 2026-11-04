@@ -1,0 +1,42 @@
+[
+  {
+    "transaction_id": "T1001",
+    "date": "2026-10-01",
+    "type": "income",
+    "source": "line_slip_ocr",
+    "product_id": "P001",
+    "quantity": 5,
+    "amount": 445,
+    "note": "ลูกค้าสั่งผ่าน LINE OA"
+  },
+  {
+    "transaction_id": "T1002",
+    "date": "2026-10-02",
+    "type": "expense",
+    "source": "manual",
+    "product_id": "P001",
+    "quantity": 50,
+    "amount": 2250,
+    "note": "ซื้อวัตถุดิบเพิ่มสต็อก"
+  },
+  {
+    "transaction_id": "T1003",
+    "date": "2026-10-03",
+    "type": "income",
+    "source": "line_voice",
+    "product_id": "P002",
+    "quantity": 2,
+    "amount": 700,
+    "note": "ขายหน้าร้าน"
+  },
+  {
+    "transaction_id": "T1004",
+    "date": "2026-10-05",
+    "type": "income",
+    "source": "line_slip_ocr",
+    "product_id": "P003",
+    "quantity": 10,
+    "amount": 590,
+    "note": "ออเดอร์ Shopee"
+  }
+]

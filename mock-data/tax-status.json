@@ -1,0 +1,13 @@
+{
+  "vat_threshold": 1800000,
+  "fiscal_year": 2026,
+  "cumulative_revenue": 612500,
+  "percent_of_threshold": 34.0,
+  "risk_level": "green",
+  "risk_levels": {
+    "green": "ต่ำกว่า 60% ของเพดาน",
+    "yellow": "60-90% ของเพดาน ควรเริ่มวางแผนจด VAT",
+    "red": "เกิน 90% ของเพดาน ใกล้ถึงเกณฑ์ต้องจด VAT"
+  },
+  "last_updated": "2026-10-15"
+}

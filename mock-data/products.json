@@ -1,0 +1,47 @@
+[
+  {
+    "product_id": "P001",
+    "name": "น้ำพริกเผา",
+    "category": "อาหาร/เครื่องปรุง",
+    "cost_price": 55,
+    "my_selling_price": 120,
+    "stock_qty": 120,
+    "unit": "กระปุก"
+  },
+  {
+    "product_id": "P002",
+    "name": "ชาไทยผง",
+    "category": "อาหาร/เครื่องปรุง",
+    "cost_price": 70,
+    "my_selling_price": 159,
+    "stock_qty": 80,
+    "unit": "ถุง"
+  },
+  {
+    "product_id": "P003",
+    "name": "ผ้าขาวม้าทอมือ",
+    "category": "แฟชั่น/งานฝีมือ",
+    "cost_price": 150,
+    "my_selling_price": 290,
+    "stock_qty": 35,
+    "unit": "ผืน"
+  },
+  {
+    "product_id": "P004",
+    "name": "กล้วยตาก",
+    "category": "อาหาร/เครื่องปรุง",
+    "cost_price": 40,
+    "my_selling_price": 89,
+    "stock_qty": 60,
+    "unit": "ถุง"
+  },
+  {
+    "product_id": "P005",
+    "name": "สบู่สมุนไพร",
+    "category": "ความงาม/สุขภาพ",
+    "cost_price": 25,
+    "my_selling_price": 65,
+    "stock_qty": 300,
+    "unit": "ก้อน"
+  }
+]

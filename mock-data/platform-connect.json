@@ -1,0 +1,56 @@
+{
+  "shopee_th": {
+    "platform_id": "shopee_th",
+    "platform_name": "Shopee",
+    "shop_name": "บ้านสวน ของฝากเชียงใหม่",
+    "shop_username": "bansuan.chiangmai",
+    "shop_avatar_initial": "บส",
+    "rating": 4.8,
+    "rating_count": 1204,
+    "followers": 3821,
+    "joined_date": "2023-06-14",
+    "response_rate_pct": 97,
+    "category": "อาหาร/เครื่องปรุง",
+    "products": [
+      { "name": "น้ำพริกตาแดงโบราณ 200g", "price": 89, "sold_count": 412, "stock_qty": 113 },
+      { "name": "กล้วยตากน้ำผึ้ง 250g", "price": 65, "sold_count": 298, "stock_qty": 80 },
+      { "name": "ผ้าขาวม้าทอมือ", "price": 180, "sold_count": 76, "stock_qty": 24 }
+    ]
+  },
+  "lazada_th": {
+    "platform_id": "lazada_th",
+    "platform_name": "Lazada",
+    "shop_name": "บ้านสวนออร์แกนิค Official Store",
+    "shop_username": "bansuan-organic",
+    "shop_avatar_initial": "บอ",
+    "rating": 4.6,
+    "rating_count": 532,
+    "followers": 1950,
+    "joined_date": "2024-01-09",
+    "response_rate_pct": 94,
+    "category": "อาหาร/เครื่องปรุง",
+    "products": [
+      { "name": "น้ำพริกตาแดงโบราณ 200g", "price": 92, "sold_count": 187, "stock_qty": 113 },
+      { "name": "สบู่สมุนไพรกลิ่นมะกรูด 100g", "price": 59, "sold_count": 341, "stock_qty": 0 },
+      { "name": "ชาไทยผงแท้ 100g", "price": 75, "sold_count": 120, "stock_qty": 70 }
+    ]
+  },
+  "tiktok_shop_th": {
+    "platform_id": "tiktok_shop_th",
+    "platform_name": "TikTok Shop",
+    "shop_name": "bansuan.shop",
+    "shop_username": "bansuan.shop",
+    "shop_avatar_initial": "BS",
+    "rating": 4.9,
+    "rating_count": 2876,
+    "followers": 15420,
+    "joined_date": "2024-11-02",
+    "response_rate_pct": 99,
+    "category": "อาหาร/เครื่องปรุง",
+    "products": [
+      { "name": "น้ำพริกตาแดงโบราณ 200g", "price": 85, "sold_count": 1024, "stock_qty": 113 },
+      { "name": "กระเป๋าผ้าทอมือเชียงใหม่", "price": 350, "sold_count": 89, "stock_qty": 40 },
+      { "name": "สบู่สมุนไพรกลิ่นมะกรูด 100g", "price": 55, "sold_count": 612, "stock_qty": 0 }
+    ]
+  }
+}

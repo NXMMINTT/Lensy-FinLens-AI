@@ -1,0 +1,62 @@
+[
+  {
+    "product_id": "P001",
+    "product_name": "น้ำพริกเผา",
+    "thailand_avg_price_thb": 110,
+    "eu_market": {
+      "region": "Germany / Netherlands",
+      "avg_retail_price_eur": 6.5,
+      "suggested_wholesale_price_eur": 3.8,
+      "demand_score": 82,
+      "demand_note": "ความต้องการสินค้ากลุ่ม Asian pantry เติบโตต่อเนื่อง"
+    }
+  },
+  {
+    "product_id": "P002",
+    "product_name": "ชาไทยผง",
+    "thailand_avg_price_thb": 157,
+    "eu_market": {
+      "region": "Netherlands / Belgium",
+      "avg_retail_price_eur": 7.9,
+      "suggested_wholesale_price_eur": 4.2,
+      "demand_score": 74,
+      "demand_note": "ชานมไทยเป็นที่รู้จักมากขึ้นจากร้านชานมไข่มุกในยุโรป"
+    }
+  },
+  {
+    "product_id": "P003",
+    "product_name": "ผ้าขาวม้าทอมือ",
+    "thailand_avg_price_thb": 282,
+    "eu_market": {
+      "region": "France / Belgium",
+      "avg_retail_price_eur": 24,
+      "suggested_wholesale_price_eur": 12,
+      "demand_score": 61,
+      "demand_note": "กลุ่ม handmade/eco-friendly fashion ได้รับความนิยมในตลาดยุโรปตะวันตก"
+    }
+  },
+  {
+    "product_id": "P004",
+    "product_name": "กล้วยตาก",
+    "thailand_avg_price_thb": 82,
+    "eu_market": {
+      "region": "Germany / Netherlands",
+      "avg_retail_price_eur": 5.2,
+      "suggested_wholesale_price_eur": 2.8,
+      "demand_score": 58,
+      "demand_note": "ขนมผลไม้อบแห้งไม่เติมน้ำตาลเข้ากับกระแส healthy snack"
+    }
+  },
+  {
+    "product_id": "P005",
+    "product_name": "สบู่สมุนไพร",
+    "thailand_avg_price_thb": 61,
+    "eu_market": {
+      "region": "Germany / Austria",
+      "avg_retail_price_eur": 8.5,
+      "suggested_wholesale_price_eur": 4.5,
+      "demand_score": 70,
+      "demand_note": "เครื่องสำอางธรรมชาติและ zero-waste เป็นกลุ่มที่โตเร็ว"
+    }
+  }
+]
