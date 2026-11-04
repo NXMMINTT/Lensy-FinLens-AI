@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 
+import { AppShell } from "@/components/finlens/app/AppShell";
 import { CompareTool } from "@/components/finlens/compare/CompareTool";
 import { Disclaimer } from "@/components/finlens/Disclaimer";
-import { LandingHeader } from "@/components/finlens/LandingHeader";
-import { LandingFooter } from "@/components/finlens/LandingSections";
 import { pickInitialCodes, toCompareFund } from "@/lib/compare";
 import { getVerifiedFunds } from "@/lib/funds";
 
@@ -19,10 +18,7 @@ export default async function ComparePage({ searchParams }: { searchParams: Prom
   const anySample = funds.some((f) => f.isSample);
 
   return (
-    <div className="overflow-x-clip text-ink">
-      <LandingHeader />
-      <main className="bg-dots">
-        <div className="mx-auto flex max-w-[1100px] flex-col gap-6 px-4 py-8 md:px-6 md:py-10">
+    <AppShell sampleNote={anySample}>
           <header className="flex flex-col gap-2">
             <span className="self-start rounded-md border border-brand/30 bg-surface px-3 py-1 text-[14px] font-semibold text-brand">True Cost Calculator</span>
             <h1 className="m-0 text-[30px] font-bold leading-tight md:text-[40px]">
@@ -38,9 +34,6 @@ export default async function ComparePage({ searchParams }: { searchParams: Prom
           ) : (
             <CompareTool funds={funds} initialCodes={initialCodes} />
           )}
-        </div>
-      </main>
-      <LandingFooter sampleNote={anySample} />
-    </div>
+    </AppShell>
   );
 }

@@ -94,7 +94,7 @@ export default function HomePage() {
   const BOTTOM_LINKS = [
     { href: "/settings", icon: "settings", label: h.shopSettings },
     { href: "/help", icon: "help", label: h.howToUse },
-    { href: "/chat", icon: "chat", label: h.chatWithUFox },
+    { href: "/ufox-chat", icon: "chat", label: h.chatWithUFox },
   ];
 
   return (

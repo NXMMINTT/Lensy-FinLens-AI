@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { LINE_ADD_FRIEND_URL } from "@/components/brand/LineAddFriendButton";
 import { LineIcon } from "@/components/ui/LineIcon";
@@ -9,10 +10,10 @@ import { useTheme } from "@/lib/theme";
 import { FinLensLogo } from "./Logo";
 
 const NAV = [
-  { href: "/#features", label: "ฟีเจอร์" },
+  { href: "/funds", label: "กองทุน" },
   { href: "/compare", label: "เทียบต้นทุน" },
+  { href: "/chat", label: "ถาม Lensy" },
   { href: "/#pricing", label: "ราคา" },
-  { href: "/#faq", label: "คำถามที่พบบ่อย" },
 ];
 
 function ThemeToggle() {
@@ -31,6 +32,7 @@ function ThemeToggle() {
 }
 
 export function LandingHeader() {
+  const path = usePathname();
   return (
     <header className="sticky top-0 z-20 bg-surface/95 shadow-[0_1px_0_rgb(var(--line))] backdrop-blur">
       <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-3 px-4 py-2.5 md:px-6">
@@ -39,7 +41,12 @@ export function LandingHeader() {
         </Link>
         <nav aria-label="เมนูหลัก" className="hidden text-base md:flex">
           {NAV.map((n) => (
-            <Link key={n.href} href={n.href} className="inline-flex min-h-[44px] items-center px-3.5 font-medium text-ink-body no-underline hover:text-brand">
+            <Link
+              key={n.href}
+              href={n.href}
+              aria-current={path === n.href || path.startsWith(`${n.href}/`) ? "page" : undefined}
+              className="inline-flex min-h-[44px] items-center px-3.5 font-medium text-ink-body aria-[current=page]:font-bold aria-[current=page]:text-brand no-underline hover:text-brand"
+            >
               {n.label}
             </Link>
           ))}

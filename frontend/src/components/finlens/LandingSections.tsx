@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { LineAddFriendButton } from "@/components/brand/LineAddFriendButton";
 import { NOT_FOUND, SAMPLE_DATA_LABEL } from "@/lib/disclaimer";
 import { pct, SAMPLE_ACTIVE as F, sampleAnnualCost } from "@/lib/sampleFunds";
@@ -29,9 +31,9 @@ export function Hero() {
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <LineAddFriendButton label="เพิ่มเพื่อนน้อง Lensy" />
-            <a href="#how" className="inline-flex min-h-[52px] items-center rounded-full border-2 border-brand px-6 font-bold text-brand no-underline hover:bg-brand-soft">
-              ดูวิธีใช้
-            </a>
+            <Link href="/funds" className="inline-flex min-h-[52px] items-center rounded-full border-2 border-brand px-6 font-bold text-brand no-underline hover:bg-brand-soft">
+              ลองใช้บนเว็บ
+            </Link>
           </div>
           <Disclaimer />
         </div>
