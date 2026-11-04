@@ -10,6 +10,7 @@ import { LensyFace } from "./Lensy";
 
 const NAV = [
   { href: "#features", label: "ฟีเจอร์" },
+  { href: "#how", label: "วิธีใช้" },
   { href: "#pricing", label: "ราคา" },
   { href: "#faq", label: "คำถามที่พบบ่อย" },
 ];

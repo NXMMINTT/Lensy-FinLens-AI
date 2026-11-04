@@ -113,3 +113,17 @@ summary:focus-visible {
     scroll-behavior: auto !important;
   }
 }
+
+/* FinLens: dotted "paper" background and marker-pen highlight */
+.bg-dots {
+  background-image: radial-gradient(rgb(var(--line)) 1.2px, transparent 1.2px);
+  background-size: 20px 20px;
+}
+.marker {
+  background: linear-gradient(transparent 55%, rgba(255, 200, 61, 0.6) 55%);
+  border-radius: 2px;
+}
+.marker-green {
+  background: linear-gradient(transparent 55%, rgba(84, 209, 16, 0.35) 55%);
+  border-radius: 2px;
+}
