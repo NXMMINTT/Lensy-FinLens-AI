@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Theme colors as "R G B" so Tailwind can add opacity (see `themed` in tailwind.config.ts).
+   .force-light keeps a block in light colors even in dark mode (e.g. the phone mockups on the landing page). */
+:root,
+html.dark .force-light {
+  --page: 255 255 255;
+  --page-fg: 22 44 33;
+  --surface: 255 255 255;
+  --brand-fg: 26 118 55;
+  --brand-soft: 236 250 210;
+  --brand-tint: 248 253 240;
+  --sky: 238 247 244;
+  --sky-deep: 201 230 223;
+  --sky-line: 170 214 203;
+  --ink: 22 44 33;
+  --ink-body: 60 84 70;
+  --ink-muted: 80 104 90;
+  --ink-faint: 130 150 138;
+  --line: 226 240 231;
+  --line-subtle: 241 247 243;
+  --sun-soft: 255 244 209;
+  --sun-ink: 122 82 0;
+  --income: 18 128 79;
+  --expense: 180 35 24;
+  --success-soft: 230 247 238;
+  --success-line: 200 230 201;
+  --success-ink: 15 107 66;
+  --danger-soft: 254 242 242;
+  --danger-line: 254 202 202;
+  --danger-ink: 153 27 27;
+}
+
+html.dark {
+  color-scheme: dark;
+  --page: 15 23 19;
+  --page-fg: 230 240 234;
+  --surface: 26 38 32;
+  --brand-fg: 120 220 70;
+  --brand-soft: 20 60 38;
+  --brand-tint: 15 23 19;
+  --sky: 21 32 26;
+  --sky-deep: 20 60 38;
+  --sky-line: 45 66 55;
+  --ink: 230 240 234;
+  --ink-body: 205 220 211;
+  --ink-muted: 150 172 160;
+  --ink-faint: 110 130 119;
+  --line: 45 66 55;
+  --line-subtle: 45 66 55;
+  --sun-soft: 66 32 6;
+  --sun-ink: 251 191 36;
+  --income: 74 222 128;
+  --expense: 248 113 113;
+  --success-soft: 21 54 45;
+  --success-line: 22 101 52;
+  --success-ink: 134 239 172;
+  --danger-soft: 63 25 33;
+  --danger-line: 127 29 29;
+  --danger-ink: 252 165 165;
+}
+
+.force-light {
+  color-scheme: light;
+  color: rgb(var(--page-fg));
+}
+
+body {
+  background-color: rgb(var(--page));
+  color: rgb(var(--page-fg));
+  transition: background-color 0.2s, color 0.2s;
+}
+
+html.dark [class*="shadow-[0_2px"] { box-shadow: 0 2px 14px rgba(0,0,0,0.3) !important; }
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+summary:focus-visible {
+  outline: 3px solid #A3E36B;
+  outline-offset: 2px;
+}
+
+/* U-Bot blinks now and then */
+@keyframes ubot-blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
+}
+.animate-loading-progress {
+  animation: loading-progress 1.8s ease-in-out infinite;
+  transform-origin: left center;
+}
+@keyframes loading-progress {
+  0%, 100% { transform: translateX(-8%) scaleX(.82); opacity: .78; }
+  50% { transform: translateX(24%) scaleX(1); opacity: 1; }
+}
+.ubot-eyes {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ubot-blink 4.5s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

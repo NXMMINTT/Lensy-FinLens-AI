@@ -1,0 +1,702 @@
+{
+  "tabs": {
+    "myBusiness": "我的生意",
+    "marketRadar": "市场雷达",
+    "home": "首页"
+  },
+  "myBusiness": {
+    "monthToDate": "本月概览",
+    "income": "收入",
+    "expense": "支出",
+    "netProfit": "净利润",
+    "trendTitle": "近 30 天收支",
+    "loading": "正在加载数据...",
+    "seeAll": "查看全部",
+    "greeting": "你好 {name}",
+    "profitMargin": "利润率 {percent}%",
+    "quickLinks": "店铺菜单"
+  },
+  "taxMeter": {
+    "title": "税务仪表 — 税务风险",
+    "subtitle": "{year} 年累计销售额",
+    "green": "安全，距离增值税登记门槛还很远",
+    "yellow": "已接近增值税门槛，请提前准备文件并规划税务",
+    "red": "已接近或达到增值税门槛，须在收入超过 180 万泰铢之日起 30 天内完成登记",
+    "ofThreshold": "占增值税登记门槛 {threshold} 的 {percent}%"
+  },
+  "topProducts": {
+    "title": "热销商品前 3 名（本月）",
+    "empty": "本月暂无指定商品的销售记录",
+    "sold": "已售",
+    "stock": "库存"
+  },
+  "stock": {
+    "title": "商品库存",
+    "empty": "暂无商品 — 在 LINE 告诉 U-Fox，例如“买辣椒酱 20 罐 1,200 泰铢”",
+    "outOfStock": "缺货",
+    "low": "库存不足",
+    "unitCost": "单位成本"
+  },
+  "transactions": {
+    "title": "记录列表",
+    "empty": "暂无记录 — 试着在 LINE 上向 U-Fox 发送文字、转账截图或语音吧",
+    "status": {
+      "pending": "待确认",
+      "confirmed": "已确认",
+      "cancelled": "已取消"
+    },
+    "source": {
+      "text": "文字",
+      "voice": "语音",
+      "image": "截图",
+      "web": "网页"
+    },
+    "actions": {
+      "edit": "编辑",
+      "confirm": "确认",
+      "cancel": "取消",
+      "save": "保存修改",
+      "close": "关闭"
+    },
+    "form": {
+      "title": "编辑记录",
+      "type": "类型",
+      "income": "收入",
+      "expense": "支出",
+      "amount": "金额（泰铢）",
+      "description": "详情",
+      "date": "日期",
+      "product": "商品（如有）",
+      "quantity": "数量",
+      "pendingOnly": "仅可编辑待确认的记录",
+      "saved": "修改已保存，点击确认后将计入总额"
+    }
+  },
+  "marketRadar": {
+    "title": "市场雷达",
+    "subtitle": "分析竞品价格、跨平台趋势和欧洲市场机会",
+    "sampleNotice": "此标签页中的市场数据为演示用模拟数据（mock-data），国外价格按大致汇率换算为泰铢",
+    "nav": {
+      "overview": "市场概览",
+      "trends": "市场趋势",
+      "compare": "竞品比价",
+      "chat": "AI 助手",
+      "platforms": "平台",
+      "plans": "套餐"
+    },
+    "locked": {
+      "title": "市场雷达仅限 Premium 会员",
+      "body": "免费试用 7 天，查看跨平台竞品价格、趋势、关键词和欧洲市场机会",
+      "cta": "查看套餐"
+    },
+    "overview": {
+      "foundIn": "出现在 {platforms} 个平台 · {sellers} 家店铺",
+      "myCost": "你的成本",
+      "myPrice": "你的售价",
+      "median": "市场中位价（泰国）",
+      "position": "你的价格与市场对比",
+      "above": "高于中位价 {pct}%",
+      "below": "低于中位价 {pct}%",
+      "insightsTitle": "U-Fox 建议",
+      "radarTitle": "竞品价格雷达",
+      "radarHint": "每个点代表一家竞品店铺 · 蓝色区间 = 泰国市场中间 50% 的价格范围",
+      "thaiMarket": "泰国市场",
+      "abroad": "国外（≈泰铢）",
+      "trendTitle": "跨平台每周销量",
+      "unitsSold": "件",
+      "keywordsTitle": "热门关键词",
+      "searches": "次/月",
+      "trend": {
+        "up": "上升中",
+        "down": "放缓",
+        "stable": "持平"
+      },
+      "euTitle": "欧洲市场套利",
+      "euThai": "泰国平均价格",
+      "euRetail": "欧洲零售价",
+      "euWholesale": "建议批发价",
+      "euDemand": "需求",
+      "sponsoredTitle": "合作伙伴推荐原料",
+      "sponsored": "赞助",
+      "moq": "最低起订 {moq} {unit}",
+      "visit": "查看商品",
+      "platformsTitle": "追踪的平台",
+      "platformsCount": "覆盖全球 {count} 个平台",
+      "askUFox": "就此询问 U-Fox",
+      "byGemini": "由 Gemini 生成",
+      "byRules": "备用建议",
+      "thinking": "U-Fox 正在分析…",
+      "suggestedPrice": "建议价格（动态定价）",
+      "vsYours": "你当前的价格 ฿{price}",
+      "reanalyze": "重新分析"
+    },
+    "compare": {
+      "title": "竞品比价",
+      "cheapest": "最便宜（有货）",
+      "priciest": "最贵（有货）",
+      "spread": "价差",
+      "sortCheapest": "价格最低",
+      "sortPriciest": "价格最高",
+      "sortPlatform": "平台",
+      "thaiOnly": "仅泰国市场",
+      "all": "所有市场",
+      "colPlatform": "平台 / 店铺",
+      "colOriginal": "标价",
+      "colTHB": "价格（泰铢）",
+      "colVsMine": "竞品与你的价格对比",
+      "colStock": "状态",
+      "estimate": "≈ 约",
+      "calcTitle": "计算单件利润",
+      "cost": "成本（泰铢）",
+      "sellPrice": "拟售价（泰铢）",
+      "fee": "平台手续费（%）",
+      "feeBaht": "手续费",
+      "profit": "单件利润",
+      "margin": "利润率 {pct}%",
+      "vsMarket": "比 {total} 家有货的泰国竞品中的 {count} 家更便宜"
+    },
+    "chat": {
+      "title": "AI 助手 — U-Fox",
+      "subtitle": "可询问价格、竞品、利润、税务或值得销售的商品",
+      "empty": "今天想让我帮你做什么？",
+      "placeholder": "输入问题",
+      "send": "发送",
+      "thinking": "U-Fox 正在思考…",
+      "disclaimer": "U-Fox 基于模拟市场数据提供初步信息，税务数字在正式申报前应请会计师核对",
+      "contextTitle": "U-Fox 用于回答的数据",
+      "suggestions": [
+        "辣椒酱需要调价吗",
+        "哪些竞品卖得比我们便宜",
+        "应该主攻哪个平台",
+        "适合出口到欧洲吗"
+      ],
+      "listen": "收听 U-Fox 语音",
+      "stop": "停止",
+      "voiceLoading": "正在生成语音…"
+    },
+    "plans": {
+      "title": "免费开始，准备好增长时再升级",
+      "perMonth": "每月",
+      "forever": "永久",
+      "trial": "免费试用 {days} 天",
+      "current": "当前套餐",
+      "status": "状态",
+      "nextBilling": "下次扣费日期",
+      "payment": "支付方式",
+      "recommended": "推荐给想要成长的店铺",
+      "choose": "选择此套餐",
+      "using": "使用中",
+      "statusLabel": {
+        "free": "免费",
+        "trialing": "试用中",
+        "active": "使用中",
+        "past_due": "逾期未付",
+        "canceled": "已取消",
+        "expired": "已过期"
+      },
+      "features": {
+        "my_business": "通过 LINE 自动记账 + 税务仪表",
+        "market_radar": "完整市场雷达标签页",
+        "competitor_prices": "全平台竞品价格，对比真实成本",
+        "market_trend": "跨平台销量趋势",
+        "keyword_volume": "顾客常用热门搜索词",
+        "eu_arbitrage": "欧洲市场出口机会",
+        "ubot_insights": "U-Fox 售价建议"
+      }
+    },
+    "trends": {
+      "title": "市场趋势",
+      "searchPlaceholder": "搜索商品或类别",
+      "clear": "清除搜索",
+      "noResults": "未找到与该词匹配的商品或类别，请尝试更短的词，或从下方类别中选择",
+      "categorySub": "类别 · {count} 件商品",
+      "statusLegend": "商品状态：热门 搜索量增长 80% 以上 · 上升中 增长 30–79% · 持平 增长 0–29% · 放缓 搜索量下降",
+      "forecastTitle": "预计 7–14 天内成为热点",
+      "forecastHint": "基于搜索量、关键词和互动数据分析",
+      "hotRank": "热门 #{rank}",
+      "growthSearch": "{growth} 搜索量",
+      "peakIn": "预计 {days} 天后达到峰值",
+      "categoriesTitle": "类别",
+      "allCategories": "市场趋势",
+      "back": "返回",
+      "tabHot": "当前热销",
+      "tabRising": "即将走红",
+      "allPlatforms": "所有平台",
+      "soldPerMonth": "每月约售出 {sold} 件",
+      "priceRange": "{count} 个平台的价格区间",
+      "priceOn": "{platform} 上的价格",
+      "notSold": "无销售",
+      "status": {
+        "hot": "热门",
+        "rising": "上升中",
+        "stable": "持平",
+        "slowing": "放缓"
+      },
+      "legendCount": "（{count}）",
+      "forecastNow": "预计 7–14 天内成为热点",
+      "forecastSub": "基于搜索量、关键词和互动数据分析",
+      "forecastPanelTitle": "商品趋势概览",
+      "forecastPanelSub": "预计未来 7–14 天仍有显著增长趋势",
+      "forecastPanelHint": "尤其是家居用品 / 家居装饰 和 电器设备 类",
+      "rankBadge": "第 {rank} 名",
+      "hotInTrend": "7–14 天搜索趋势走高",
+      "growthShort": "{growth} 搜索量",
+      "keywords": "亮点：{keywords}",
+      "tipsTitle": "建议",
+      "tip1Title": "关注排名 1–3 的商品",
+      "tip1Body": "在 7–14 天内有明显的社会热度",
+      "tip2Title": "准备库存",
+      "tip2Body": "尤其是趋势将达到峰值的品类",
+      "tip3Title": "做好店铺营销",
+      "tip3Body": "让图片和促销与主要搜索词保持一致",
+      "statusCount": "{count}",
+      "heroPriceTitle": "商品中位价区间",
+      "heroPriceDays": "未来 7 – 14 天",
+      "heroPriceNote": "（基于最新数据）",
+      "statBestSeller": "符合热销趋势的商品",
+      "statHotChance": "最有可能成为热点的商品",
+      "statRangeLabel": "预计成交的中位价区间",
+      "shopsInfo": "{all} 项中的 {shops} 项",
+      "growthCaption": "搜索量",
+      "forecastBadge2": "价格预测",
+      "chartNow": "当前趋势",
+      "chartForecast": "预测区间（7-14 天）",
+      "miniStart": "起始价格",
+      "miniRange": "预计成交的中位价",
+      "miniTrend": "趋势",
+      "summaryTotal": "分析全部",
+      "productsUnit": "商品"
+    },
+    "product": {
+      "foundIn": "出现在 {platforms} 个平台 · {shops} 家店铺",
+      "summary": "搜索量在 8 周内变化 {growth} · 所有平台每月合计约售出 {sold} 件",
+      "bestTotal": "最低总价",
+      "worstTotal": "最高总价",
+      "maxSave": "最多可节省",
+      "compareTitle": "对比所有平台价格",
+      "totalFormula": "总价 = 商品价格 + 运费 − 优惠码",
+      "sortTotal": "总价最低",
+      "sortSold": "销量最高",
+      "sortRating": "评分最高",
+      "colPlatform": "平台 / 店铺",
+      "colMatch": "商品匹配度",
+      "colPrice": "商品价格",
+      "colShip": "运费",
+      "colCode": "优惠码",
+      "colTotal": "总价",
+      "colRating": "评分 · 已售",
+      "colDelivery": "配送",
+      "freeShip": "免运费",
+      "best": "最便宜",
+      "matchPct": "匹配 {pct}%",
+      "intlNote": "eBay 和 Amazon 已大致包含寄往泰国的运费，未含进口关税",
+      "historyTitle": "8 周价格历史",
+      "searchTitle": "搜索量趋势",
+      "actual": "过去 8 周",
+      "forecast": "预测未来 2 周",
+      "peak": "预计峰值",
+      "noPeak": "尚未看到峰值",
+      "peakDays": "约 {days} 天后",
+      "aiTitle": "AI 助手建议",
+      "insightGap": "价差高达 {gap}%，如果以接近 {low} 的价格进货，并以接近 {high} 的价格出售，每件约有 {baht} 的差价（未含手续费和运费）",
+      "insightFlat": "各平台价格相近，很难靠价格竞争，建议通过配送速度、评价或组合套装来竞争",
+      "calcTitle": "转售能赚多少利润",
+      "calcCost": "成本（最低总价）",
+      "askAI": "让 AI 助手继续计算税务",
+      "howTitle": "MarketRadar 如何比较同一件商品的价格",
+      "how": [
+        [
+          "抓取所有平台数据",
+          "汇总各平台的商品列表、价格、运费和优惠码"
+        ],
+        [
+          "匹配同一商品",
+          "比对型号名称、规格和图片，给出“商品匹配度”评分，剔除不同型号的商品"
+        ],
+        [
+          "按选项区分",
+          "只比较相同的颜色、尺寸或容量，因为每个选项的价格不同"
+        ],
+        [
+          "计算真实总价",
+          "加上运费、扣除优惠码、换算货币，然后排序，让你一眼看出哪里最划算"
+        ]
+      ],
+      "notFound": "未找到该商品"
+    },
+    "platforms": {
+      "title": "选择平台",
+      "subtitle": "可选择多个平台，查看哪些商品已经热销，哪些商品有望热销",
+      "picked": "已选择 {count} 个平台",
+      "none": "尚未选择平台",
+      "selectAll": "全选",
+      "go": "查看热销商品和趋势"
+    },
+    "dashboard": {
+      "alertsTitle": "趋势提醒",
+      "alertLine": "搜索量 +{growth}% · {days} 天后达到峰值",
+      "seeAll": "查看全部",
+      "premiumTitle": "竞品价格追踪",
+      "premiumBody": "自动追踪竞品店铺价格，并通过动态定价帮你定出既好卖又有利润的价格",
+      "premiumCta": "免费试用 Premium 7 天",
+      "plan": "当前套餐"
+    }
+  },
+  "home": {
+    "recordIncome": "记录收入",
+    "recordIncomeSub": "轻松\n添加收入",
+    "recordExpense": "记录支出",
+    "recordExpenseSub": "即时\n记录支出",
+    "summaryOverview": "总览",
+    "summaryOverviewSub": "按月查看\n收支情况",
+    "manageProducts": "管理商品",
+    "manageProductsSub": "查看商品列表\n和库存",
+    "viewMarket": "查看市场",
+    "viewMarketSub": "商品/趋势\n来自海外",
+    "knowledge": "知识/新闻",
+    "knowledgeSub": "税务和营销技巧\n为您的店铺",
+    "upgradePlan": "升级套餐",
+    "upgradePlanSub": "更多功能\n助力您的业务",
+    "new": "新",
+    "shopSettings": "店铺设置",
+    "howToUse": "使用方法",
+    "chatWithUFox": "与 U-Fox 聊天"
+  },
+  "summary": {
+    "tabs": {
+      "overview": "总览",
+      "income": "收入",
+      "expense": "支出",
+      "products": "商品"
+    },
+    "months": [
+      "一月",
+      "二月",
+      "三月",
+      "四月",
+      "五月",
+      "六月",
+      "七月",
+      "八月",
+      "九月",
+      "十月",
+      "十一月",
+      "十二月"
+    ],
+    "prevMonth": "上个月",
+    "nextMonth": "下个月",
+    "bestSellers": "本月畅销商品",
+    "viewStock": "查看库存 >",
+    "loading": "加载中…",
+    "noSales": "本月暂无商品销售",
+    "sold": "已售",
+    "remaining": "剩余"
+  },
+  "help": {
+    "title": "FinLens AI 使用方法",
+    "subtitle": "通过 LINE 记账只需5步",
+    "steps": [
+      {
+        "title": "在 LINE 上添加 U-Fox 好友",
+        "body": "点击下方按钮即可开始聊天，无需额外安装应用。"
+      },
+      {
+        "title": "像和朋友聊天一样输入记录",
+        "body": "U-Fox 自动分类收入、支出、商品和数量。",
+        "example": "卖辣酱 20 罐 1780"
+      },
+      {
+        "title": "或发送收据照片/语音",
+        "body": "U-Fox 从照片或语音中读取金额，并发送卡片供您审核。",
+        "example": "买干辣椒 2 袋 900"
+      },
+      {
+        "title": "在卡片中确认",
+        "body": "确认的记录将计入总额并调整库存。如有错误，确认前可点击\"编辑\"。"
+      },
+      {
+        "title": "在网页上查看汇总",
+        "body": "我的店铺显示利润、VAT 仪表盘、畅销商品和待确认记录。"
+      }
+    ],
+    "commandsTitle": "可以问 U-Fox 的指令",
+    "commands": [
+      {
+        "say": "汇总",
+        "does": "今天的销售额、支出和利润"
+      },
+      {
+        "say": "今年快要注册 VAT 了吗？",
+        "does": "年度销售额与 180 万泰铢门槛的对比"
+      }
+    ],
+    "webEntryTitle": "也可以从网页记录",
+    "webEntryBody": "不方便聊天？在这里直接记录收支，记录会立即计入总额。",
+    "recordIncome": "记录收入",
+    "recordExpense": "记录支出",
+    "addFriend": "在 LINE 上添加 U-Fox"
+  },
+  "shopOverview": {
+    "loadError": "加载店铺数据失败",
+    "loading": "正在加载店铺数据…",
+    "zone": {
+      "green": {
+        "label": "绿色区域 · 远离门槛",
+        "note": "还安全~",
+        "say": "销售额距离 VAT 门槛还很远。"
+      },
+      "yellow": {
+        "label": "黄色区域 · 开始规划",
+        "note": "快接近了！",
+        "say": "但销售额已接近 VAT 门槛。"
+      },
+      "red": {
+        "label": "红色区域 · 接近 VAT 注册",
+        "note": "要小心！",
+        "say": "销售额已非常接近 VAT 门槛，请准备注册。"
+      }
+    },
+    "tips": [
+      "别忘了确认待处理的记录哦。",
+      "在 LINE 上发送收据，我来帮您记录。",
+      "保留原材料收据可以抵税哦。",
+      "想了解竞争对手的价格？去 Market Radar 标签看看。"
+    ],
+    "hello": "您好",
+    "profitThisMonth": "本月利润为",
+    "lossThisMonth": "本月亏损为",
+    "vatThreshold": "VAT 门槛的",
+    "from": "共",
+    "inYear": "年",
+    "reachThreshold": "预计达到门槛约",
+    "incomeThisMonth": "本月收入",
+    "expenseThisMonth": "本月支出",
+    "netProfit": "净利润",
+    "bestSellers": "本月畅销",
+    "viewStock": "查看库存",
+    "noSales": "本月暂无商品销售",
+    "sold": "已售",
+    "remaining": "剩余",
+    "competitorCta": "竞争对手卖同类商品多少钱？",
+    "competitorSub": "让 U-Fox 帮您找到最佳售价和利润。",
+    "tryFree": "免费试用7天"
+  },
+  "monthTransaction": {
+    "incomeList": "收入明细",
+    "expenseList": "支出明细",
+    "loadError": "加载数据失败",
+    "loading": "加载中…",
+    "noIncome": "本月暂无收入",
+    "noExpense": "本月暂无支出",
+    "noCategory": "未分类"
+  },
+  "knowledge": {
+    "title": "知识 / 新闻",
+    "subtitle": "税务技巧、营销和店铺实用信息",
+    "all": "全部",
+    "loading": "加载中…",
+    "loadError": "加载数据失败",
+    "readSummary": "阅读摘要",
+    "hideSummary": "隐藏摘要",
+    "listen": "收听",
+    "pause": "暂停",
+    "resume": "继续",
+    "stop": "停止",
+    "generating": "正在生成音频…",
+    "summarizing": "正在摘要…",
+    "summaryError": "摘要失败"
+  },
+  "settings": {
+    "title": "设置",
+    "subtitle": "管理店铺信息和显示设置",
+    "shopInfo": "店铺信息",
+    "shopName": "店铺名称",
+    "businessType": "业务类型",
+    "businessTypePlaceholder": "例如：餐厅、服装店",
+    "tax": "税务",
+    "vatStatus": "VAT 状态",
+    "vatRegistered": "已注册 VAT",
+    "vatNotRegistered": "未注册 VAT",
+    "vatReminder": "接近门槛时通知",
+    "plan": "套餐",
+    "currentPlan": "当前套餐",
+    "trialing": "试用中",
+    "changePlan": "更改套餐",
+    "appearance": "外观",
+    "language": "语言",
+    "theme": "主题",
+    "themeLight": "浅色",
+    "themeDark": "深色",
+    "themeSystem": "跟随系统",
+    "line": "LINE",
+    "lineDesc": "连接 LINE 以使用 U-Fox",
+    "openLineChat": "打开 LINE 聊天",
+    "save": "保存",
+    "saving": "保存中…",
+    "saved": "已保存"
+  },
+  "common": {
+    "loading": "加载中…",
+    "loadError": "加载数据失败"
+  },
+  "nav": {
+    "home": "首页",
+    "myShop": "我的店铺",
+    "marketRadar": "市场雷达"
+  },
+  "backend": {
+    "connected": "后端连接成功",
+    "disconnected": "无法连接后端"
+  },
+  "welcome": {
+    "tag": "MARKET INTELLIGENCE PLATFORM",
+    "title": "市场雷达",
+    "headline": "更聪明地销售，抢先洞察市场",
+    "lead": "提前知道哪些商品即将热销，对比所有平台价格，并通过 LINE 免费记账，一站搞定",
+    "searchPlaceholder": "搜索商品，例如 无线耳机",
+    "search": "搜索",
+    "benefits": [
+      "即时搜索商品",
+      "对比多家店铺价格",
+      "确保价格最优",
+      "节省时间和金钱"
+    ],
+    "strip": [
+      [
+        "5 大主流平台",
+        "汇总 Shopee、Lazada、Thaimart、eBay 和 Amazon 的价格"
+      ],
+      [
+        "价格实时更新",
+        "价格时刻在变，我们始终为你更新"
+      ],
+      [
+        "明智决策",
+        "先比较再决定，一站式全搞定"
+      ]
+    ],
+    "bestPrice": "最优",
+    "note": "轻松查看，价格最优",
+    "qr": "通过 LINE 试用，扫码添加好友 U-Renger",
+    "problemTag": "THE_PROBLEM",
+    "problemTitle": "网络卖家在没有数据的情况下做决策",
+    "problems": [
+      [
+        "蒙着眼睛竞争",
+        "不知道竞争对手的定价，所以很难定出既好卖又有利润的价格"
+      ],
+      [
+        "海外市场难以进入",
+        "泰国商品在欧洲有需求，但中小企业缺乏数据，不知道该卖什么、卖到哪里、卖多少钱"
+      ],
+      [
+        "担心被追溯补税",
+        "收支记录混乱，让人担心税务问题，不敢扩大生意"
+      ]
+    ],
+    "capTag": "CAPABILITIES",
+    "capTitle": "从账本到市场指挥中心",
+    "caps": [
+      [
+        "CORE",
+        "市场趋势",
+        "根据搜索量和互动数据扫描即将爆红的商品，提前 7–14 天提醒",
+        "查看趋势",
+        "/market/trends"
+      ],
+      [
+        "CORE",
+        "跨平台比价",
+        "Shopee、Lazada、Thaimart、Amazon 和 eBay，按扣除运费和优惠码后的真实总价计算",
+        "选择平台",
+        "/market/platforms"
+      ],
+      [
+        "CORE",
+        "AI 助手",
+        "随时询问利润、收支和税务，并附带数据摘要卡片",
+        "与 AI 聊天",
+        "/market/chat"
+      ],
+      [
+        "FREE",
+        "通过 LINE 自动记账",
+        "发送转账截图或语音指令，U-Fox 为你汇总数据并提醒税务，无需安装额外应用",
+        "查看店铺账目",
+        "/"
+      ],
+      [
+        "PREMIUM",
+        "欧洲市场指引",
+        "查看在欧洲热销的泰国商品及其与泰国售价的对比，寻找有利可图的出口机会",
+        "查看机会",
+        "/market"
+      ],
+      [
+        "PARTNER",
+        "从 Thai Mart 订购商品",
+        "搜索热销商品，向供应商下单，并直接发货给买家，全部在同一个 Dashboard 中完成",
+        "查看推荐原料",
+        "/market"
+      ]
+    ],
+    "flowTag": "WORKFLOW",
+    "flowTitle": "只需发张图，账就记好了 · 只需选类别，趋势一目了然",
+    "lineTrack": "通过 LINE 记账",
+    "lineSteps": [
+      [
+        "添加 LINE 好友",
+        "立即开始，无需安装额外应用"
+      ],
+      [
+        "发送转账截图或语音",
+        "U-Fox 识别并为你记录收支"
+      ],
+      [
+        "查看利润和税务",
+        "汇总数据，并在申报截止前提醒你"
+      ]
+    ],
+    "chat": {
+      "bot": "U-Fox LINE 官方账号",
+      "slip": "[转账截图]",
+      "saved": "已记录支出 ฿450.00，本月累计 ฿248,400",
+      "ask": "这个月需要准备多少税款？",
+      "answer": "根据本月销售额约 ฿9,320（估算）"
+    },
+    "webTrack": "在网页上寻找即将热销的商品",
+    "webSteps": [
+      [
+        "选择你销售的平台",
+        "系统会为你抓取该平台的热销商品",
+        "/market/platforms"
+      ],
+      [
+        "查看即将走红的商品",
+        "选择类别，查看热销商品和正在走红的商品",
+        "/market/trends"
+      ],
+      [
+        "比价后询问 AI",
+        "了解在哪里买最便宜，转售能赚多少利润",
+        "/market/compare"
+      ]
+    ],
+    "pricingTag": "PRICING",
+    "pricingTitle": "免费开始，准备好增长时再升级",
+    "freeCta": "通过 LINE 开始",
+    "premiumCta": "免费试用 7 天",
+    "allPlans": "查看所有套餐详情 →",
+    "ctaTitle": "准备好比竞争对手更清楚地看透市场了吗？",
+    "openDashboard": "打开 Dashboard",
+    "footer": "FinLens AI · Future of Finance and Community · U-Hackathon 2026"
+  },
+  "site": {
+    "ledger": "记账",
+    "tax": "税务",
+    "radar": "竞品分析",
+    "pricing": "价格",
+    "faq": "常见问题",
+    "cta": "开始使用"
+  }
+}
