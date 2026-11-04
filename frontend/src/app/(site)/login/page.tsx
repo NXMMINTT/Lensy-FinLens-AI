@@ -14,7 +14,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   if (await verifySession((await cookies()).get(SESSION_COOKIE)?.value)) redirect(next);
 
   return (
-    <div className="bg-dots flex min-h-svh flex-col items-center justify-center gap-6 px-4 py-10 text-ink">
+    <div className="flex min-h-svh bg-gradient-to-b from-brand-tint to-surface flex-col items-center justify-center gap-6 px-4 py-10 text-ink">
       <Link href="/" aria-label="FinLens AI หน้าแรก" className="no-underline">
         <FinLensLogo height={38} />
       </Link>

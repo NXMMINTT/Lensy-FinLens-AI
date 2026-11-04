@@ -10,8 +10,8 @@ html.dark .force-light {
   --page-fg: 22 44 33;
   --surface: 255 255 255;
   --brand-fg: 26 118 55;
-  --brand-soft: 236 250 210;
-  --brand-tint: 248 253 240;
+  --brand-soft: 228 243 233;
+  --brand-tint: 246 250 247;
   --sky: 238 247 244;
   --sky-deep: 201 230 223;
   --sky-line: 170 214 203;
@@ -129,6 +129,6 @@ button:focus:not(:focus-visible) {
   border-radius: 2px;
 }
 .marker-green {
-  background: linear-gradient(transparent 55%, rgba(84, 209, 16, 0.35) 55%);
+  background: linear-gradient(transparent 58%, rgba(26, 118, 55, 0.16) 58%);
   border-radius: 2px;
 }

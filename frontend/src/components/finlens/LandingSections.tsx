@@ -14,7 +14,7 @@ import { FinLensLogo } from "./Logo";
 
 export function Hero() {
   return (
-    <section aria-labelledby="hero-title" className="bg-dots relative">
+    <section aria-labelledby="hero-title" className="relative bg-surface">
       <div className="mx-auto grid max-w-[1200px] items-center gap-x-10 gap-y-12 px-5 pb-16 pt-10 md:px-6 lg:min-h-[min(calc(100svh-66px),780px)] lg:grid-cols-[1.05fr_1fr] lg:py-10">
         <div className="flex min-w-0 flex-col gap-5">
           <span className="self-start rounded-md border border-brand/30 bg-surface px-3 py-1 text-[14px] font-semibold text-brand">
@@ -37,7 +37,8 @@ export function Hero() {
           </div>
           <Disclaimer />
         </div>
-        <div className="flex justify-center px-2 lg:justify-end">
+        <div className="relative flex justify-center px-2 lg:justify-end">
+          <span aria-hidden="true" className="pointer-events-none absolute left-1/2 top-1/2 h-[min(520px,95vw)] w-[min(520px,95vw)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-brand-soft via-brand-tint to-surface lg:left-[55%]" />
           <DocumentLens />
         </div>
       </div>
@@ -48,8 +49,9 @@ export function Hero() {
 /** Says out loud that every figure on the page is made up. */
 export function SampleNotice() {
   return (
-    <div className="border-y border-sun/40 bg-sun-soft px-5 py-3 text-center text-[15px] text-sun-ink">
-      <b>{SAMPLE_DATA_LABEL}:</b> กองทุนและตัวเลขในหน้านี้สร้างขึ้นเพื่อสาธิตการทำงาน ไม่ใช่กองทุนจริง
+    <div className="flex flex-wrap items-center justify-center gap-2 border-y border-line bg-surface px-5 py-3 text-center text-[15px] text-ink-muted">
+      <span className="rounded-full border border-dashed border-sun-ink/50 bg-sun-soft px-2 py-0.5 text-[12px] font-bold text-sun-ink">{SAMPLE_DATA_LABEL}</span>
+      กองทุนและตัวเลขในหน้านี้สร้างขึ้นเพื่อสาธิตการทำงาน ไม่ใช่กองทุนจริง
     </div>
   );
 }
