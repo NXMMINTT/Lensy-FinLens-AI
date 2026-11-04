@@ -6,7 +6,7 @@ import { AppTabBar } from "./AppTabBar";
 export function AppShell({ children, sampleNote }: { children: React.ReactNode; sampleNote: boolean }) {
   return (
     <div className="overflow-x-clip text-ink">
-      <LandingHeader />
+      <LandingHeader signedIn />
       <main className="bg-dots min-h-[70svh] pb-24 md:pb-0">
         <div className="mx-auto flex max-w-[1100px] flex-col gap-6 px-4 py-8 md:px-6 md:py-10">{children}</div>
       </main>

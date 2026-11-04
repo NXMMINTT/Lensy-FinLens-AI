@@ -30,7 +30,26 @@ function ThemeToggle() {
   );
 }
 
-export function LandingHeader() {
+function LogoutButton() {
+  async function logout() {
+    await fetch("/api/auth/logout", { method: "POST" }).catch(() => {});
+    // load the LINE SDK only when needed, so the promo page stays light
+    const { liffLogout } = await import("@/lib/liff");
+    liffLogout();
+    window.location.assign("/");
+  }
+  return (
+    <button
+      type="button"
+      onClick={logout}
+      className="inline-flex min-h-[44px] items-center rounded-full border border-line bg-surface px-3.5 text-[14px] font-semibold text-ink-body hover:border-brand"
+    >
+      ออกจากระบบ
+    </button>
+  );
+}
+
+export function LandingHeader({ signedIn = false }: { signedIn?: boolean } = {}) {
   const path = usePathname();
   return (
     <header className="sticky top-0 z-20 bg-surface/95 shadow-[0_1px_0_rgb(var(--line))] backdrop-blur">
@@ -52,9 +71,10 @@ export function LandingHeader() {
         </nav>
         <div className="flex items-center gap-2">
           <ThemeToggle />
+          {signedIn && <LogoutButton />}
           <Link
             href="/chat"
-            className="inline-flex min-h-[44px] items-center rounded-full bg-brand px-5 font-bold text-white no-underline hover:bg-brand-dark"
+            className={`${signedIn ? "hidden sm:inline-flex" : "inline-flex"} min-h-[44px] items-center rounded-full bg-brand px-5 font-bold text-white no-underline hover:bg-brand-dark`}
           >
             คุยกับ Lensy
           </Link>
