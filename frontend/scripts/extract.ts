@@ -13,7 +13,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { aiConfig, chatJson } from "../src/lib/ai";
-import { buildFund, documentsText, EXTRACTION_SYSTEM, extractionPrompt, type ExtractionDoc } from "../src/lib/extraction";
+import { buildFund, documentsText, EXTRACTION_SYSTEM, extractionPrompt, FIELD_BATCHES, mergeAnswers, type ExtractionDoc } from "../src/lib/extraction";
 import { extractPages } from "../src/lib/pdfText";
 import type { DocSource } from "../src/lib/schema";
 
@@ -58,8 +58,20 @@ async function main() {
   }
   console.log(`กอง ${code}: ส่ง ${docs.length} เอกสารให้ ${model} (${baseURL})`);
 
-  const { data, model: usedModel, usage } = await chatJson(EXTRACTION_SYSTEM, `${documentsText(docs)}\n\n${extractionPrompt()}`);
-  const fund = buildFund({ code, answer: data, docs, model: usedModel, extractedAt: new Date().toISOString() });
+  // Ask in small batches: smaller models keep the value + doc + page + quote format better.
+  const docText = documentsText(docs);
+  const answers: unknown[] = [];
+  let usedModel = model;
+  const usage = { prompt_tokens: 0, completion_tokens: 0 };
+  for (const [i, batch] of FIELD_BATCHES.entries()) {
+    const r = await chatJson(EXTRACTION_SYSTEM, `${docText}\n\n${extractionPrompt(batch)}`);
+    answers.push(r.data);
+    usedModel = r.model;
+    usage.prompt_tokens += r.usage?.prompt_tokens ?? 0;
+    usage.completion_tokens += r.usage?.completion_tokens ?? 0;
+    console.log(`  ชุดที่ ${i + 1}/${FIELD_BATCHES.length} เสร็จ (${batch.length} ค่า)`);
+  }
+  const fund = buildFund({ code, answer: mergeAnswers(answers), docs, model: usedModel, extractedAt: new Date().toISOString() });
 
   const outDir = path.join("data", "extracted");
   fs.mkdirSync(outDir, { recursive: true });
@@ -68,7 +80,7 @@ async function main() {
 
   const found = [fund.fees, fund.risk, fund.redemption].flatMap((g) => Object.values(g)).filter((v) => v.value !== null).length;
   console.log(`\nบันทึกแล้ว: ${out} (สถานะ pending) · ได้ค่าพร้อมเลขหน้า ${found} ค่า (ไม่นับข้อมูลทั่วไปและผลตอบแทน)`);
-  if (usage) console.log(`โทเคน: input ${usage.prompt_tokens.toLocaleString()} · output ${usage.completion_tokens.toLocaleString()}`);
+  console.log(`โทเคน: input ${usage.prompt_tokens.toLocaleString()} · output ${usage.completion_tokens.toLocaleString()}`);
   const notes = fund.meta.notes;
   if (notes.length) {
     console.log(`\nสิ่งที่ต้องตรวจเอง (${notes.length} ข้อ):`);

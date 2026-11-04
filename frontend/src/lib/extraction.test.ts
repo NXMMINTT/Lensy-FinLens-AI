@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { buildFund, documentsText, extractionPrompt, FIELDS, type ExtractionDoc } from "./extraction";
+import { buildFund, documentsText, extractionPrompt, FIELD_BATCHES, FIELDS, mergeAnswers, type ExtractionDoc } from "./extraction";
 import { findQuotePage, quoteHasNumber, skeleton } from "./pdfText";
 
 // Page text as unpdf gives it for Thai PDFs: some tone marks missing, sara am split in two.
@@ -101,6 +101,28 @@ describe("buildFund", () => {
     expect(f.pastReturns).toEqual([
       { period: "1y", fund: { value: 8.4, page: 4, quote: "1 ปี 8.40%", source: "factsheet" }, benchmark: { value: null, page: null, quote: null, source: "factsheet" } },
     ]);
+  });
+});
+
+describe("answer formats", () => {
+  it("accepts the item list from several batches, with doc/page sent as text", () => {
+    const answer = mergeAnswers([
+      { items: [{ key: "fees.ter", value: 1.07, doc: "0", page: "2", quote: "ค่าใช้จ่ายรวมทั้งหมด 1.0700 %" }] },
+      { items: [{ key: "fees.masterFundExpense", value: 0.8, doc: 1, page: 3, quote: "ค่าใช้จ่ายของกองทุนหลัก (Ongoing charges) 0.80%" }] },
+    ]);
+    const f = buildFund({ code: "X", answer, docs, model: "t", extractedAt: "x" });
+    expect(f.fees.ter).toMatchObject({ value: 1.07, page: 2, source: "factsheet" });
+    expect(f.fees.masterFundExpense).toMatchObject({ value: 0.8, page: 3, source: "prospectus" });
+  });
+
+  it("drops bare values that come without doc/page/quote", () => {
+    const f = buildFund({ code: "X", answer: { fields: { "fees.ter": 1.07, "fees.frontEnd": { value: 1.5, doc: 0, page: 2, quote: "ค่าธรรมเนียมการขาย 1.50 %" } } }, docs, model: "t", extractedAt: "x" });
+    expect(f.fees.ter.value).toBeNull();
+    expect(f.fees.frontEnd.value).toBe(1.5);
+  });
+
+  it("splits the fields into batches that cover every field once", () => {
+    expect(FIELD_BATCHES.flat().map((f) => f.key).sort()).toEqual(FIELDS.map((f) => f.key).sort());
   });
 });
 

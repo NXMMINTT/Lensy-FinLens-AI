@@ -85,31 +85,63 @@ export function documentsText(docs: ExtractionDoc[]): string {
 export const EXTRACTION_SYSTEM =
   "คุณช่วยดึงข้อมูลจากเอกสารกองทุนรวมไทยอย่างแม่นยำ ตอบเฉพาะสิ่งที่เอกสารเขียนไว้ ถ้าไม่พบหรือไม่แน่ใจให้ตอบ null ห้ามเดา ห้ามคำนวณเอง ห้ามใช้ความรู้นอกเอกสาร ตอบเป็น JSON เท่านั้น";
 
-/** The instruction sent after the documents. */
-export function extractionPrompt(): string {
+/**
+ * Fields asked per request. Small batches keep smaller models on the format (value + doc + page +
+ * quote for every key); one long list made them drop doc/page/quote halfway through.
+ */
+export const FIELD_BATCHES: FieldDef[][] = [general, fees, [...risk, ...redemption], returns];
+
+/** The instruction sent after the documents, for one batch of fields. */
+export function extractionPrompt(fields: FieldDef[] = FIELDS): string {
   return [
-    "จากเอกสารด้านบน (ข้อความถูกดึงจาก PDF อาจมีวรรณยุกต์หายบ้าง) ให้ตอบเป็น JSON object รูปแบบนี้:",
-    '{"fields": {"<key>": {"value": <ค่า หรือ null>, "doc": <เลขเอกสาร>, "page": <เลขหน้า>, "quote": "<ข้อความสั้น ๆ ที่คัดลอกตรงจากหน้านั้น ซึ่งมีค่านี้อยู่>"}}}',
+    "จากเอกสารด้านบน (ข้อความถูกดึงจาก PDF อาจมีวรรณยุกต์หายบ้าง) ให้ตอบเป็น JSON object รูปแบบนี้เท่านั้น:",
+    '{"items": [{"key": "<key>", "value": <ค่า หรือ null>, "doc": <เลขเอกสาร>, "page": <เลขหน้า>, "quote": "<ข้อความที่คัดลอกตรงจากหน้านั้น>"}]}',
     "",
     "กติกา:",
-    "- ใส่ครบทุก key ด้านล่าง ถ้าไม่พบให้ {\"value\": null, \"doc\": null, \"page\": null, \"quote\": null}",
-    "- doc และ page ต้องตรงกับป้าย === เอกสาร X หน้า Y === ที่ข้อความนั้นอยู่",
+    `- items ต้องมี ${fields.length} รายการ หนึ่งรายการต่อหนึ่ง key ตามลำดับด้านล่าง ทุกรายการต้องมีครบ 5 ช่อง key, value, doc, page, quote`,
+    '- ถ้าไม่พบหรือไม่แน่ใจ ให้ value, doc, page, quote เป็น null ทั้งหมด เช่น {"key": "fees.backEnd", "value": null, "doc": null, "page": null, "quote": null}',
+    "- doc และ page เป็นตัวเลข ต้องตรงกับป้าย === เอกสาร X หน้า Y === ที่ข้อความนั้นอยู่",
     "- quote ต้องคัดลอกจากเอกสารตามตัวอักษร ยาวไม่เกิน 120 ตัวอักษร และต้องมีตัวเลขหรือคำตอบนั้นอยู่ในข้อความ",
     "- ตัวเลข % ให้ตอบเป็นตัวเลขตามที่เขียนในเอกสาร เช่น 1.07 (ไม่ใส่เครื่องหมาย %)",
     '- ค่าธรรมเนียม ถ้าเอกสารแสดงทั้ง "สูงสุดไม่เกิน" และ "เก็บจริง" ให้ใช้ค่าที่เก็บจริง',
+    '- ถ้าเอกสารเขียนว่า "ไม่มี" หรือ "ไม่เรียกเก็บ" สำหรับค่าธรรมเนียม ให้ตอบ 0 พร้อม quote',
     "",
     "keys:",
-    ...FIELDS.map((f) => `${f.key}: ${f.hint}`),
+    ...fields.map((f) => `${f.key}: ${f.hint}`),
   ].join("\n");
 }
 
+const numOrNull = z.preprocess((v) => (typeof v === "string" && v.trim() !== "" && !Number.isNaN(Number(v)) ? Number(v) : v), z.number().int().nullable().optional());
 const AnswerEntry = z.object({
   value: z.unknown().optional(),
-  doc: z.number().int().nullable().optional(),
-  page: z.number().int().nullable().optional(),
+  doc: numOrNull,
+  page: numOrNull,
   quote: z.string().nullable().optional(),
 });
-const AnswerSchema = z.object({ fields: z.record(z.string(), AnswerEntry) });
+const AnswerItem = AnswerEntry.extend({ key: z.string() });
+/** Either {items: [...]} (current) or {fields: {key: entry}} (older prompt), merged across batches. */
+const AnswerSchema = z.union([
+  z.object({ items: z.array(AnswerItem) }).transform((a) => ({ fields: Object.fromEntries(a.items.map(({ key, ...e }) => [key, e])) })),
+  // older shape; entries that are bare values (no doc/page/quote) are dropped, not trusted
+  z.object({ fields: z.record(z.string(), z.unknown()) }).transform((a) => ({
+    fields: Object.fromEntries(
+      Object.entries(a.fields).flatMap(([k, v]) => {
+        const e = AnswerEntry.safeParse(v);
+        return e.success && v !== null && typeof v === "object" ? [[k, e.data]] : [];
+      }),
+    ),
+  })),
+]);
+
+/** Merge the answers of several batches into one answer for buildFund. */
+export function mergeAnswers(answers: unknown[]): unknown {
+  const items: unknown[] = [];
+  for (const a of answers) {
+    const p = AnswerSchema.safeParse(a);
+    if (p.success) for (const [key, e] of Object.entries(p.data.fields)) items.push({ key, ...e });
+  }
+  return { items };
+}
 
 function empty<T>(source: DocSource): Sourced<T> {
   return { value: null, page: null, quote: null, source };
