@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { baht, pct } from "@/lib/sampleFunds";
+import { baht, pct } from "@/lib/money";
 import { DEFAULT_ANNUAL_RETURN, MAX_YEARS, MIN_YEARS, trueCost } from "@/lib/trueCost";
 
 import { Lensy } from "../Lensy";

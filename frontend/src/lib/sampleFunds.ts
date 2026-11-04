@@ -1,44 +1,53 @@
 /**
- * Made-up funds for the landing page demo ("ข้อมูลตัวอย่าง"). Not real funds, not from real documents.
- * Every value carries a page and source like the real data will (project brief `Sourced<T>`),
- * so the demo follows the same "every number has a page" rule. Real data lives in data/verified/.
+ * Sample (made-up) funds for the landing page ("ข้อมูลตัวอย่าง"). The numbers come from
+ * data/verified/SAMPLE-*.json (meta.isSample = true), the same files the fund pages read, so there is
+ * one source. Values here are converted to rates (1.07% -> 0.0107) for the calculator.
  */
+import sampleGlobal from "../../data/verified/SAMPLE-GLOBAL.json";
+import sampleIndex from "../../data/verified/SAMPLE-INDEX.json";
+import { FundSchema, pctToRate, type DocSource, type Fund, type Sourced } from "@/lib/schema";
 import { trueCost } from "@/lib/trueCost";
 
-export type DocSource = "factsheet" | "prospectus";
+export type { DocSource };
 export type SampleSourced<T> = { value: T; page: number; source: DocSource };
 
 export type SampleFund = {
   code: string;
   nameTh: string;
   isFeeder: boolean;
-  /** % per year, as decimals */
+  /** rates (0.0107 = 1.07%) */
   ter: SampleSourced<number>;
   masterFundExpense: SampleSourced<number> | null;
-  /** % per transaction, as decimals */
   frontEnd: SampleSourced<number>;
   backEnd: SampleSourced<number>;
 };
 
-export const SAMPLE_ACTIVE: SampleFund = {
-  code: "SAMPLE-GLOBAL",
-  nameTh: "กองทุนตัวอย่าง หุ้นโลก",
-  isFeeder: true,
-  ter: { value: 0.0107, page: 2, source: "factsheet" },
-  masterFundExpense: { value: 0.008, page: 14, source: "prospectus" },
-  frontEnd: { value: 0.015, page: 2, source: "factsheet" },
-  backEnd: { value: 0, page: 2, source: "factsheet" },
-};
+function need<T>(s: Sourced<T>, what: string): SampleSourced<T> {
+  if (s.value === null || s.page === null) throw new Error(`sample fund is missing ${what}`);
+  return { value: s.value, page: s.page, source: s.source };
+}
 
-export const SAMPLE_INDEX: SampleFund = {
-  code: "SAMPLE-INDEX",
-  nameTh: "กองทุนตัวอย่าง ดัชนีโลก",
-  isFeeder: true,
-  ter: { value: 0.0045, page: 2, source: "factsheet" },
-  masterFundExpense: { value: 0.0007, page: 12, source: "prospectus" },
-  frontEnd: { value: 0, page: 2, source: "factsheet" },
-  backEnd: { value: 0, page: 2, source: "factsheet" },
-};
+function rate(s: Sourced<number>, what: string): SampleSourced<number> {
+  const v = need(s, what);
+  return { ...v, value: pctToRate(v.value) };
+}
+
+function toSample(f: Fund): SampleFund {
+  return {
+    code: f.code,
+    nameTh: need(f.nameTh, "nameTh").value,
+    isFeeder: f.isFeeder.value === true,
+    ter: rate(f.fees.ter, "ter"),
+    masterFundExpense: f.fees.masterFundExpense.value === null ? null : rate(f.fees.masterFundExpense, "masterFundExpense"),
+    frontEnd: rate(f.fees.frontEnd, "frontEnd"),
+    backEnd: rate(f.fees.backEnd, "backEnd"),
+  };
+}
+
+export const SAMPLE_GLOBAL_FUND: Fund = FundSchema.parse(sampleGlobal);
+export const SAMPLE_INDEX_FUND: Fund = FundSchema.parse(sampleIndex);
+export const SAMPLE_ACTIVE: SampleFund = toSample(SAMPLE_GLOBAL_FUND);
+export const SAMPLE_INDEX: SampleFund = toSample(SAMPLE_INDEX_FUND);
 
 /** TER + master fund expense (the sample TERs exclude the master fund's costs). */
 export function sampleAnnualCost(f: SampleFund): number {
@@ -62,23 +71,25 @@ export const SOURCE_LABEL: Record<DocSource, string> = {
   prospectus: "หนังสือชี้ชวน",
 };
 
-export function pct(v: number, digits = 2): string {
-  return `${(v * 100).toFixed(digits)}%`;
-}
-
-export function baht(v: number): string {
-  return `${Math.round(v).toLocaleString("th-TH")} บาท`;
-}
+export { baht, pct } from "@/lib/money";
 
 export type RiskLevelTag = "high" | "medium" | "info";
 export type SampleRisk = { level: RiskLevelTag; topic: string; detail: string; page: number; source: DocSource };
 
-/** Sample risk alerts for SAMPLE-GLOBAL (real ones come from lib/riskRules.ts). */
+/**
+ * Sample risk alerts for the landing page, built from SAMPLE-GLOBAL. The level labels are chosen here
+ * for the demo; real alerts come from lib/riskRules.ts (step 3).
+ */
+const g = SAMPLE_GLOBAL_FUND;
+const fx = need(g.risk.fxHedging, "fxHedging");
+const top10 = need(g.risk.top10Pct, "top10Pct");
+const country = need(g.risk.topCountry, "topCountry");
+const settle = need(g.redemption.settlementDays, "settlementDays");
 export const SAMPLE_RISKS: SampleRisk[] = [
-  { level: "high", topic: "ค่าเงิน", detail: "ป้องกันความเสี่ยงค่าเงินตามดุลยพินิจผู้จัดการกองทุน", page: 1, source: "factsheet" },
-  { level: "medium", topic: "กระจุกตัว", detail: "10 หลักทรัพย์แรกรวมกัน 62%", page: 3, source: "factsheet" },
-  { level: "medium", topic: "ตลาดต่างประเทศ", detail: "ลงทุนในสหรัฐฯ 68%", page: 3, source: "factsheet" },
-  { level: "info", topic: "ขายคืน", detail: "ได้รับเงินภายใน 5 วันทำการ (T+5)", page: 9, source: "prospectus" },
+  { level: "high", topic: "ค่าเงิน", detail: "ป้องกันความเสี่ยงค่าเงินตามดุลยพินิจผู้จัดการกองทุน", page: fx.page, source: fx.source },
+  { level: "medium", topic: "กระจุกตัว", detail: `10 หลักทรัพย์แรกรวมกัน ${top10.value}%`, page: top10.page, source: top10.source },
+  { level: "medium", topic: "ตลาดต่างประเทศ", detail: `ลงทุนใน${country.value.name} ${country.value.pct}%`, page: country.page, source: country.source },
+  { level: "info", topic: "ขายคืน", detail: `ได้รับเงินภายใน ${settle.value} วันทำการ (T+${settle.value})`, page: settle.page, source: settle.source },
 ];
 
 export const RISK_TAG: Record<RiskLevelTag, { label: string; className: string }> = {

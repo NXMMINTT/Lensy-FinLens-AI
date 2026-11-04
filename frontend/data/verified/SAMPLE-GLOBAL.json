@@ -1,0 +1,226 @@
+{
+  "code": "SAMPLE-GLOBAL",
+  "nameTh": {
+    "value": "กองทุนตัวอย่าง หุ้นโลก",
+    "page": 1,
+    "quote": "ชื่อกองทุน: กองทุนตัวอย่าง หุ้นโลก",
+    "source": "factsheet"
+  },
+  "amc": {
+    "value": "บลจ. ตัวอย่าง จำกัด",
+    "page": 1,
+    "quote": "บริษัทจัดการ: บลจ. ตัวอย่าง จำกัด",
+    "source": "factsheet"
+  },
+  "type": {
+    "value": "กองทุนรวมตราสารทุนต่างประเทศ",
+    "page": 1,
+    "quote": "ประเภทกองทุน: กองทุนรวมตราสารทุนต่างประเทศ",
+    "source": "factsheet"
+  },
+  "isFeeder": {
+    "value": true,
+    "page": 1,
+    "quote": "กองทุนรวมฟีดเดอร์ (Feeder Fund)",
+    "source": "factsheet"
+  },
+  "masterFundName": {
+    "value": "Sample Global Equity Fund",
+    "page": 1,
+    "quote": "ลงทุนในหน่วยลงทุนของกองทุนหลัก Sample Global Equity Fund",
+    "source": "factsheet"
+  },
+  "riskLevel": {
+    "value": 6,
+    "page": 1,
+    "quote": "ระดับความเสี่ยง 6 : เสี่ยงสูง",
+    "source": "factsheet"
+  },
+  "asOfDate": {
+    "value": "2026-09-30",
+    "page": 1,
+    "quote": "ข้อมูล ณ วันที่ 30 กันยายน 2569",
+    "source": "factsheet"
+  },
+  "fees": {
+    "frontEnd": {
+      "value": 1.5,
+      "page": 2,
+      "quote": "ค่าธรรมเนียมการขาย เก็บจริง 1.50%",
+      "source": "factsheet"
+    },
+    "backEnd": {
+      "value": 0,
+      "page": 2,
+      "quote": "ค่าธรรมเนียมการรับซื้อคืน ไม่เรียกเก็บ",
+      "source": "factsheet"
+    },
+    "switching": {
+      "value": 1.5,
+      "page": 2,
+      "quote": "ค่าธรรมเนียมการสับเปลี่ยนเข้า เก็บจริง 1.50%",
+      "source": "factsheet"
+    },
+    "management": {
+      "value": 0.8025,
+      "page": 2,
+      "quote": "ค่าธรรมเนียมการจัดการ เก็บจริง 0.8025% ต่อปี",
+      "source": "factsheet"
+    },
+    "ter": {
+      "value": 1.07,
+      "page": 2,
+      "quote": "ค่าใช้จ่ายรวมทั้งหมด เก็บจริง 1.0700% ต่อปี",
+      "source": "factsheet"
+    },
+    "masterFundExpense": {
+      "value": 0.8,
+      "page": 14,
+      "quote": "ค่าใช้จ่ายของกองทุนหลัก (Ongoing charges) 0.80% ต่อปี",
+      "source": "prospectus"
+    },
+    "otherExpenses": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "terIncludesMasterFund": {
+      "value": false,
+      "page": 14,
+      "quote": "ค่าใช้จ่ายข้างต้นยังไม่รวมค่าใช้จ่ายที่เรียกเก็บโดยกองทุนหลัก",
+      "source": "prospectus"
+    }
+  },
+  "risk": {
+    "fxHedging": {
+      "value": "discretionary",
+      "page": 1,
+      "quote": "ป้องกันความเสี่ยงจากอัตราแลกเปลี่ยนตามดุลยพินิจของผู้จัดการกองทุน",
+      "source": "factsheet"
+    },
+    "top5Pct": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "top10Pct": {
+      "value": 62,
+      "page": 3,
+      "quote": "10 อันดับแรก รวม 62% ของ NAV",
+      "source": "factsheet"
+    },
+    "topCountry": {
+      "value": {
+        "name": "สหรัฐอเมริกา",
+        "pct": 68
+      },
+      "page": 3,
+      "quote": "สหรัฐอเมริกา 68%",
+      "source": "factsheet"
+    },
+    "topSector": {
+      "value": {
+        "name": "เทคโนโลยีสารสนเทศ",
+        "pct": 24
+      },
+      "page": 3,
+      "quote": "เทคโนโลยีสารสนเทศ 24%",
+      "source": "factsheet"
+    }
+  },
+  "redemption": {
+    "settlementDays": {
+      "value": 5,
+      "page": 9,
+      "quote": "ระยะเวลาการรับเงินค่าขายคืน T+5",
+      "source": "prospectus"
+    },
+    "frequency": {
+      "value": "ทุกวันทำการ",
+      "page": 1,
+      "quote": "การขายคืนหน่วยลงทุน: ทุกวันทำการ",
+      "source": "factsheet"
+    },
+    "lockUp": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "prospectus"
+    }
+  },
+  "pastReturns": [
+    {
+      "period": "ytd",
+      "fund": {
+        "value": 6.2,
+        "page": 2,
+        "quote": "ผลการดำเนินงานย้อนหลัง ytd: กองทุน 6.2%",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 9.8,
+        "page": 2,
+        "quote": "ผลการดำเนินงานย้อนหลัง ytd: ตัวชี้วัด 9.8%",
+        "source": "factsheet"
+      }
+    },
+    {
+      "period": "1y",
+      "fund": {
+        "value": 8.4,
+        "page": 2,
+        "quote": "ผลการดำเนินงานย้อนหลัง 1y: กองทุน 8.4%",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 12.1,
+        "page": 2,
+        "quote": "ผลการดำเนินงานย้อนหลัง 1y: ตัวชี้วัด 12.1%",
+        "source": "factsheet"
+      }
+    },
+    {
+      "period": "3y",
+      "fund": {
+        "value": 4.1,
+        "page": 2,
+        "quote": "ผลการดำเนินงานย้อนหลัง 3y: กองทุน 4.1%",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 7.6,
+        "page": 2,
+        "quote": "ผลการดำเนินงานย้อนหลัง 3y: ตัวชี้วัด 7.6%",
+        "source": "factsheet"
+      }
+    },
+    {
+      "period": "5y",
+      "fund": {
+        "value": 5.3,
+        "page": 2,
+        "quote": "ผลการดำเนินงานย้อนหลัง 5y: กองทุน 5.3%",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 9,
+        "page": 2,
+        "quote": "ผลการดำเนินงานย้อนหลัง 5y: ตัวชี้วัด 9%",
+        "source": "factsheet"
+      }
+    }
+  ],
+  "meta": {
+    "status": "verified",
+    "isSample": true,
+    "extractedAt": null,
+    "model": null,
+    "sourceFiles": [],
+    "verifiedBy": "ข้อมูลตัวอย่าง (ไม่ได้มาจากเอกสารจริง)",
+    "notes": [
+      "ข้อมูลตัวอย่าง: กองทุนสมมติเพื่อสาธิตระบบ ไม่ใช่กองทุนจริง ข้อความใน quote แต่งขึ้น"
+    ]
+  }
+}
