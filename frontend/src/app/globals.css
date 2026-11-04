@@ -79,12 +79,17 @@ body {
 
 html.dark [class*="shadow-[0_2px"] { box-shadow: 0 2px 14px rgba(0,0,0,0.3) !important; }
 
+/* Keyboard focus only (not on mouse click): brand green ring that follows rounded corners */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 summary:focus-visible {
-  outline: 3px solid #A3E36B;
-  outline-offset: 2px;
+  outline: 2px solid rgb(var(--brand-fg));
+  outline-offset: 3px;
+}
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible) {
+  outline: none;
 }
 
 /* U-Bot blinks now and then */

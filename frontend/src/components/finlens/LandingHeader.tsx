@@ -54,7 +54,7 @@ export function LandingHeader({ signedIn = false }: { signedIn?: boolean } = {})
   return (
     <header className="sticky top-0 z-20 bg-surface/95 shadow-[0_1px_0_rgb(var(--line))] backdrop-blur">
       <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-3 px-4 py-2.5 md:px-6">
-        <Link href="/" className="no-underline" aria-label="FinLens AI หน้าแรก">
+        <Link href="/" className="rounded-xl no-underline" aria-label="FinLens AI หน้าแรก">
           <FinLensLogo height={34} />
         </Link>
         <nav aria-label="เมนูหลัก" className="hidden text-base md:flex">
