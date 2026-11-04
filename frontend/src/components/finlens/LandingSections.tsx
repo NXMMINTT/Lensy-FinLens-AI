@@ -6,6 +6,7 @@ import { AnswerCard } from "./chat";
 import { Disclaimer } from "./Disclaimer";
 import { DocumentLens } from "./home/DocumentLens";
 import { Lensy, LensyFace } from "./Lensy";
+import { FinLensLogo } from "./Logo";
 
 /* ── Hero: the magnifier over the documents ── */
 
@@ -296,12 +297,9 @@ export function LandingFooter() {
     <footer className="border-t border-line bg-surface">
       <div className="mx-auto flex max-w-[1200px] flex-col gap-4 px-5 py-8 text-[15px] md:px-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <LensyFace size={44} />
-            <div>
-              <div className="font-heading text-[22px] font-bold text-brand">FinLens AI</div>
-              <div className="text-ink-muted">เข้าใจกองทุนก่อนตัดสินใจ ทุกคำตอบมีเลขหน้าที่มา</div>
-            </div>
+          <div className="flex flex-col gap-1.5">
+            <FinLensLogo height={38} />
+            <div className="text-ink-muted">เข้าใจกองทุนก่อนตัดสินใจ ทุกคำตอบมีเลขหน้าที่มา</div>
           </div>
           <div className="text-ink-muted">Trinity Hackathon 2026</div>
         </div>
