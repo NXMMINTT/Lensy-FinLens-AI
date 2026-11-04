@@ -10,7 +10,9 @@
     "gen:api": "openapi-typescript ../backend/openapi.json -o src/types/api.gen.ts",
     "test": "vitest run",
     "test:watch": "vitest",
-    "extract": "tsx scripts/extract.ts"
+    "extract": "tsx scripts/extract.ts",
+    "line:validate": "tsx scripts/line-validate.ts",
+    "line:richmenu": "tsx scripts/line-richmenu.ts"
   },
   "dependencies": {
     "@line/bot-sdk": "^11.4.0",
@@ -34,6 +36,7 @@
     "eslint-config-next": "^15.0.0",
     "openapi-typescript": "^7.4.4",
     "postcss": "^8.4.47",
+    "sharp": "^0.35.5",
     "tailwindcss": "^3.4.14",
     "tsx": "^4.23.15",
     "typescript": "^5.6.3",
