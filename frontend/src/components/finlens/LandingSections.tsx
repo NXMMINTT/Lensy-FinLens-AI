@@ -99,7 +99,7 @@ export function HowItWorks() {
     },
   ];
   return (
-    <section id="how" aria-labelledby="how-title" className="scroll-mt-20 bg-brand-tint px-5 py-16 md:px-6">
+    <section id="how" aria-labelledby="how-title" className="scroll-mt-20 bg-surface px-5 py-16 md:px-6">
       <div className="mx-auto flex max-w-[1100px] flex-col gap-8">
         <h2 id="how-title" className="m-0 text-center text-[30px] font-bold md:text-[40px]">
           ใช้ง่าย <span className="marker-green">3 ขั้น</span>
@@ -242,7 +242,7 @@ const FAQ: [string, string][] = [
 
 export function FaqAccordion() {
   return (
-    <section id="faq" aria-labelledby="faq-title" className="scroll-mt-20 bg-brand-tint px-5 py-16 md:px-6">
+    <section id="faq" aria-labelledby="faq-title" className="scroll-mt-20 bg-surface px-5 py-16 md:px-6">
       <div className="mx-auto grid max-w-[1100px] gap-10 lg:grid-cols-[1fr_2fr]">
         <div className="flex flex-col items-start gap-3">
           <h2 id="faq-title" className="m-0 text-[30px] font-bold leading-tight md:text-[40px]">

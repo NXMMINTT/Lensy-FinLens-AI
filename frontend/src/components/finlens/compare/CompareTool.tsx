@@ -307,7 +307,7 @@ export function CompareTool({ funds, initialCodes }: { funds: CompareFund[]; ini
       </section>
 
       {/* assumptions */}
-      <section aria-labelledby="assume-title" className="rounded-[24px] border border-line bg-brand-tint p-5 md:p-6">
+      <section aria-labelledby="assume-title" className="rounded-[24px] border border-line bg-surface p-5 md:p-6">
         <h2 id="assume-title" className="m-0 text-[17px] font-bold">
           สมมติฐานที่ใช้คำนวณ
         </h2>

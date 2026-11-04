@@ -272,7 +272,7 @@ export default async function FundPage({ params }: Props) {
       </Card>
 
       {/* sources */}
-      <Card className="bg-brand-tint">
+      <Card>
         <h2 className="m-0 text-[17px] font-bold">ที่มาของข้อมูล</h2>
         <ul className="m-0 mt-2 flex flex-col gap-1 pl-5 text-[14.5px] text-ink-body">
           {f.meta.isSample && <li>กองนี้เป็นข้อมูลตัวอย่าง สร้างขึ้นเพื่อสาธิตระบบ ไม่ใช่กองทุนจริง</li>}
