@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { LINE_ADD_FRIEND_URL } from "@/components/brand/LineAddFriendButton";
 import { LineIcon } from "@/components/ui/LineIcon";
 import { useTheme } from "@/lib/theme";
 
@@ -53,12 +52,12 @@ export function LandingHeader() {
         </nav>
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <a
-            href={LINE_ADD_FRIEND_URL}
+          <Link
+            href="/chat"
             className="inline-flex min-h-[44px] items-center rounded-full bg-brand px-5 font-bold text-white no-underline hover:bg-brand-dark"
           >
             คุยกับ Lensy
-          </a>
+          </Link>
         </div>
       </div>
     </header>
