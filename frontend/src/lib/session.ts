@@ -72,9 +72,12 @@ export const sessionCookieOptions = {
   maxAge: SESSION_DAYS * 24 * 3600,
 };
 
-/** Demo login is only allowed while LINE Login (LIFF) is not configured. */
+/**
+ * Demo login: always on the dev server (LINE Login only works on the LIFF endpoint URL, not
+ * localhost); on a deployed site only while LINE Login (LIFF) is not configured.
+ */
 export function demoLoginAllowed(): boolean {
-  return !process.env.NEXT_PUBLIC_LIFF_ID?.trim();
+  return process.env.NODE_ENV !== "production" || !process.env.NEXT_PUBLIC_LIFF_ID?.trim();
 }
 
 /** Only same-site paths are allowed as a post-login destination. */

@@ -105,7 +105,7 @@ export function LoginPanel({ next, demoAllowed }: { next: string; demoAllowed: b
           เข้าโหมดทดลอง
         </button>
       )}
-      {demoAllowed && <p className="m-0 -mt-3 text-[12.5px] text-ink-muted">โหมดทดลองจะปิดเองเมื่อตั้งค่า LINE Login แล้ว</p>}
+      {demoAllowed && <p className="m-0 -mt-3 text-[12.5px] text-ink-muted">โหมดทดลองมีเฉพาะตอนพัฒนา หรือก่อนตั้งค่า LINE Login</p>}
 
       {error && (
         <p role="alert" className="m-0 w-full rounded-xl bg-danger-soft px-3 py-2 text-[14px] text-danger-ink">
