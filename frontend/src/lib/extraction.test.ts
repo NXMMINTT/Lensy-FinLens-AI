@@ -1,78 +1,115 @@
 import { describe, expect, it } from "vitest";
 
-import { buildFund, extractionPrompt, FIELDS, parseCitedLines, type CitedSegment } from "./extraction";
+import { buildFund, documentsText, extractionPrompt, FIELDS, type ExtractionDoc } from "./extraction";
+import { findQuotePage, quoteHasNumber, skeleton } from "./pdfText";
 
-const docs = [
-  { file: "docs/pdfs/X/factsheet.pdf", source: "factsheet" as const },
-  { file: "docs/pdfs/X/prospectus.pdf", source: "prospectus" as const },
+// Page text as unpdf gives it for Thai PDFs: some tone marks missing, sara am split in two.
+const docs: ExtractionDoc[] = [
+  {
+    file: "docs/pdfs/X/factsheet.pdf",
+    source: "factsheet",
+    pages: ["กองทุนรวมฟดเดอร (Feeder Fund)\nบริษัทจัดการ จํากัด", "คาใชจายรวมทั้งหมด 1.0700 %\nคาธรรมเนียมการขาย 1.50 %", ""],
+  },
+  {
+    file: "docs/pdfs/X/prospectus.pdf",
+    source: "prospectus",
+    pages: ["สารบัญ", "...", "คาใชจายของกองทุนหลัก (Ongoing charges) 0.80% ตอป"],
+  },
 ];
 
-const cite = (documentIndex: number, startPage: number, quote: string) => ({ documentIndex, startPage, quote });
+const entry = (value: unknown, doc: number | null, page: number | null, quote: string | null) => ({ value, doc, page, quote });
 
-function build(segments: CitedSegment[]) {
-  return buildFund({ code: "X", segments, documents: docs, model: "test", extractedAt: "2026-11-04T00:00:00Z" });
+function build(fields: Record<string, unknown>) {
+  return buildFund({ code: "X", answer: { fields }, docs, model: "test", extractedAt: "2026-11-04T00:00:00Z" });
 }
 
-describe("parseCitedLines", () => {
-  it("attaches citations from the block that holds the value, even when the key is in another block", () => {
-    const lines = parseCitedLines([
-      { text: "fees.ter: ", citations: [] },
-      { text: "1.07", citations: [cite(0, 2, "ค่าใช้จ่ายรวม 1.07%")] },
-      { text: "\nfees.backEnd: null\n", citations: [] },
-    ]);
-    expect(lines).toEqual([
-      { key: "fees.ter", raw: "1.07", citations: [cite(0, 2, "ค่าใช้จ่ายรวม 1.07%")] },
-      { key: "fees.backEnd", raw: "null", citations: [] },
-    ]);
+describe("skeleton matching for Thai PDF text", () => {
+  it("ignores tone marks, upper/lower vowels, sara am forms and spaces", () => {
+    expect(skeleton("ค่าใช้จ่ายรวมทั้งหมด 1.07 %")).toBe(skeleton("คาใชจายรวมทั้งหมด1.07%"));
+    expect(skeleton("บริษัทจัดการ จำกัด")).toBe(skeleton("บริษัทจัดการ จํากัด"));
   });
 
-  it("ignores lines that are not key: value", () => {
-    expect(parseCitedLines([{ text: "Here you go\n\nnameTh: \"ก\"\n", citations: [] }])).toHaveLength(1);
+  it("finds the page that holds the quote, preferring the stated page", () => {
+    expect(findQuotePage(docs[1].pages, "ค่าใช้จ่ายของกองทุนหลัก (Ongoing charges) 0.80%", 3)).toBe(3);
+    expect(findQuotePage(docs[1].pages, "ค่าใช้จ่ายของกองทุนหลัก", 1)).toBe(3);
+    expect(findQuotePage(docs[1].pages, "ไม่มีข้อความนี้")).toBeNull();
+  });
+
+  it("checks numbers inside a quote", () => {
+    expect(quoteHasNumber("ค่าใช้จ่ายรวม 1.0700 %", 1.07)).toBe(true);
+    expect(quoteHasNumber("1,000 บาท", 1000)).toBe(true);
+    expect(quoteHasNumber("ค่าใช้จ่ายรวม 1.17 %", 1.07)).toBe(false);
   });
 });
 
 describe("buildFund", () => {
-  it("takes page, quote and source from the citation, not from the model's text", () => {
-    const f = build([
-      { text: "fees.masterFundExpense: ", citations: [] },
-      { text: "0.8", citations: [cite(1, 14, "ค่าใช้จ่ายของกองทุนหลัก 0.80% ต่อปี")] },
-      { text: "\n", citations: [] },
-    ]);
-    expect(f.fees.masterFundExpense).toEqual({ value: 0.8, page: 14, quote: "ค่าใช้จ่ายของกองทุนหลัก 0.80% ต่อปี", source: "prospectus" });
+  it("keeps a value whose quote is on the stated page, with the document's source", () => {
+    const f = build({ "fees.masterFundExpense": entry(0.8, 1, 3, "ค่าใช้จ่ายของกองทุนหลัก (Ongoing charges) 0.80% ต่อปี") });
+    expect(f.fees.masterFundExpense).toEqual({
+      value: 0.8,
+      page: 3,
+      quote: "ค่าใช้จ่ายของกองทุนหลัก (Ongoing charges) 0.80% ต่อปี",
+      source: "prospectus",
+    });
     expect(f.meta.status).toBe("pending");
     expect(f.meta.isSample).toBe(false);
   });
 
-  it("drops a value with no citation to null and notes it for review", () => {
-    const f = build([{ text: "fees.ter: 1.07\n", citations: [] }]);
+  it("corrects the page when the quote is on a different one, and notes it", () => {
+    const f = build({ "fees.ter": entry(1.07, 0, 1, "ค่าใช้จ่ายรวมทั้งหมด 1.0700 %") });
+    expect(f.fees.ter.page).toBe(2);
+    expect(f.meta.notes.some((n) => n.startsWith("fees.ter:") && n.includes("หน้า 2"))).toBe(true);
+  });
+
+  it("drops a value whose quote is not in the documents", () => {
+    const f = build({ "fees.ter": entry(1.07, 0, 2, "TER 1.07% ต่อปี (แต่งขึ้น)") });
     expect(f.fees.ter.value).toBeNull();
-    expect(f.meta.notes.some((n) => n.startsWith("fees.ter:") && n.includes("ไม่มีการอ้างอิง"))).toBe(true);
+    expect(f.meta.notes.some((n) => n.startsWith("fees.ter:") && n.includes("หาข้อความอ้างอิงในเอกสารไม่เจอ"))).toBe(true);
+  });
+
+  it("notes a number that is not in its quote", () => {
+    const f = build({ "fees.frontEnd": entry(1.25, 0, 2, "ค่าธรรมเนียมการขาย 1.50 %") });
+    expect(f.fees.frontEnd.value).toBe(1.25);
+    expect(f.meta.notes.some((n) => n.startsWith("fees.frontEnd:") && n.includes("ไม่อยู่ในข้อความอ้างอิง"))).toBe(true);
   });
 
   it("keeps null when the document has no data, and rejects values in the wrong shape", () => {
-    const f = build([
-      { text: "fees.backEnd: null\n", citations: [] },
-      { text: "riskLevel: 9", citations: [cite(0, 1, "ระดับ 9")] },
-      { text: "\n", citations: [] },
-    ]);
+    const f = build({
+      "fees.backEnd": entry(null, null, null, null),
+      riskLevel: entry(9, 0, 1, "Feeder Fund"),
+    });
     expect(f.fees.backEnd.value).toBeNull();
     expect(f.riskLevel.value).toBeNull();
     expect(f.meta.notes.some((n) => n.startsWith("riskLevel:"))).toBe(true);
   });
 
-  it("collects past returns by period", () => {
-    const f = build([
-      { text: "return.1y: ", citations: [] },
-      { text: "8.4", citations: [cite(0, 2, "1 ปี 8.40%")] },
-      { text: "\nbenchmark.1y: null\n", citations: [] },
-    ]);
-    expect(f.pastReturns).toEqual([
-      { period: "1y", fund: { value: 8.4, page: 2, quote: "1 ปี 8.40%", source: "factsheet" }, benchmark: { value: null, page: null, quote: null, source: "factsheet" } },
-    ]);
+  it("sets everything to null when the answer is not in the expected shape", () => {
+    const f = buildFund({ code: "X", answer: { wrong: true }, docs, model: "test", extractedAt: "x" });
+    expect(f.fees.ter.value).toBeNull();
+    expect(f.meta.notes[0]).toContain("ผิดรูปแบบ");
   });
 
-  it("asks the model for every field", () => {
+  it("collects past returns by period", () => {
+    const withReturns: ExtractionDoc[] = [{ ...docs[0], pages: [...docs[0].pages, "ผลการดำเนินงาน 1 ปี 8.40%"] }];
+    const f = buildFund({
+      code: "X",
+      answer: { fields: { "return.1y": entry(8.4, 0, 4, "1 ปี 8.40%"), "benchmark.1y": entry(null, null, null, null) } },
+      docs: withReturns,
+      model: "test",
+      extractedAt: "x",
+    });
+    expect(f.pastReturns).toEqual([
+      { period: "1y", fund: { value: 8.4, page: 4, quote: "1 ปี 8.40%", source: "factsheet" }, benchmark: { value: null, page: null, quote: null, source: "factsheet" } },
+    ]);
+  });
+});
+
+describe("prompt", () => {
+  it("asks the model for every field and labels every page", () => {
     const prompt = extractionPrompt();
     for (const f of FIELDS) expect(prompt).toContain(`${f.key}:`);
+    const text = documentsText(docs);
+    expect(text).toContain("=== เอกสาร 0 หน้า 2 ===");
+    expect(text).toContain("=== เอกสาร 1 หน้า 3 ===");
   });
 });

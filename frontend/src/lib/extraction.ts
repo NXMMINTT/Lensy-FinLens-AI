@@ -1,10 +1,11 @@
 /**
- * Pure helpers for scripts/extract.ts: the fields we ask the model for, and how its cited answer
- * becomes a Fund. Page numbers and quotes come from the API's citations (page_location), never
- * from text the model typed. A value without a citation is dropped to null and noted for review.
+ * Pure helpers for scripts/extract.ts: the fields we ask the model for, and how its answer becomes
+ * a Fund. The model returns value + page + quote; the quote is then searched for in the PDF text, so
+ * a page number is only kept when the quote is really on that page.
  */
 import { z } from "zod";
 
+import { findQuotePage, quoteHasNumber } from "./pdfText";
 import { FX_HEDGING, FundSchema, RETURN_PERIODS, type DocSource, type Fund, type Sourced } from "./schema";
 
 const Pct = z.number().min(0).max(100);
@@ -65,52 +66,50 @@ const returns: FieldDef[] = RETURN_PERIODS.flatMap((p) => [
 
 export const FIELDS: FieldDef[] = [...general, ...fees, ...risk, ...redemption, ...returns];
 
-/** The instruction sent after the PDFs. */
+/** A document as sent to the model: its text, page by page (1-based in the prompt). */
+export type ExtractionDoc = { file: string; source: DocSource; pages: string[] };
+
+/** All documents as page-marked text, so the model can say where each value is. */
+export function documentsText(docs: ExtractionDoc[]): string {
+  return docs
+    .map((d, i) =>
+      [
+        `<<<เอกสาร ${i}: ${d.source === "factsheet" ? "Fund Fact Sheet" : "หนังสือชี้ชวน"}>>>`,
+        ...d.pages.map((t, p) => `=== เอกสาร ${i} หน้า ${p + 1} ===\n${t.trim()}`),
+        `<<<จบเอกสาร ${i}>>>`,
+      ].join("\n"),
+    )
+    .join("\n\n");
+}
+
+export const EXTRACTION_SYSTEM =
+  "คุณช่วยดึงข้อมูลจากเอกสารกองทุนรวมไทยอย่างแม่นยำ ตอบเฉพาะสิ่งที่เอกสารเขียนไว้ ถ้าไม่พบหรือไม่แน่ใจให้ตอบ null ห้ามเดา ห้ามคำนวณเอง ห้ามใช้ความรู้นอกเอกสาร ตอบเป็น JSON เท่านั้น";
+
+/** The instruction sent after the documents. */
 export function extractionPrompt(): string {
   return [
-    "อ่านเอกสารกองทุนที่แนบมา แล้วตอบทีละบรรทัดตามรูปแบบนี้เท่านั้น:",
-    "<key>: <ค่าแบบ JSON>",
+    "จากเอกสารด้านบน (ข้อความถูกดึงจาก PDF อาจมีวรรณยุกต์หายบ้าง) ให้ตอบเป็น JSON object รูปแบบนี้:",
+    '{"fields": {"<key>": {"value": <ค่า หรือ null>, "doc": <เลขเอกสาร>, "page": <เลขหน้า>, "quote": "<ข้อความสั้น ๆ ที่คัดลอกตรงจากหน้านั้น ซึ่งมีค่านี้อยู่>"}}}',
     "",
     "กติกา:",
-    "- หนึ่งบรรทัดต่อหนึ่ง key ครบทุก key ตามลำดับด้านล่าง ไม่มีข้อความอื่น ไม่ใช้ markdown",
-    "- ทุกค่าที่ตอบต้องอ้างอิง (cite) ข้อความในเอกสารที่เป็นที่มาของค่านั้น",
-    "- ถ้าเอกสารไม่มีข้อมูล หรือไม่แน่ใจ ให้ตอบ null ห้ามเดา ห้ามคำนวณเอง ห้ามใช้ความรู้นอกเอกสาร",
+    "- ใส่ครบทุก key ด้านล่าง ถ้าไม่พบให้ {\"value\": null, \"doc\": null, \"page\": null, \"quote\": null}",
+    "- doc และ page ต้องตรงกับป้าย === เอกสาร X หน้า Y === ที่ข้อความนั้นอยู่",
+    "- quote ต้องคัดลอกจากเอกสารตามตัวอักษร ยาวไม่เกิน 120 ตัวอักษร และต้องมีตัวเลขหรือคำตอบนั้นอยู่ในข้อความ",
     "- ตัวเลข % ให้ตอบเป็นตัวเลขตามที่เขียนในเอกสาร เช่น 1.07 (ไม่ใส่เครื่องหมาย %)",
-    "- ค่าธรรมเนียม ถ้าเอกสารแสดงทั้ง \"สูงสุดไม่เกิน\" และ \"เก็บจริง\" ให้ใช้ค่าที่เก็บจริง",
+    '- ค่าธรรมเนียม ถ้าเอกสารแสดงทั้ง "สูงสุดไม่เกิน" และ "เก็บจริง" ให้ใช้ค่าที่เก็บจริง',
     "",
     "keys:",
     ...FIELDS.map((f) => `${f.key}: ${f.hint}`),
   ].join("\n");
 }
 
-/** A text block of the response with its PDF citations (simplified from the SDK types). */
-export type CitedSegment = {
-  text: string;
-  citations: { documentIndex: number; startPage: number; quote: string }[];
-};
-
-type ParsedLine = { key: string; raw: string; citations: CitedSegment["citations"] };
-
-/** Split the cited answer into `key: value` lines, each with the citations that overlap it. */
-export function parseCitedLines(segments: CitedSegment[]): ParsedLine[] {
-  let text = "";
-  const spans: { start: number; end: number; citations: CitedSegment["citations"] }[] = [];
-  for (const s of segments) {
-    spans.push({ start: text.length, end: text.length + s.text.length, citations: s.citations });
-    text += s.text;
-  }
-  const lines: ParsedLine[] = [];
-  let pos = 0;
-  for (const line of text.split("\n")) {
-    const start = pos, end = pos + line.length;
-    pos = end + 1;
-    const m = /^\s*([A-Za-z0-9_.]+)\s*:\s*(.+?)\s*$/.exec(line);
-    if (!m) continue;
-    const citations = spans.filter((s) => s.citations.length && s.start < end && s.end > start).flatMap((s) => s.citations);
-    lines.push({ key: m[1], raw: m[2], citations });
-  }
-  return lines;
-}
+const AnswerEntry = z.object({
+  value: z.unknown().optional(),
+  doc: z.number().int().nullable().optional(),
+  page: z.number().int().nullable().optional(),
+  quote: z.string().nullable().optional(),
+});
+const AnswerSchema = z.object({ fields: z.record(z.string(), AnswerEntry) });
 
 function empty<T>(source: DocSource): Sourced<T> {
   return { value: null, page: null, quote: null, source };
@@ -123,55 +122,61 @@ function setPath(obj: Record<string, unknown>, key: string, v: unknown) {
   cur[parts.at(-1)!] = v;
 }
 
+/** Locate the quote: stated doc/page first, then any page of any document. */
+function locate(docs: ExtractionDoc[], quote: string, doc: number | null | undefined, page: number | null | undefined) {
+  const order = [...(doc != null && docs[doc] ? [doc] : []), ...docs.map((_, i) => i).filter((i) => i !== doc)];
+  for (const i of order) {
+    const p = findQuotePage(docs[i].pages, quote, i === doc ? page : null);
+    if (p !== null) return { doc: i, page: p };
+  }
+  return null;
+}
+
 export type ExtractionInput = {
   code: string;
-  segments: CitedSegment[];
-  /** Index = document_index in the request. */
-  documents: { file: string; source: DocSource }[];
+  /** The model's parsed JSON answer. */
+  answer: unknown;
+  docs: ExtractionDoc[];
   model: string;
   extractedAt: string;
 };
 
-/** Build a pending Fund from the cited answer. Returns the fund (validated) and review notes. */
-export function buildFund({ code, segments, documents, model, extractedAt }: ExtractionInput): Fund {
+/**
+ * Build a pending Fund from the model's answer. Every value is checked against the PDF text:
+ * the quote must really be in the document (its page is corrected if the model named the wrong
+ * one), otherwise the value is dropped to null. Everything a reviewer should look at goes to
+ * meta.notes.
+ */
+export function buildFund({ code, answer, docs, model, extractedAt }: ExtractionInput): Fund {
   const notes: string[] = [];
-  const byKey = new Map(parseCitedLines(segments).map((l) => [l.key, l]));
+  const parsedAnswer = AnswerSchema.safeParse(answer);
+  if (!parsedAnswer.success) notes.push("คำตอบของ AI ผิดรูปแบบ ทุกค่าตั้งเป็น null");
+  const entries = parsedAnswer.success ? parsedAnswer.data.fields : {};
 
-  const fund: Record<string, unknown> = {
-    code,
-    fees: {},
-    risk: {},
-    redemption: {},
-    pastReturns: [],
-  };
+  const fund: Record<string, unknown> = { code, fees: {}, risk: {}, redemption: {}, pastReturns: [] };
   const values = new Map<string, Sourced<unknown>>();
 
   for (const f of FIELDS) {
-    const line = byKey.get(f.key);
+    const e = entries[f.key];
     let result: Sourced<unknown> = empty(f.defaultSource);
-    if (!line) {
+    if (!e) {
       notes.push(`${f.key}: ไม่มีในคำตอบ ตั้งเป็น null`);
-    } else if (line.raw !== "null") {
-      let parsed: unknown;
-      try {
-        parsed = JSON.parse(line.raw);
-      } catch {
-        parsed = undefined;
-      }
-      const ok = f.value.safeParse(parsed);
-      const cite = line.citations[0];
+    } else if (e.value !== null && e.value !== undefined) {
+      const ok = f.value.safeParse(e.value);
+      const quote = e.quote?.trim() ?? "";
+      const where = quote ? locate(docs, quote, e.doc, e.page) : null;
       if (!ok.success) {
-        notes.push(`${f.key}: ค่า ${line.raw} ไม่ผ่านรูปแบบ ตั้งเป็น null`);
-      } else if (!cite) {
-        notes.push(`${f.key}: ได้ค่า ${line.raw} แต่ไม่มีการอ้างอิงเลขหน้า ตั้งเป็น null (ตรวจในเอกสารเอง)`);
+        notes.push(`${f.key}: ค่า ${JSON.stringify(e.value)} ไม่ผ่านรูปแบบ ตั้งเป็น null`);
+      } else if (!where) {
+        notes.push(`${f.key}: ได้ค่า ${JSON.stringify(ok.data)} แต่หาข้อความอ้างอิงในเอกสารไม่เจอ ตั้งเป็น null (ตรวจในเอกสารเอง)`);
       } else {
-        const doc = documents[cite.documentIndex];
-        result = {
-          value: ok.data,
-          page: cite.startPage,
-          quote: cite.quote.trim().slice(0, 400) || line.raw,
-          source: doc?.source ?? f.defaultSource,
-        };
+        if (where.doc !== e.doc || where.page !== e.page) {
+          notes.push(`${f.key}: AI บอกเอกสาร ${e.doc} หน้า ${e.page} แต่เจอข้อความที่เอกสาร ${where.doc} หน้า ${where.page} ใช้หน้าที่เจอ`);
+        }
+        if (typeof ok.data === "number" && !quoteHasNumber(quote, ok.data)) {
+          notes.push(`${f.key}: ตัวเลข ${ok.data} ไม่อยู่ในข้อความอ้างอิง ตรวจให้แน่ใจ`);
+        }
+        result = { value: ok.data, page: where.page, quote: quote.slice(0, 400), source: docs[where.doc].source };
       }
     }
     values.set(f.key, result);
@@ -191,7 +196,7 @@ export function buildFund({ code, segments, documents, model, extractedAt }: Ext
     isSample: false,
     extractedAt,
     model,
-    sourceFiles: documents,
+    sourceFiles: docs.map(({ file, source }) => ({ file, source })),
     verifiedBy: null,
     notes,
   };
