@@ -102,7 +102,7 @@ export function DocumentLens() {
         </span>
       </div>
 
-      <Lensy pose="magnifier" size={110} className="absolute -left-[4%] -top-[4%] animate-bob max-sm:!h-[80px] max-sm:!w-[80px]" />
+      <Lensy pose="magnifier" size={150} className="absolute -left-[6%] -top-[8%] animate-bob max-sm:!h-[96px] max-sm:!w-[96px]" />
     </figure>
   );
 }
