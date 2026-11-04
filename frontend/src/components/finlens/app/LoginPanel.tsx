@@ -7,6 +7,7 @@ import { DISCLAIMER } from "@/lib/disclaimer";
 import { initLiff, isLiffConfigured } from "@/lib/liff";
 
 import { Lensy } from "../Lensy";
+import { Icon } from "../Icon";
 
 type State = "checking" | "idle" | "working";
 
@@ -117,7 +118,7 @@ export function LoginPanel({ next, demoAllowed }: { next: string; demoAllowed: b
         <li>✓ ไม่ต้องสมัครสมาชิก ไม่มีรหัสผ่าน</li>
         <li>✓ ไม่เก็บชื่อ รูป หรือเบอร์โทร เก็บเฉพาะรหัสที่แปลงแล้วย้อนกลับไม่ได้</li>
       </ul>
-      <p className="m-0 text-[13px] text-ink-muted">ⓘ {DISCLAIMER}</p>
+      <p className="m-0 text-[13px] text-ink-muted"><Icon name="info" className="mr-1" />{DISCLAIMER}</p>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { pct, SAMPLE_ACTIVE as F, sampleAnnualCost } from "@/lib/sampleFunds";
 
 import { AnswerCard } from "./chat";
 import { Disclaimer } from "./Disclaimer";
+import { Icon } from "./Icon";
 import { DocumentLens } from "./home/DocumentLens";
 import { HeroDecor, HeroTextDecor, MascotDecor, TitleDecor } from "./Decor";
 import { Lensy, LensyFace } from "./Lensy";
@@ -20,7 +21,8 @@ export function Hero() {
         <div className="relative flex min-w-0 flex-col gap-5">
           <HeroTextDecor />
           <span className="self-start rounded-md border border-brand/30 bg-surface px-3 py-1 text-[14px] font-semibold text-brand">
-            🔍 ผู้ช่วยอ่านเอกสารกองทุนรวม ใน LINE
+            <Icon name="search" className="mr-1.5" />
+            ผู้ช่วยอ่านเอกสารกองทุนรวม ใน LINE
           </span>
           <h1 id="hero-title" className="m-0 text-[34px] font-bold leading-[1.3] tracking-tight sm:text-[44px] md:text-[52px]">
             ส่องค่าธรรมเนียม
@@ -77,7 +79,8 @@ export function HowItWorks() {
         <span className="flex flex-wrap gap-1.5">
           {["Factsheet หน้า 1–3", "หนังสือชี้ชวน หน้า 9–14"].map((t) => (
             <span key={t} className="rounded-md border border-line bg-brand-tint px-2 py-1 text-[13px]">
-              📄 {t}
+              <Icon name="doc" size={14} className="mr-1 text-brand" />
+              {t}
             </span>
           ))}
         </span>

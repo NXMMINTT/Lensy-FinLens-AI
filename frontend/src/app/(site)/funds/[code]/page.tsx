@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { AppShell } from "@/components/finlens/app/AppShell";
 import { Card, RiskBadge, RiskMeter, SourceChip } from "@/components/finlens/app/ui";
 import { Disclaimer } from "@/components/finlens/Disclaimer";
+import { Icon } from "@/components/finlens/Icon";
 import { Lensy } from "@/components/finlens/Lensy";
 import { SampleBadge } from "@/components/finlens/SampleBadge";
 import { toCompareFund } from "@/lib/compare";
@@ -161,7 +162,7 @@ export default async function FundPage({ params }: Props) {
 
           {master.value !== null && master.source === "prospectus" && (
             <p className="m-0 mt-3 rounded-xl bg-sun-soft px-3 py-2 text-[14px] text-sun-ink">
-              <b>⚠ ค่าใช้จ่ายของกองทุนหลักอยู่ในหนังสือชี้ชวน ไม่อยู่ใน Factsheet</b> ถ้าดูแค่ Factsheet จะเห็นค่าใช้จ่ายไม่ครบ
+              <b><Icon name="warn" className="mr-1" />ค่าใช้จ่ายของกองทุนหลักอยู่ในหนังสือชี้ชวน ไม่อยู่ใน Factsheet</b> ถ้าดูแค่ Factsheet จะเห็นค่าใช้จ่ายไม่ครบ
             </p>
           )}
           {c.masterInclusionUnknown && (

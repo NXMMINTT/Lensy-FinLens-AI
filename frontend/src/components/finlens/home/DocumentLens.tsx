@@ -1,6 +1,7 @@
 import { pct, SAMPLE_ACTIVE as F, sampleAnnualCost, SOURCE_LABEL } from "@/lib/sampleFunds";
 
 import { Lensy } from "../Lensy";
+import { Icon } from "../Icon";
 import { SampleBadge } from "../SampleBadge";
 
 /** Grey placeholder text lines on a document page. */
@@ -90,7 +91,7 @@ export function DocumentLens() {
 
       {/* callout */}
       <div className="absolute right-0 top-[47%] max-w-[35%] rounded-xl bg-[#FFF4D1] px-2.5 py-1.5 text-[11px] font-semibold leading-snug text-[#7A5200] shadow-sm">
-        ⚠ ซ่อนอยู่ในหนังสือชี้ชวน หน้า {master.page} ไม่อยู่ใน Factsheet
+        <Icon name="warn" className="mr-1" />ซ่อนอยู่ในหนังสือชี้ชวน หน้า {master.page} ไม่อยู่ใน Factsheet
       </div>
 
       {/* result */}

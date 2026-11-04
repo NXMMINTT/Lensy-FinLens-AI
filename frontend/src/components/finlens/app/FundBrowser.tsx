@@ -7,6 +7,7 @@ import type { FundSummary } from "@/lib/fundSummary";
 import { pct } from "@/lib/money";
 
 import { SampleBadge } from "../SampleBadge";
+import { Icon } from "../Icon";
 import { RiskBadge, RiskMeter, SourceChip } from "./ui";
 
 /** Search + fund cards. Order is the data order (by code), never a ranking. */
@@ -87,7 +88,7 @@ export function FundBrowser({ funds }: { funds: FundSummary[] }) {
               </div>
 
               {f.hiddenInProspectus && (
-                <p className="m-0 rounded-xl bg-sun-soft px-3 py-2 text-[13.5px] font-semibold text-sun-ink">⚠ มีค่าใช้จ่ายของกองทุนหลักที่อยู่ในหนังสือชี้ชวน ไม่อยู่ใน Factsheet</p>
+                <p className="m-0 rounded-xl bg-sun-soft px-3 py-2 text-[13.5px] font-semibold text-sun-ink"><Icon name="warn" className="mr-1" />มีค่าใช้จ่ายของกองทุนหลักที่อยู่ในหนังสือชี้ชวน ไม่อยู่ใน Factsheet</p>
               )}
 
               <div className="flex flex-wrap items-center gap-2 text-[14px] text-ink-body">

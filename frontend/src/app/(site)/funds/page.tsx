@@ -4,6 +4,7 @@ import Link from "next/link";
 import { AppShell } from "@/components/finlens/app/AppShell";
 import { FundBrowser } from "@/components/finlens/app/FundBrowser";
 import { Disclaimer } from "@/components/finlens/Disclaimer";
+import { Icon } from "@/components/finlens/Icon";
 import { MascotDecor } from "@/components/finlens/Decor";
 import { Lensy } from "@/components/finlens/Lensy";
 import { toFundSummary } from "@/lib/fundSummary";
@@ -29,7 +30,7 @@ export default function FundsPage() {
         <div className="flex max-w-[620px] flex-col gap-2">
           <h1 className="m-0 text-[28px] font-bold leading-tight md:text-[36px]">สวัสดีค่ะ อยากส่องกองไหนดีคะ</h1>
           <p className="m-0 opacity-90">เลือกกองเพื่อดูค่าใช้จ่ายทุกชั้น ความเสี่ยงที่อาจมองข้าม และเงื่อนไขการขายคืน ทุกตัวเลขกดดูข้อความในเอกสารได้</p>
-          <p className="m-0 text-[14px] opacity-80">ⓘ ข้อมูลเพื่อความเข้าใจ ไม่ใช่คำแนะนำการลงทุน</p>
+          <p className="m-0 text-[14px] opacity-80"><Icon name="info" className="mr-1" />ข้อมูลเพื่อความเข้าใจ ไม่ใช่คำแนะนำการลงทุน</p>
         </div>
         <span className="relative mr-4 max-sm:hidden">
           <Lensy pose="magnifier" size={130} />

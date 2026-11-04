@@ -9,6 +9,7 @@ import { useTheme } from "@/lib/theme";
 import { DEFAULT_ANNUAL_RETURN, MAX_YEARS, MIN_YEARS, trueCost, type TrueCostResult } from "@/lib/trueCost";
 
 import { SampleBadge } from "../SampleBadge";
+import { Icon } from "../Icon";
 import { CostChart, SERIES_COLORS, type ChartRow, type ChartSeries } from "./CostChart";
 
 const SOURCE_LABEL = { factsheet: "Factsheet", prospectus: "หนังสือชี้ชวน" } as const;
@@ -277,7 +278,7 @@ export function CompareTool({ funds, initialCodes }: { funds: CompareFund[]; ini
                           <span className="flex flex-col">
                             <b className="text-ink">{item.value.toFixed(2)}%</b>
                             <PageTag page={item.page} source={item.source} />
-                            {hidden && <span className="text-[12px] font-semibold text-sun-ink">⚠ อยู่ในหนังสือชี้ชวน ไม่อยู่ใน Factsheet</span>}
+                            {hidden && <span className="text-[12px] font-semibold text-sun-ink"><Icon name="warn" className="mr-1" />อยู่ในหนังสือชี้ชวน ไม่อยู่ใน Factsheet</span>}
                           </span>
                         )}
                       </td>
