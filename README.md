@@ -1,138 +1,131 @@
-# U-Ledger AI
+# FinLens AI · น้อง Lensy
 
-MVP สำหรับ U-Hackathon 2026 — Market Intelligence Platform สำหรับ SME
-ใช้บัญชี Zero-UI ผ่าน LINE เป็นตัวดึงผู้ใช้เข้าระบบ แล้วต่อยอดเป็น Web Dashboard (Next.js + LIFF) แบบ 2 Tabs
+ผู้ช่วยอ่านเอกสารกองทุนรวม ทั้งใน LINE และบนเว็บ น้อง Lensy (แพนด้าแดงตัวสีเขียว) อ่าน Fund Fact Sheet กับหนังสือชี้ชวนให้ แล้วบอกเป็นภาษาง่าย ๆ ว่า **มีค่าใช้จ่ายอะไร เสียเงินไปกี่บาท และมีความเสี่ยงอะไร** ทุกคำตอบบอกเลขหน้าในเอกสาร
 
-> สถานะปัจจุบัน:
-> - **Tab 1 — My Business เสร็จแล้ว** (MINT)
->   - LINE: บันทึกรายรับ-รายจ่ายจาก **ข้อความ / รูปสลิป-ใบเสร็จ / ข้อความเสียง** (Gemini ผ่าน KKU IntelSphere) → การ์ดยืนยัน →
->     **ตัดสต็อกอัตโนมัติ** เมื่อยืนยันการขาย และเพิ่มสต็อกพร้อมบันทึกต้นทุนเมื่อยืนยันการซื้อ
->   - Dashboard: Tax Meter (เขียว/เหลือง/แดง), รายรับ-รายจ่าย-กำไรสุทธิ, สินค้าขายดี 3 อันดับ, สต็อก
-> - **Tab 2 — Market Radar + U-Bot + B2B เสร็จแล้ว** (natchanon, mock-data backed — ดู `backend/README.md`)
->   - ราคาคู่แข่งข้ามแพลตฟอร์ม, เทรนด์ Omni-channel, Keyword volume, EU arbitrage, B2B Sponsored Placements
->   - U-Bot ต่อ Gemini จริงผ่าน KKU IntelSphere + ตอบด้วยเสียงผ่าน ElevenLabs, ความรู้ธุรกิจประจำวัน
-> - Premium/Subscription — mock data พร้อมแล้ว (EARTH), ยังไม่มี billing logic จริง
-> - Frontend ตัวจริง — อยู่ระหว่างรวมงาน (ดู branch `MINT`, `NIGHT`)
+> ข้อมูลเพื่อความเข้าใจ ไม่ใช่คำแนะนำการลงทุน
 
-## โครงสร้างโปรเจกต์
+- เว็บ: https://lensy-fin-lens-ai.vercel.app
+- LINE: [@961ngpkl](https://line.me/R/ti/p/@961ngpkl) (Lensy | FinLens AI)
+- ผลงานส่ง Trinity Hackathon 2026
+
+---
+
+## ฟังก์ชันหลัก
+
+| ฟังก์ชัน | ทำอะไร | ทำงานอย่างไร |
+|---|---|---|
+| **Hidden Fee Detector** | รวมค่าใช้จ่ายทุกชั้นเป็น "ต้นทุนต่อปีรวม" แยกชั้นเป็นแถบสี และเตือนเมื่อค่าใช้จ่ายกองหลักอยู่ในหนังสือชี้ชวนแต่ไม่อยู่ใน Factsheet | `TER + ค่าใช้จ่ายกองหลัก` (ถ้าเอกสารระบุว่า TER ยังไม่รวม) · `src/lib/funds.ts` |
+| **Risk Alert** | เตือนเรื่องค่าเงิน ตลาดต่างประเทศ การกระจุกตัว และเงื่อนไขขายคืน พร้อมป้าย สูง / ปานกลาง / ควรรู้ | **กฎตายตัว ไม่ใช้ AI** · `src/lib/riskRules.ts` |
+| **True Cost Calculator** | ค่าธรรมเนียมเป็นเงินบาท เทียบได้ 2–3 กอง ปรับเงิน จำนวนปี (1–30) และผลตอบแทนสมมติได้ | **สูตรในโค้ด ไม่ให้ AI คิดตัวเลข** · `src/lib/trueCost.ts` |
+| **AI Explain** | ถามศัพท์และเงื่อนไขในเอกสาร ได้คำตอบพร้อมเลขหน้า | คำถามขอคำแนะนำ → ปฏิเสธด้วยกฎ · คำถามตัวเลขเงิน → `trueCost` · อื่น ๆ → Gemini แล้วตรวจเลขหน้าซ้ำ · `src/lib/askService.ts` |
+
+### กติกา Responsible AI ที่ระบบบังคับใช้
+1. ทุกตัวเลขมีเลขหน้าและข้อความอ้างอิง (สคีมาไม่ยอมรับค่าที่ไม่มีเลขหน้า)
+2. เอกสารไม่มี → "ไม่พบข้อมูลนี้ในเอกสาร" ไม่เดา
+3. ไม่แนะนำซื้อขาย ไม่จัดอันดับ ไม่คาดการณ์ผลตอบแทน
+4. เว็บและ LINE อ่านเฉพาะข้อมูลที่ทีมตรวจแล้ว (`data/verified/`)
+5. ทุกหน้าและทุกการ์ด LINE มีบรรทัด "ไม่ใช่คำแนะนำการลงทุน"
+6. ไม่มีฐานข้อมูลสมาชิก คุกกี้เก็บแค่ LINE userId แบบ hash
+7. ข้อมูลตัวอย่างติดป้าย "ข้อมูลตัวอย่าง" ทุกที่
+
+---
+
+## หน้าเว็บ
+
+| หน้า | ล็อกอิน | เนื้อหา |
+|---|---|---|
+| `/` | ไม่ต้อง | หน้าโปรโมต |
+| `/login` | – | เข้าสู่ระบบด้วย LINE (LIFF) |
+| `/funds` | ต้อง | รายการกองทุน ค้นหา |
+| `/funds/[รหัส]` | ต้อง | Hidden Fee, Risk Alert, การขายคืน, ผลตอบแทนย้อนหลัง |
+| `/compare` | ต้อง | เทียบต้นทุนเป็นบาท พร้อมกราฟ |
+| `/chat` | ต้อง | ถามน้อง Lensy |
+
+## น้อง Lensy ใน LINE
+- พิมพ์ชื่อหรือรหัสกอง → การ์ดสรุปต้นทุนรวม ความเสี่ยงหลัก เลขหน้า และปุ่ม "ดูละเอียด" (เปิดหน้าเว็บใน LINE)
+- พิมพ์คำถาม → คำตอบแบบเดียวกับหน้าแชตบนเว็บ
+- เมนูล่างแชต 4 ปุ่ม: ค่าใช้จ่าย / ความเสี่ยง / คำนวณ / ถามน้อง Lensy
+
+---
+
+## สถาปัตยกรรม
 
 ```
-u-ledger-ai/
-├── backend/             # FastAPI + PostgreSQL + LINE Bot (Python 3.12)
-│   ├── app/
-│   │   ├── core/          # settings, db session, errors
-│   │   ├── models/        # SQLAlchemy models
-│   │   ├── schemas/       # Pydantic request/response
-│   │   ├── routers/       # API endpoints: LINE webhook, auth, dashboard (DB),
-│   │   │                  # market_radar, ubot, b2b, voice, knowledge, insights (mock-data)
-│   │   ├── services/      # business logic (Gemini, LINE, สต็อก, auth)
-│   │   ├── analytics/     # สรุปภาพรวมสำหรับ dashboard
-│   │   ├── line_messages/ # Flex message templates
-│   │   ├── prompts/       # system prompts ของ Gemini
-│   │   ├── locales/       # ข้อความภาษาไทย
-│   │   ├── tax_engine/    # pure functions, config-driven ผ่าน config/tax_rules.yaml
-│   │   ├── config.py      # ตั้งค่า U-Bot/ElevenLabs (KKU IntelSphere) แยกจาก core/settings.py
-│   │   └── main.py
-│   ├── alembic/           # migrations
-│   ├── config/tax_rules.yaml
-│   ├── scripts/           # seed_demo.py, export_openapi.py
-│   ├── tests/
-│   └── .env.example
-├── frontend/            # Next.js + LIFF dashboard (ดู frontend/README.md)
-│   ├── src/
-│   │   ├── app/           # หน้าเว็บ (App Router)
-│   │   ├── components/    # UI components
-│   │   └── hooks/ lib/ locales/ types/
-│   └── .env.example
-├── mock-data/           # ข้อมูลจำลองสำหรับ Market Radar/B2B/ความรู้ธุรกิจ (ดู mock-data/README.md)
-└── docker-compose.yml   # PostgreSQL
+LINE app ──webhook──▶ /api/line/webhook ─┐
+                                         ├─▶ askService ─┬─ กฎ: ปฏิเสธคำแนะนำ
+เว็บ (Next.js) ───────▶ /api/ask ─────────┘              ├─ trueCost: ตัวเลขเงิน
+                                                        └─ Gemini (KKU IntelSphere) + ตรวจเลขหน้า
+                 ทุกเส้นทางอ่านข้อมูลจาก data/verified/*.json (ผ่าน Zod schema)
+
+PDF ──npm run extract──▶ data/extracted/ (pending) ──ทีม econ ตรวจ──▶ data/verified/
 ```
 
-## Backend
+- **Next.js 15** (App Router) + TypeScript + Tailwind CSS + Recharts บน Vercel
+- **AI:** Gemini ผ่าน KKU IntelSphere (API แบบ OpenAI)
+- **LINE:** Messaging API (`@line/bot-sdk`) + LIFF (`@line/liff`)
+- **ข้อมูล:** ไฟล์ JSON ในโปรเจกต์ ไม่มีฐานข้อมูล
+- **ทดสอบ:** Vitest
 
-1. สตาร์ท PostgreSQL (ที่ root ของโปรเจกต์):
-   ```bash
-   docker compose up -d
-   ```
-   **Port 5432 ชนกับอย่างอื่นในเครื่อง** (container โปรเจกต์อื่น หรือ PostgreSQL ที่ลงไว้แต่เดิม)? สร้าง
-   `docker-compose.override.yml` (ไม่ต้อง commit เข้า repo — อยู่ใน `.gitignore` แล้ว) แมปไปพอร์ตอื่นแทน:
-   ```yaml
-   services:
-     postgres:
-       ports: !override
-         - "5433:5432"
-   ```
-   ต้องใช้ `!override` ไม่ใช่เขียน `ports:` เฉยๆ เพราะ Docker Compose จะ **รวม** list ports จากทั้งสองไฟล์
-   (เปิดทั้งพอร์ตเดิมและพอร์ตใหม่พร้อมกัน) ไม่ใช่แทนที่ — แล้วแก้ `DATABASE_URL` ใน `backend/.env` ให้ตรงพอร์ตที่ใช้จริง
+โค้ด FinLens อยู่ใน `frontend/` ทั้งหมด (`backend/` และหน้าในกลุ่ม `(ledger)` เป็นโค้ดของ U-Ledger ที่เก็บไว้เป็นต้นแบบ)
 
-   **ไม่มี Docker?** ลง PostgreSQL ผ่าน Homebrew แทนได้:
-   ```bash
-   brew install postgresql@16
-   brew services start postgresql@16
-   ```
-   ถ้าเครื่องมี PostgreSQL ตัวอื่นครองพอร์ต 5432 อยู่แล้ว (เช่น EDB installer / Postgres.app) — เช็คด้วย
-   `lsof -nP -iTCP:5432 -sTCP:LISTEN` — ให้เปลี่ยน Homebrew instance ไปพอร์ตอื่นแทนที่จะไปยุ่งกับตัวเดิม:
-   ```bash
-   echo "port = 5433" >> /opt/homebrew/var/postgresql@16/postgresql.conf
-   brew services restart postgresql@16
-   ```
-   แล้วสร้าง role/database (ปรับพอร์ตในคำสั่งถ้าใช้ 5433):
-   ```bash
-   psql -d postgres -c "CREATE ROLE uledger WITH LOGIN PASSWORD 'uledger' SUPERUSER;"
-   psql -d postgres -c "CREATE DATABASE uledger OWNER uledger;"
-   ```
-   อย่าลืมแก้ `DATABASE_URL` ใน `backend/.env` ให้ตรงพอร์ตที่ใช้จริง
-2. เข้าโฟลเดอร์ backend แล้วคัดลอกไฟล์ environment:
-   ```bash
-   cd backend
-   cp .env.example .env
-   ```
-   ใส่ `KKU_API_KEY` (KKU IntelSphere — ใช้ทั้ง LINE bot แยกรายการ/สลิป/เสียง และ U-Bot/Market Radar), `LINE_CHANNEL_SECRET` / `LINE_CHANNEL_ACCESS_TOKEN` (LINE bot) และ `ELEVENLABS_API_KEY` ตามที่ต้องการใช้งาน — รายละเอียด endpoint ของฝั่ง Market Radar/U-Bot/B2B ดูที่ [backend/README.md](backend/README.md)
-3. ติดตั้ง dependencies (ใช้ Python 3.12):
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # Windows: .venv\Scripts\activate
-   pip install -e ".[dev]"
-   ```
-4. รัน migration:
-   ```bash
-   alembic upgrade head
-   ```
-5. สร้างข้อมูลตัวอย่าง (ร้านของฝากสาธิต + สินค้า/สต็อก + รายการตั้งแต่ต้นปี ให้ Tax Meter อยู่โซนเหลือง):
-   ```bash
-   python scripts/seed_demo.py          # เพิ่ม --reset เพื่อลบร้านสาธิตเดิมแล้วสร้างใหม่
-   ```
-6. รันเทส `tax_engine`:
-   ```bash
-   pytest -q
-   ```
-7. รัน API (health check ที่ `/health`, เอกสาร API ที่ `/docs`):
-   ```bash
-   uvicorn app.main:app --reload
-   ```
-   ถ้าไม่ได้ตั้ง `LIFF_ID` endpoint ของ dashboard จะคืนข้อมูลร้านสาธิตโดยไม่ต้อง login (สำหรับ dev/เดโม)
-   — **ก่อนใช้งานจริงต้องตั้ง `LIFF_ID` และ `JWT_SECRET` ที่ยาวอย่างน้อย 32 ตัวอักษร**
+```
+frontend/
+  src/app/(site)/         หน้าเว็บ FinLens
+  src/app/api/            ask, auth, line/webhook
+  src/lib/                schema, funds, trueCost, riskRules, ask, askService, extraction, line/
+  src/components/finlens/ UI ของ FinLens
+  data/verified/          ข้อมูลกองที่ตรวจแล้ว (เว็บและ LINE อ่านจากที่นี่)
+  data/extracted/         ผลดึงจาก PDF รอตรวจ
+  docs/pdfs/<รหัสกอง>/    PDF ต้นฉบับ
+  scripts/                extract, line-validate, line-richmenu
+```
 
-   Market Radar/U-Bot/B2B/เสียง/ความรู้ธุรกิจประจำวัน **ไม่ต้องมี PostgreSQL/migration** — อ่านจาก `mock-data/*.json` ตรงๆ ใช้ได้ทันทีแค่ตั้ง `KKU_API_KEY`/`ELEVENLABS_API_KEY`
+---
 
-## Frontend
+## วิธีรันในเครื่อง
+
+ต้องมี Node.js 20+ (ใช้ pnpm ผ่าน `npx pnpm`)
 
 ```bash
 cd frontend
-cp .env.example .env.local
-pnpm install
-pnpm dev        # http://localhost:3000
+npx pnpm@10 install
+cp .env.example .env.local   # แล้วใส่ค่า (ดูด้านล่าง)
+npm run dev                  # http://localhost:3000
+npm test                     # unit tests
+npm run build
 ```
 
-รายละเอียดเพิ่มเติม: [frontend/README.md](frontend/README.md)
+บนเครื่องพัฒนา หน้าล็อกอินมีปุ่ม **"เข้าโหมดทดลอง"** สำหรับเข้าแดชบอร์ดโดยไม่ใช้ LINE (เว็บจริงที่ตั้ง LIFF แล้วจะไม่มีปุ่มนี้)
 
-## หมายเหตุ
+### ค่าใน `.env.local` (และใน Vercel)
+| ชื่อ | ใช้ทำอะไร |
+|---|---|
+| `KKU_BASE_URL`, `KKU_API_KEY`, `KKU_MODEL` | AI (Gemini ผ่าน KKU IntelSphere) |
+| `LINE_CHANNEL_SECRET`, `LINE_CHANNEL_ACCESS_TOKEN` | บอท LINE (Messaging API channel) |
+| `NEXT_PUBLIC_LIFF_ID` | ล็อกอินด้วย LINE และเปิดเว็บใน LINE |
+| `NEXT_PUBLIC_SITE_URL` | URL ของเว็บ เช่น `https://lensy-fin-lens-ai.vercel.app` |
+| `SESSION_SECRET` | เซ็นคุกกี้ล็อกอิน (สุ่มยาว ๆ บนเว็บจริงต้องมี) |
+| `NEXT_PUBLIC_LINE_ADD_FRIEND_URL` | ปุ่มเพิ่มเพื่อน |
 
-- ตัวเลขภาษีทั้งหมดอยู่ใน `backend/config/tax_rules.yaml` — ห้าม hardcode logic ภาษีในโค้ด
-- `tax_engine/` เป็น pure functions ล้วน ไม่ติดต่อฐานข้อมูลหรือ side effects
-- รูปสลิป/ไฟล์เสียงจาก LINE เก็บไว้ที่ `backend/uploads/` (อยู่ใน .gitignore)
-- Market Radar/U-Bot/B2B/เสียง/ความรู้ธุรกิจประจำวัน ใช้ mock data ใน `mock-data/` — แก้ schema ที่นั่นแล้ว API ได้ตามทันที ไม่ต้อง sync ซ้ำ
+ห้าม commit `.env.local`
 
-## Branches
+---
 
-แต่ละคนทำงานบน branch ของตัวเอง ตั้งชื่อตามคน แล้ว merge เข้า `main` ผ่าน PR
+## วิธีเพิ่มกองทุน
+
+1. วาง PDF ที่ `frontend/docs/pdfs/<รหัสกอง>/` (ชื่อไฟล์มีคำว่า `fact` = Factsheet, ไฟล์อื่น = หนังสือชี้ชวน; ชื่อโฟลเดอร์ไม่มี `&` หรือเว้นวรรค)
+2. `npm run extract -- <รหัสกอง>` → ได้ `data/extracted/<รหัสกอง>.json` สถานะ `pending`
+   ระบบตรวจซ้ำว่าข้อความอ้างอิงมีอยู่จริงในหน้านั้น ถ้าไม่เจอค่านั้นจะเป็น `null` และอยู่ในรายการ "สิ่งที่ต้องตรวจเอง"
+3. ทีม econ ตรวจทีละค่าเทียบกับ PDF ตาม [frontend/data/README.md](frontend/data/README.md)
+4. ตั้ง `"status": "verified"` และ `"verifiedBy"` แล้วย้ายไฟล์ไป `data/verified/`
+5. `npm test` และ `npm run build` แล้ว commit
+
+## ตั้งค่า LINE
+1. **Messaging API channel:** Webhook URL = `https://<เว็บ>/api/line/webhook` → Verify → เปิด Use webhook
+2. **LINE Official Account Manager:** ปิด Auto-reply และ Greeting messages
+3. **LINE Login channel → LIFF:** Endpoint URL และ Callback URL = `https://<เว็บ>`, Scope `openid` + `profile`, Size Full
+4. เมนูล่างแชต: `npm run line:richmenu` (ดูรูป) และ `npm run line:richmenu -- --apply` (ตั้งจริง)
+5. เปลี่ยนการ์ดแล้ว: `npm run line:validate` ให้ LINE ตรวจรูปแบบ (ไม่ได้ส่งข้อความหาใคร)
+
+## เดโม
+สคริปต์เดโม 3 นาที: [docs/demo-script.md](docs/demo-script.md)
