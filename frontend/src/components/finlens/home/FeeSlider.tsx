@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 import { baht, pct } from "@/lib/money";
@@ -93,6 +94,9 @@ export function FeeSlider() {
             ตัวอย่างสมมติ ไม่ใช่ข้อมูลกองทุนจริง · สมมติผลตอบแทน {pct(DEFAULT_ANNUAL_RETURN, 0)} ต่อปีก่อนหักค่าใช้จ่าย ไม่ใช่การคาดการณ์ ·
             คำนวณด้วยสูตร ไม่ได้ให้ AI คิดตัวเลข
           </p>
+          <Link href="/compare" className="self-start font-bold text-brand underline-offset-4 hover:underline">
+            ลองเทียบค่าธรรมเนียมของกองทุนจริงทีละชั้น →
+          </Link>
         </div>
       </div>
     </section>

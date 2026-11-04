@@ -47,4 +47,28 @@ describe("trueCost", () => {
     expect(() => trueCost({ ...base, frontEnd: 1 })).toThrow(RangeError);
     expect(() => trueCost({ ...base, annualCost: -0.01 })).toThrow(RangeError);
   });
+
+  it.each([1, 5, 30])("works for %i year(s): one value per year and fees cost more over time", (years) => {
+    const r = trueCost({ ...base, years, annualCost: 0.01 });
+    expect(r.values).toHaveLength(years + 1);
+    expect(r.end).toBeCloseTo(100_000 * (1.06 * 0.99) ** years, 4);
+    expect(r.feeCost).toBeGreaterThan(0);
+  });
+
+  it("handles a 0% return: fees simply shrink the money", () => {
+    const r = trueCost({ ...base, years: 5, annualReturn: 0, frontEnd: 0.01, annualCost: 0.01 });
+    expect(r.gross).toBe(100_000);
+    expect(r.end).toBeCloseTo(99_000 * 0.99 ** 5, 6);
+    expect(r.feeCost).toBeCloseTo(100_000 - 99_000 * 0.99 ** 5, 6);
+  });
+
+  it("100,000 baht, 5 years, 6%: fund A (2.7%/yr + 1.5% buy fee) vs fund B (0.8%/yr) differ by about 13,600 baht", () => {
+    const common = { principal: 100_000, years: 5, annualReturn: 0.06, backEnd: 0 };
+    const a = trueCost({ ...common, frontEnd: 0.015, annualCost: 0.027 });
+    const b = trueCost({ ...common, frontEnd: 0, annualCost: 0.008 });
+    const diff = a.feeCost - b.feeCost;
+    expect(diff).toBeGreaterThan(13_500);
+    expect(diff).toBeLessThan(13_700);
+    expect(Math.round(diff)).toBe(13_599);
+  });
 });

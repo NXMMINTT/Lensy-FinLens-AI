@@ -292,7 +292,7 @@ export function StartCta() {
   );
 }
 
-export function LandingFooter() {
+export function LandingFooter({ sampleNote = true }: { sampleNote?: boolean } = {}) {
   return (
     <footer className="border-t border-line bg-surface">
       <div className="mx-auto flex max-w-[1200px] flex-col gap-4 px-5 py-8 text-[15px] md:px-6">
@@ -305,7 +305,7 @@ export function LandingFooter() {
         </div>
         <div className="flex flex-wrap items-center justify-between gap-2 border-t border-line pt-4">
           <Disclaimer className="font-semibold text-ink-body" />
-          <span className="text-ink-muted">ข้อมูลกองทุนในหน้านี้เป็น{SAMPLE_DATA_LABEL}</span>
+          {sampleNote && <span className="text-ink-muted">ข้อมูลกองทุนในหน้านี้เป็น{SAMPLE_DATA_LABEL}</span>}
         </div>
       </div>
     </footer>

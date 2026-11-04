@@ -9,10 +9,10 @@ import { useTheme } from "@/lib/theme";
 import { FinLensLogo } from "./Logo";
 
 const NAV = [
-  { href: "#features", label: "ฟีเจอร์" },
-  { href: "#how", label: "วิธีใช้" },
-  { href: "#pricing", label: "ราคา" },
-  { href: "#faq", label: "คำถามที่พบบ่อย" },
+  { href: "/#features", label: "ฟีเจอร์" },
+  { href: "/compare", label: "เทียบต้นทุน" },
+  { href: "/#pricing", label: "ราคา" },
+  { href: "/#faq", label: "คำถามที่พบบ่อย" },
 ];
 
 function ThemeToggle() {
@@ -39,9 +39,9 @@ export function LandingHeader() {
         </Link>
         <nav aria-label="เมนูหลัก" className="hidden text-base md:flex">
           {NAV.map((n) => (
-            <a key={n.href} href={n.href} className="inline-flex min-h-[44px] items-center px-3.5 font-medium text-ink-body no-underline hover:text-brand">
+            <Link key={n.href} href={n.href} className="inline-flex min-h-[44px] items-center px-3.5 font-medium text-ink-body no-underline hover:text-brand">
               {n.label}
-            </a>
+            </Link>
           ))}
         </nav>
         <div className="flex items-center gap-2">
