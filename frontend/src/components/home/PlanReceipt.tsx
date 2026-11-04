@@ -8,6 +8,7 @@ export function PlanReceipt({
   per,
   lines,
   highlight = false,
+  badge = "ลองฟรี 7 วัน",
 }: {
   name: string;
   subtitle: string;
@@ -15,13 +16,14 @@ export function PlanReceipt({
   per?: string;
   lines: string[];
   highlight?: boolean;
+  badge?: string;
 }) {
   return (
     <div className="relative drop-shadow-[0_14px_24px_rgba(20,46,34,.12)]">
       <div className="flex flex-col gap-3 rounded-t-2xl bg-surface px-7 pb-6 pt-7">
         <div className="flex items-center justify-between gap-3">
           <h3 className={`m-0 text-[28px] font-extrabold ${highlight ? "text-brand" : ""}`}>{name}</h3>
-          {highlight && <span className="rounded-full bg-sun px-3 py-1 text-sm font-bold text-[#4A3500]">ลองฟรี 7 วัน</span>}
+          {highlight && badge && <span className="rounded-full bg-sun px-3 py-1 text-sm font-bold text-[#4A3500]">{badge}</span>}
         </div>
         <p className="m-0 text-ink-muted">{subtitle}</p>
         <ul className="m-0 flex list-none flex-col gap-2 border-y-2 border-dashed border-line p-0 py-4">
