@@ -24,9 +24,9 @@ export function LineProfileBadge() {
     return () => document.removeEventListener("mousedown", onClick);
   }, []);
 
-  function logout() {
+  async function logout() {
     clearStoredJwt();
-    liffLogout();
+    await liffLogout();
     window.location.href = "/";
   }
 

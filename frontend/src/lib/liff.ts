@@ -31,7 +31,10 @@ export async function ensureLoggedIn(): Promise<void> {
   // after login via LiffStateHandler.
   if (!liff.isLoggedIn()) {
     liff.login({ redirectUri: SITE_URL || window.location.origin });
+    return;
   }
+  // logged in from before the openid scope was added: no ID token, so ask LINE again (once)
+  if (!liff.getIDToken()) reloginForIdToken();
 }
 
 export async function getIdToken(): Promise<string | null> {
@@ -52,12 +55,53 @@ function safePath(p: string | null | undefined): string | null {
   return p && p.startsWith("/") && !p.startsWith("//") && !p.startsWith("/\\") ? p : null;
 }
 
-/** Exchanges the LINE ID token for our own session cookie (POST /api/auth/line). */
-export async function exchangeLineToken(): Promise<void> {
+/* A user who logged in before the openid scope was added has liff.isLoggedIn() === true but no
+ * ID token. We log them out of LINE and log in again to get the new scope, at most once per tab
+ * session (RELOGIN_KEY), so a token that never comes cannot cause a redirect loop. */
+const RELOGIN_KEY = "finlens.login.relogin";
+export const NO_ID_TOKEN = "ไม่ได้รับข้อมูลยืนยันตัวตนจาก LINE";
+
+/** Re-login to get an ID token. Returns true when it is navigating to LINE, false if already tried. */
+export function reloginForIdToken(next?: string): boolean {
+  try {
+    if (sessionStorage.getItem(RELOGIN_KEY)) return false;
+    sessionStorage.setItem(RELOGIN_KEY, "1");
+    sessionStorage.setItem(PENDING_KEY, safePath(next) ?? safePath(window.location.pathname + window.location.search) ?? "/funds");
+  } catch {
+    return false; // can't remember the attempt, so don't risk a loop
+  }
+  try {
+    liff.logout();
+  } catch {
+    /* ignore */
+  }
+  liff.login({ redirectUri: SITE_URL || window.location.origin });
+  return true;
+}
+
+/** "ลองใหม่" after a failed attempt: allow one more re-login. */
+export function resetRelogin(): void {
+  try {
+    sessionStorage.removeItem(RELOGIN_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
+/**
+ * Exchanges the LINE ID token for our own session cookie (POST /api/auth/line).
+ * "redirecting" = no ID token, so it went back to LINE Login for the new scope; the caller stops.
+ */
+export async function exchangeLineToken(next?: string): Promise<"ok" | "redirecting"> {
   const idToken = liff.getIDToken();
-  if (!idToken) throw new Error("ไม่ได้รับข้อมูลยืนยันตัวตนจาก LINE");
+  if (!idToken) {
+    if (reloginForIdToken(next)) return "redirecting";
+    throw new Error(NO_ID_TOKEN);
+  }
   const r = await fetch("/api/auth/line", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ idToken }) });
   if (!r.ok) throw new Error(((await r.json().catch(() => null)) as { error?: string } | null)?.error ?? "เข้าสู่ระบบไม่สำเร็จ");
+  resetRelogin();
+  return "ok";
 }
 
 /** Sends the user to LINE Login, remembering where to go afterwards. */
@@ -81,21 +125,24 @@ export async function finishPendingLogin(): Promise<void> {
   }
   if (!next || !liff.isLoggedIn()) return;
   try {
-    await exchangeLineToken();
+    if ((await exchangeLineToken(next)) === "redirecting") return;
     window.location.replace(next);
   } catch {
     window.location.replace(`/login?next=${encodeURIComponent(next)}`);
   }
 }
 
-/** Logs the user out of LINE (LIFF). The caller clears our own session separately. */
-export function liffLogout(): void {
+/** Logs the user out of LINE (LIFF). The caller clears our own session separately.
+ * Initializes LIFF first: on a page that never called init, liff.logout() would do nothing. */
+export async function liffLogout(): Promise<void> {
   if (!LIFF_ID) return;
   try {
+    await initLiff();
     if (liff.isLoggedIn()) liff.logout();
   } catch {
     /* ignore */
   }
+  resetRelogin();
 }
 
 export type LineProfile = { displayName: string; pictureUrl?: string };

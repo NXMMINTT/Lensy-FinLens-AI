@@ -4,7 +4,7 @@ import liff from "@line/liff";
 import { useEffect, useState } from "react";
 
 import { DISCLAIMER } from "@/lib/disclaimer";
-import { exchangeLineToken, initLiff, isLiffConfigured, startLineLogin } from "@/lib/liff";
+import { exchangeLineToken, initLiff, isLiffConfigured, resetRelogin, startLineLogin } from "@/lib/liff";
 
 import { Icon } from "../Icon";
 
@@ -15,7 +15,6 @@ const PRIVACY = [
   { title: "ไม่เก็บชื่อ รูป หรือเบอร์โทร", text: "เก็บแค่รหัสผู้ใช้ที่แปลงแล้ว ย้อนกลับไม่ได้", icon: "M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6zM8.5 12l2.5 2.5 4.5-5" },
 ];
 
-const exchange = exchangeLineToken;
 
 export function LoginPanel({ next, demoAllowed }: { next: string; demoAllowed: boolean }) {
   const liffOn = isLiffConfigured();
@@ -29,7 +28,8 @@ export function LoginPanel({ next, demoAllowed }: { next: string; demoAllowed: b
       try {
         await initLiff();
         if (liff.isLoggedIn()) {
-          await exchange();
+          // no ID token (logged in before the openid scope): goes back to LINE once
+          if ((await exchangeLineToken(next)) === "redirecting") return;
           window.location.replace(next);
           return;
         }
@@ -49,12 +49,18 @@ export function LoginPanel({ next, demoAllowed }: { next: string; demoAllowed: b
         startLineLogin(next);
         return; // navigates to LINE, which returns to the site root
       }
-      await exchange();
+      if ((await exchangeLineToken(next)) === "redirecting") return;
       window.location.replace(next);
     } catch (e) {
       setError(e instanceof Error ? e.message : "เข้าสู่ระบบไม่สำเร็จ");
       setState("idle");
     }
+  }
+
+  /** "ลองใหม่": allow one more LINE re-login, then try again. */
+  function retry() {
+    resetRelogin();
+    void lineLogin();
   }
 
   async function demoLogin() {
@@ -109,9 +115,19 @@ export function LoginPanel({ next, demoAllowed }: { next: string; demoAllowed: b
       {demoAllowed && <p className="m-0 -mt-3 text-[12.5px] text-ink-muted">โหมดทดลองมีเฉพาะตอนพัฒนา หรือก่อนตั้งค่า LINE Login</p>}
 
       {error && (
-        <p role="alert" className="m-0 w-full rounded-xl bg-danger-soft px-3 py-2 text-[14px] text-danger-ink">
-          {error}
-        </p>
+        <div role="alert" className="flex w-full flex-wrap items-center justify-between gap-2 rounded-xl bg-danger-soft px-3 py-2 text-[14px] text-danger-ink">
+          <span>{error}</span>
+          {liffOn && (
+            <button
+              type="button"
+              onClick={retry}
+              disabled={busy}
+              className="rounded-full border border-danger-line bg-surface px-3.5 py-1 text-[13.5px] font-bold text-danger-ink hover:bg-danger-soft disabled:opacity-60"
+            >
+              ลองใหม่
+            </button>
+          )}
+        </div>
       )}
 
       <ul className="m-0 flex list-none flex-col gap-2.5 p-0">

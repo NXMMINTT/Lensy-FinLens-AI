@@ -46,7 +46,7 @@ function LogoutButton() {
     await fetch("/api/auth/logout", { method: "POST" }).catch(() => {});
     // load the LINE SDK only when needed, so the promo page stays light
     const { liffLogout } = await import("@/lib/liff");
-    liffLogout();
+    await liffLogout(); // also log out of LINE, not only our session cookie
     window.location.assign("/");
   }
   return (
