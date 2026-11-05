@@ -13,7 +13,7 @@ data/verified/<รหัสกอง>.json    สถานะ "verified" เว�
 ## 1. ดึงข้อมูลจาก PDF
 
 1. วาง PDF ไว้ที่ `docs/pdfs/<รหัสกอง>/` ไฟล์ที่ชื่อมีคำว่า `fact` คือ Factsheet ไฟล์อื่นถือเป็นหนังสือชี้ชวน
-2. ใส่ `KKU_API_KEY` ใน `.env.local` (key ของ KKU IntelSphere ตัวเดียวกับงาน U-Fox)
+2. ใส่ `GEMINI_API_KEY` ใน `.env.local` (key ของ Gemini API จาก Google AI Studio)
 3. รันในโฟลเดอร์ `frontend/`
 
    ```

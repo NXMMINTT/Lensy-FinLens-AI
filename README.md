@@ -62,14 +62,14 @@
 LINE app ──webhook──▶ /api/line/webhook ─┐
                                          ├─▶ askService ─┬─ กฎ: ปฏิเสธคำแนะนำ
 เว็บ (Next.js) ───────▶ /api/ask ─────────┘              ├─ trueCost: ตัวเลขเงิน
-                                                        └─ Gemini (KKU IntelSphere) + ตรวจเลขหน้า
+                                                        └─ Gemini API + ตรวจเลขหน้า
                  ทุกเส้นทางอ่านข้อมูลจาก data/verified/*.json (ผ่าน Zod schema)
 
 PDF ──npm run extract──▶ data/extracted/ (pending) ──ทีม econ ตรวจ──▶ data/verified/
 ```
 
 - **Next.js 15** (App Router) + TypeScript + Tailwind CSS + Recharts บน Vercel
-- **AI:** Gemini ผ่าน KKU IntelSphere (API แบบ OpenAI)
+- **AI:** Gemini API ของ Google (`@google/genai`) รุ่น `gemini-3.5-flash-lite` เปลี่ยนได้ด้วย `GEMINI_MODEL`
 - **LINE:** Messaging API (`@line/bot-sdk`) + LIFF (`@line/liff`)
 - **ข้อมูล:** ไฟล์ JSON ในโปรเจกต์ ไม่มีฐานข้อมูล
 - **ทดสอบ:** Vitest
@@ -108,7 +108,7 @@ npm run build
 ### ค่าใน `.env.local` (และใน Vercel)
 | ชื่อ | ใช้ทำอะไร |
 |---|---|
-| `KKU_BASE_URL`, `KKU_API_KEY`, `KKU_MODEL` | AI (Gemini ผ่าน KKU IntelSphere) |
+| `GEMINI_API_KEY`, `GEMINI_MODEL` | AI (Gemini API ของ Google ค่าเริ่มต้น `gemini-3.5-flash-lite`) |
 | `LINE_CHANNEL_SECRET`, `LINE_CHANNEL_ACCESS_TOKEN` | บอท LINE (Messaging API channel) |
 | `NEXT_PUBLIC_LIFF_ID` | ล็อกอินด้วย LINE และเปิดเว็บใน LINE |
 | `NEXT_PUBLIC_SITE_URL` | URL ของเว็บ เช่น `https://lensy-fin-lens-ai.vercel.app` |

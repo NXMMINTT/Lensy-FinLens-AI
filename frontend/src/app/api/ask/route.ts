@@ -12,7 +12,8 @@ export const runtime = "nodejs";
 // The AI call gives up after ANSWER_LIMITS (lib/ai.ts); the route itself may run a little longer.
 export const maxDuration = 60;
 
-const STATUS: Record<AskResponse["kind"], number> = { refusal: 200, money: 200, ai: 200, not_configured: 503, error: 502 };
+// `busy` (AI timed out or hit its rate limit) is an expected, handled case: the body is a polite answer.
+const STATUS: Record<AskResponse["kind"], number> = { refusal: 200, money: 200, ai: 200, busy: 200, not_configured: 503, error: 502 };
 
 export async function POST(req: Request) {
   const parsed = AskRequestSchema.safeParse(await req.json().catch(() => null));

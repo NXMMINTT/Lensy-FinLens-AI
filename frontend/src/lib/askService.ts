@@ -6,7 +6,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { AiNotConfiguredError, ANSWER_LIMITS, aiConfig, chatJson } from "./ai";
+import { AiBusyError, AiNotConfiguredError, AiTimeoutError, ANSWER_LIMITS, aiConfig, chatJson } from "./ai";
 import { ASK_SYSTEM, askPrompt, checkAiAnswer, classifyQuestion, moneyAnswer, refusal, type AskResponse } from "./ask";
 import { documentsText } from "./extraction";
 import { extractPages } from "./pdfText";
@@ -32,8 +32,11 @@ async function pdfDocs(code: string) {
   return docs;
 }
 
-export const NOT_CONFIGURED_ANSWER = "ตอนนี้ระบบตอบคำถามด้วย AI ยังไม่ได้ตั้งค่า (KKU_API_KEY) ระหว่างนี้ดูหน้ากองทุนหรือเทียบต้นทุนได้เลยค่ะ";
-const ERROR_ANSWER = "ขอโทษค่ะ ตอนนี้น้อง Lensy ตอบไม่ทัน ลองถามใหม่อีกครั้งนะคะ ระหว่างนี้พิมพ์ชื่อกองเพื่อดูการ์ดสรุปพร้อมเลขหน้า หรือถามเป็นบาท เช่น \"ลงทุน 100,000 บาท 10 ปี เสียกี่บาท\" ได้ทันทีค่ะ";
+export const NOT_CONFIGURED_ANSWER = "ตอนนี้ระบบตอบคำถามด้วย AI ยังไม่ได้ตั้งค่า ระหว่างนี้ดูหน้ากองทุนหรือเทียบต้นทุนได้เลยค่ะ";
+const MEANWHILE = "ระหว่างนี้พิมพ์ชื่อกองเพื่อดูการ์ดสรุปพร้อมเลขหน้า หรือถามเป็นบาท เช่น \"ลงทุน 100,000 บาท 10 ปี เสียกี่บาท\" ได้ทันทีค่ะ";
+export const TIMEOUT_ANSWER = `ขอโทษค่ะ ตอนนี้น้อง Lensy ตอบไม่ทัน ลองถามใหม่อีกครั้งนะคะ ${MEANWHILE}`;
+export const BUSY_ANSWER = `ขอโทษค่ะ ตอนนี้มีคนถามน้อง Lensy เยอะมาก รอสักครู่แล้วลองใหม่นะคะ ${MEANWHILE}`;
+const ERROR_ANSWER = `ขอโทษค่ะ ตอนนี้น้อง Lensy ตอบไม่ได้ ลองถามใหม่อีกครั้งนะคะ ${MEANWHILE}`;
 
 export async function answerQuestion(funds: Fund[], question: string): Promise<AskResponse> {
   const kind = classifyQuestion(question);
@@ -54,7 +57,9 @@ export async function answerQuestion(funds: Fund[], question: string): Promise<A
     return checkAiAnswer(data, funds, pdfPages, question);
   } catch (err) {
     if (err instanceof AiNotConfiguredError) return { kind: "not_configured", answer: NOT_CONFIGURED_ANSWER, refs: [] };
-    console.error("[askService]", err instanceof Error ? err.message : err);
+    console.error("[askService]", err instanceof Error ? `${err.name}: ${err.message}` : err);
+    if (err instanceof AiBusyError) return { kind: "busy", answer: BUSY_ANSWER, refs: [] };
+    if (err instanceof AiTimeoutError) return { kind: "busy", answer: TIMEOUT_ANSWER, refs: [] };
     return { kind: "error", answer: ERROR_ANSWER, refs: [] };
   }
 }

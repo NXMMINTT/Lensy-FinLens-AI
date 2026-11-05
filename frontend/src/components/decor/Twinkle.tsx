@@ -1,4 +1,4 @@
-/** Soft four-point twinkle, as on the U-Fox stickers. */
+/** Soft four-point twinkle, as on the mascot stickers. */
 export function Twinkle({ className = "", color = "#54D110" }: { className?: string; color?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={`pointer-events-none absolute ${className}`} aria-hidden="true">

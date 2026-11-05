@@ -94,7 +94,7 @@ export function ChatClient({
 
       {!aiReady && (
         <p className="m-0 rounded-xl border border-sun/40 bg-sun-soft px-4 py-2.5 text-[14px] text-sun-ink">
-          ระบบ AI ยังไม่ได้ตั้งค่า (KKU_API_KEY) ตอนนี้ตอบได้เฉพาะคำถามตัวเลขเงิน (คำนวณด้วยสูตร) และคำถามที่น้องต้องปฏิเสธ
+          ระบบ AI ยังไม่ได้ตั้งค่า (GEMINI_API_KEY) ตอนนี้ตอบได้เฉพาะคำถามตัวเลขเงิน (คำนวณด้วยสูตร) และคำถามที่น้องต้องปฏิเสธ
         </p>
       )}
 

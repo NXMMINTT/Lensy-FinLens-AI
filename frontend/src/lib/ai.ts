@@ -1,34 +1,50 @@
 /**
- * AI client: Gemini through KKU IntelSphere (OpenAI-compatible API), the same setup U-Fox uses.
- * Settings come from .env.local: KKU_BASE_URL, KKU_API_KEY, KKU_MODEL. Server-side only.
+ * AI client: Google's Gemini API through the official SDK (@google/genai). Server-side only.
+ * Settings come from the environment (.env.local on a dev machine, project settings on Vercel):
+ *   GEMINI_API_KEY  required, never written in code
+ *   GEMINI_MODEL    optional, default gemini-3.5-flash-lite
  */
-import OpenAI from "openai";
+import { ApiError, GoogleGenAI, ThinkingLevel, type ThinkingConfig } from "@google/genai";
 
-export const AI_DEFAULTS = {
-  baseURL: "https://gen.ai.kku.ac.th/api/v1",
-  model: "gemini-3.5-flash-lite",
-} as const;
+export const AI_DEFAULTS = { model: "gemini-3.5-flash-lite" } as const;
 
 export function aiConfig() {
   return {
-    baseURL: process.env.KKU_BASE_URL?.trim() || AI_DEFAULTS.baseURL,
-    apiKey: process.env.KKU_API_KEY?.trim() ?? "",
-    model: process.env.KKU_MODEL?.trim() || AI_DEFAULTS.model,
+    apiKey: process.env.GEMINI_API_KEY?.trim() ?? "",
+    model: process.env.GEMINI_MODEL?.trim() || AI_DEFAULTS.model,
   };
 }
 
 export class AiNotConfiguredError extends Error {
   constructor() {
-    super("ยังไม่มี KKU_API_KEY ใน .env.local");
+    super("ยังไม่มี GEMINI_API_KEY");
   }
 }
 
-let client: OpenAI | null = null;
+/** Gemini did not answer within the time limit. */
+export class AiTimeoutError extends Error {
+  constructor(ms: number) {
+    super(`Gemini ไม่ตอบภายใน ${ms / 1000} วินาที`);
+  }
+}
 
-function getClient(): OpenAI {
-  const { baseURL, apiKey } = aiConfig();
+/** Gemini is busy: rate or quota limit (HTTP 429) or high demand (HTTP 503). */
+export class AiBusyError extends Error {
+  constructor(detail: string) {
+    super(`Gemini ไม่ว่าง (429/503): ${detail.slice(0, 200)}`);
+  }
+}
+
+let client: GoogleGenAI | null = null;
+let clientKey = "";
+
+function getClient(): GoogleGenAI {
+  const { apiKey } = aiConfig();
   if (!apiKey) throw new AiNotConfiguredError();
-  client ??= new OpenAI({ baseURL, apiKey, timeout: 5 * 60_000, maxRetries: 2 });
+  if (!client || clientKey !== apiKey) {
+    client = new GoogleGenAI({ apiKey });
+    clientKey = apiKey;
+  }
   return client;
 }
 
@@ -38,32 +54,71 @@ export function stripJsonFences(text: string): string {
 }
 
 /**
- * Time limits for a chat call. The default suits the offline extraction script (long PDFs). User-facing
- * answers pass ANSWER_LIMITS: a LINE reply token and a serverless function both expire long before
- * 5 minutes, so it is better to fail fast and send a fallback reply than to send nothing.
+ * Time limits for a chat call. The default suits the offline extraction script (long PDFs, a few
+ * retries). User-facing answers pass ANSWER_LIMITS: a LINE reply token and a serverless function
+ * expire long before minutes pass, so it is better to fail fast and send a polite fallback.
  */
-export type ChatLimits = { timeoutMs?: number; maxRetries?: number };
-export const ANSWER_LIMITS: Required<ChatLimits> = { timeoutMs: 20_000, maxRetries: 0 };
+export type ChatLimits = {
+  /** Whole call, retries included. */
+  timeoutMs?: number;
+  /** Tries in total (1 = no retry). Each try gets an equal share of timeoutMs. */
+  attempts?: number;
+};
+const EXTRACTION_LIMITS: Required<ChatLimits> = { timeoutMs: 5 * 60_000, attempts: 3 };
+/** One quick retry, only when Google says busy (429 rate limit, 503 high demand). */
+export const ANSWER_LIMITS: Required<ChatLimits> = { timeoutMs: 25_000, attempts: 2 };
+const BUSY_STATUS = [429, 503];
+
+export type AiUsage = { prompt_tokens: number; completion_tokens: number };
+
+function isTimeout(err: unknown): boolean {
+  if (!(err instanceof Error)) return false;
+  return err.name === "AbortError" || err.name === "TimeoutError" || /timed? ?out|aborted/i.test(err.message);
+}
+
+/**
+ * Gemini 2.x takes a token budget (0 = off); Gemini 3 and later take a level instead and reject a
+ * budget of 0 (HTTP 400), so they get the lowest level.
+ */
+export function thinkingFor(model: string): ThinkingConfig {
+  const major = Number(/gemini-(\d+)/i.exec(model)?.[1] ?? NaN);
+  return major >= 3 ? { thinkingLevel: ThinkingLevel.MINIMAL } : { thinkingBudget: 0 };
+}
 
 /** One chat call that must answer with a JSON object. Returns the parsed object and the model used. */
-export async function chatJson(system: string, user: string, limits: ChatLimits = {}): Promise<{ data: unknown; model: string; usage?: OpenAI.CompletionUsage }> {
+export async function chatJson(system: string, user: string, limits: ChatLimits = {}): Promise<{ data: unknown; model: string; usage?: AiUsage }> {
   const { model } = aiConfig();
-  const completion = await getClient().chat.completions.create(
-    {
-      model,
-      response_format: { type: "json_object" },
-      temperature: 0,
-      messages: [
-        { role: "system", content: system },
-        { role: "user", content: user },
-      ],
-    },
-    { timeout: limits.timeoutMs, maxRetries: limits.maxRetries },
-  );
-  const text = completion.choices[0]?.message?.content;
-  if (!text) throw new Error(`AI ไม่ได้ตอบกลับ (finish_reason: ${completion.choices[0]?.finish_reason ?? "ไม่ทราบ"})`);
+  const { timeoutMs, attempts } = { ...EXTRACTION_LIMITS, ...limits };
+  let response;
   try {
-    return { data: JSON.parse(stripJsonFences(text)), model: completion.model || model, usage: completion.usage };
+    response = await getClient().models.generateContent({
+      model,
+      contents: user,
+      config: {
+        systemInstruction: system,
+        responseMimeType: "application/json",
+        temperature: 0,
+        // answers are short lookups: as little "thinking" as the model allows, so they come back fast
+        thinkingConfig: thinkingFor(model),
+        httpOptions: {
+          timeout: Math.floor(timeoutMs / attempts),
+          retryOptions: { attempts, initialDelay: 1, maxDelay: 2, httpStatusCodes: BUSY_STATUS },
+        },
+        abortSignal: AbortSignal.timeout(timeoutMs),
+      },
+    });
+  } catch (err) {
+    if (err instanceof ApiError && BUSY_STATUS.includes(err.status)) throw new AiBusyError(`${err.status} ${err.message}`);
+    if (isTimeout(err)) throw new AiTimeoutError(timeoutMs);
+    throw err;
+  }
+
+  const text = response.text;
+  if (!text) throw new Error(`AI ไม่ได้ตอบกลับ (finishReason: ${response.candidates?.[0]?.finishReason ?? "ไม่ทราบ"})`);
+  const meta = response.usageMetadata;
+  const usage = meta ? { prompt_tokens: meta.promptTokenCount ?? 0, completion_tokens: meta.candidatesTokenCount ?? 0 } : undefined;
+  try {
+    return { data: JSON.parse(stripJsonFences(text)), model: response.modelVersion || model, usage };
   } catch {
     throw new Error(`AI ตอบกลับไม่ใช่ JSON: ${text.slice(0, 200)}`);
   }

@@ -1,4 +1,4 @@
-/** U-Fox paw print. */
+/** Red-panda paw print. */
 export function Paw({ className = "", color = "#1A7637" }: { className?: string; color?: string }) {
   return (
     <svg viewBox="0 0 32 32" className={`pointer-events-none absolute ${className}`} aria-hidden="true">

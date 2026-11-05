@@ -1,8 +1,8 @@
 /**
  * npm run extract -- <รหัสกอง>
  *
- * Reads the PDFs in docs/pdfs/<code>/, extracts their text page by page, asks Gemini (KKU
- * IntelSphere) for each field with page + quote, checks every quote against the PDF text, and writes
+ * Reads the PDFs in docs/pdfs/<code>/, extracts their text page by page, asks Gemini (Google
+ * Gemini API) for each field with page + quote, checks every quote against the PDF text, and writes
  * data/extracted/<code>.json with status "pending". The econ team then checks every value against
  * the PDF and moves the file to data/verified/ (see data/README.md).
  *
@@ -42,9 +42,9 @@ async function main() {
     process.exit(1);
   }
   loadEnv();
-  const { apiKey, model, baseURL } = aiConfig();
+  const { apiKey, model } = aiConfig();
   if (!apiKey) {
-    console.error("ยังไม่มี KKU_API_KEY ใน .env.local");
+    console.error("ยังไม่มี GEMINI_API_KEY ใน .env.local");
     process.exit(1);
   }
 
@@ -56,7 +56,7 @@ async function main() {
     if (chars < 200) console.warn(`      ⚠ แทบไม่มีข้อความ อาจเป็น PDF แบบสแกน (ภาพ) ซึ่งดึงข้อความไม่ได้`);
     docs.push({ ...pdf, pages });
   }
-  console.log(`กอง ${code}: ส่ง ${docs.length} เอกสารให้ ${model} (${baseURL})`);
+  console.log(`กอง ${code}: ส่ง ${docs.length} เอกสารให้ ${model}`);
 
   // Ask in small batches: smaller models keep the value + doc + page + quote format better.
   // only the prospectus pages about fees/costs/currency/redemption/risk (saves most of the tokens)
