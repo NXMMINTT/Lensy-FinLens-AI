@@ -9,8 +9,6 @@ venv/
 node_modules/
 .next/
 .DS_Store
-backend/openapi.json
-backend/uploads/
 
 # Local editor settings
 .vscode/

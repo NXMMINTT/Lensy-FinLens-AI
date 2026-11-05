@@ -74,7 +74,7 @@ PDF ──npm run extract──▶ data/extracted/ (pending) ──ทีม eco
 - **ข้อมูล:** ไฟล์ JSON ในโปรเจกต์ ไม่มีฐานข้อมูล
 - **ทดสอบ:** Vitest
 
-โค้ด FinLens อยู่ใน `frontend/` ทั้งหมด (`backend/` และหน้าในกลุ่ม `(ledger)` เป็นโค้ดของ U-Ledger ที่เก็บไว้เป็นต้นแบบ)
+โค้ดทั้งหมดอยู่ใน `frontend/`
 
 ```
 frontend/

@@ -11,5 +11,3 @@ npm run extract -- <รหัสกอง>   # ดึงข้อมูลจา
 npm run line:validate          # ให้ LINE ตรวจรูปแบบการ์ด
 npm run line:richmenu          # รูปเมนูล่างแชต (เพิ่ม -- --apply เพื่อตั้งจริง)
 ```
-
-หน้าในกลุ่ม `src/app/(ledger)` และ `src/components/home` เป็นโค้ดของ U-Ledger ที่เก็บไว้เป็นต้นแบบ ไม่ได้ใช้ใน FinLens
