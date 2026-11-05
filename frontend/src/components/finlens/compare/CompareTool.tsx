@@ -1,14 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 
 import type { CompareFund } from "@/lib/compare";
+import { FEE_PHASES } from "@/lib/feePhases";
 import { NOT_FOUND } from "@/lib/disclaimer";
 import { baht, pct } from "@/lib/money";
 import { useTheme } from "@/lib/theme";
 import { DEFAULT_ANNUAL_RETURN, MAX_YEARS, MIN_YEARS, trueCost, type TrueCostResult } from "@/lib/trueCost";
 
+import { DataStatusBadge } from "../app/DataStatusBadge";
 import { SampleBadge } from "../SampleBadge";
 import { Icon } from "../Icon";
 import { CostChart, SERIES_COLORS, type ChartRow, type ChartSeries } from "./CostChart";
@@ -257,32 +259,50 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
         <>
       {/* fee table */}
       <section aria-labelledby="table-title" className="rounded-[24px] border border-line bg-surface">
-        <h2 id="table-title" className="m-0 px-5 pt-5 text-[18px] font-bold md:px-6">
-          ค่าใช้จ่ายทุกชั้น พร้อมเลขหน้าในเอกสาร
-        </h2>
+        <div className="flex flex-col gap-1 px-5 pt-5 md:px-6">
+          <h2 id="table-title" className="m-0 text-[18px] font-bold">
+            Fee X-Ray: ค่าใช้จ่ายทุกชั้น แยกตามช่วงที่จ่าย
+          </h2>
+          <p className="m-0 text-[13.5px] text-ink-muted">ทุกค่ามีเลขหน้าในเอกสาร ค่าที่รวมอยู่ใน TER แล้วจะแสดงไว้ให้รู้ แต่ไม่นับซ้ำ</p>
+        </div>
         <div className="overflow-x-auto p-2 md:p-3">
           <table className="w-full min-w-[560px] border-collapse text-left text-[14.5px]">
             <thead>
               <tr className="border-b border-line">
                 <th className="p-3 font-semibold text-ink-muted">รายการ</th>
                 {chosen.map((s) => (
-                  <th key={s.code} className="p-3 font-semibold">
-                    <span className="flex items-center gap-1.5">
-                      <Swatch slot={s.slot} />
-                      {s.fund.nameTh}
+                  <th key={s.code} className="p-3 align-top font-semibold">
+                    <span className="flex flex-col gap-1.5">
+                      <span className="flex items-center gap-1.5">
+                        <Swatch slot={s.slot} />
+                        {s.fund.nameTh}
+                      </span>
+                      <DataStatusBadge status={s.fund.status} />
                     </span>
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {chosen[0]?.fund.layers.map((layer, i) => (
+              {FEE_PHASES.map((ph) => {
+                const layers = (chosen[0]?.fund.layers ?? []).filter((l) => l.phase === ph.phase);
+                if (layers.length === 0) return null;
+                return (
+                  <Fragment key={ph.phase}>
+                    <tr className="border-b border-line bg-brand-tint">
+                      <td colSpan={chosen.length + 1} className="px-3 py-2">
+                        <b className="text-[14.5px] text-brand">{ph.title}</b>{" "}
+                        <span className="text-[12.5px] text-ink-muted">· {ph.how}</span>
+                      </td>
+                    </tr>
+              {layers.map((layer) => (
                 <tr key={layer.key} className="border-b border-line-subtle">
-                  <td className="p-3 text-ink-body">
+                  <td className="p-3 pl-5 text-ink-body">
                     {layer.label} <span className="text-[12px] text-ink-faint">({layer.unit})</span>
+                    {layer.note && <span className="block text-[12px] text-ink-muted">{layer.note}</span>}
                   </td>
                   {chosen.map((s) => {
-                    const item = s.fund.layers[i].item;
+                    const item = s.fund.layers.find((l) => l.key === layer.key)!.item;
                     const hidden = layer.key === "masterFundExpense" && item.value !== null && item.source === "prospectus";
                     return (
                       <td key={s.code} className={`p-3 align-top ${hidden ? "bg-sun-soft" : ""}`}>
@@ -300,19 +320,14 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
                   })}
                 </tr>
               ))}
-              <tr className="bg-brand-tint">
-                <td className="p-3 font-bold">ต้นทุนต่อปีรวม</td>
+                  </Fragment>
+                );
+              })}
+              <tr className="bg-brand-soft/70">
+                <td className="p-3 font-bold">ต้นทุนต่อปีรวม (TER + กองทุนหลัก)</td>
                 {chosen.map((s) => (
                   <td key={s.code} className="p-3 font-bold text-ink">
                     {s.fund.annualCostRate === null ? <span className="text-[13px] font-normal text-ink-muted">คำนวณไม่ได้</span> : pct(s.fund.annualCostRate)}
-                  </td>
-                ))}
-              </tr>
-              <tr>
-                <td className="p-3 text-[13px] text-ink-muted">ข้อมูล ณ วันที่</td>
-                {chosen.map((s) => (
-                  <td key={s.code} className="p-3 text-[13px] text-ink-muted">
-                    {s.fund.asOfDate.value ?? NOT_FOUND}
                   </td>
                 ))}
               </tr>

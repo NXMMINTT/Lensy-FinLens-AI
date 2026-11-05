@@ -2,6 +2,8 @@
  * What the compare page needs from a verified fund, in a plain serializable shape for the client.
  * No calculation of money here: the client calls lib/trueCost.ts with these rates.
  */
+import { fundDataStatus, type DataStatus } from "./dataStatus";
+import type { FeePhase } from "./feePhases";
 import { totalAnnualCostRate } from "./funds";
 import { pctToRate, type Fund, type Sourced } from "./schema";
 
@@ -11,6 +13,9 @@ export type FeeLayer = {
   key: FeeLayerKey;
   label: string;
   unit: "ต่อครั้ง" | "ต่อปี";
+  phase: FeePhase;
+  /** shown under the label, e.g. that it is already inside the TER (so it is not added twice) */
+  note?: string;
   /** % as written in the document */
   item: Sourced<number>;
 };
@@ -28,16 +33,19 @@ export type CompareFund = {
   /** rates; null = not in the documents */
   frontEndRate: number | null;
   backEndRate: number | null;
+  status: DataStatus;
 };
 
-const LAYERS: { key: FeeLayerKey; label: string; unit: FeeLayer["unit"] }[] = [
-  { key: "frontEnd", label: "ค่าธรรมเนียมการขาย (ตอนซื้อ)", unit: "ต่อครั้ง" },
-  { key: "backEnd", label: "ค่าธรรมเนียมการรับซื้อคืน (ตอนขาย)", unit: "ต่อครั้ง" },
-  { key: "switching", label: "ค่าธรรมเนียมการสับเปลี่ยน", unit: "ต่อครั้ง" },
-  { key: "management", label: "ค่าธรรมเนียมการจัดการ", unit: "ต่อปี" },
-  { key: "ter", label: "ค่าใช้จ่ายรวมของกองนี้ (TER)", unit: "ต่อปี" },
-  { key: "masterFundExpense", label: "ค่าใช้จ่ายของกองทุนหลัก", unit: "ต่อปี" },
-  { key: "otherExpenses", label: "ค่าใช้จ่ายอื่น", unit: "ต่อปี" },
+/* Order = how the table reads: buy, hold, sell, switch. Management fee and other expenses are part
+ * of the TER, so they are shown but not added again (the total is TER + master fund expense). */
+const LAYERS: { key: FeeLayerKey; label: string; unit: FeeLayer["unit"]; phase: FeePhase; note?: string }[] = [
+  { key: "frontEnd", label: "ค่าธรรมเนียมการขาย", unit: "ต่อครั้ง", phase: "buy" },
+  { key: "ter", label: "ค่าใช้จ่ายรวมของกองนี้ (TER)", unit: "ต่อปี", phase: "hold" },
+  { key: "management", label: "ค่าธรรมเนียมการจัดการ", unit: "ต่อปี", phase: "hold", note: "รวมอยู่ใน TER แล้ว ไม่นับซ้ำ" },
+  { key: "otherExpenses", label: "ค่าใช้จ่ายอื่นของกอง", unit: "ต่อปี", phase: "hold", note: "รวมอยู่ใน TER แล้ว ไม่นับซ้ำ" },
+  { key: "masterFundExpense", label: "ค่าใช้จ่ายของกองทุนหลัก", unit: "ต่อปี", phase: "hold", note: "หักในกองทุนหลักอีกชั้น นับเพิ่มจาก TER" },
+  { key: "backEnd", label: "ค่าธรรมเนียมการรับซื้อคืน", unit: "ต่อครั้ง", phase: "sell" },
+  { key: "switching", label: "ค่าธรรมเนียมการสับเปลี่ยน", unit: "ต่อครั้ง", phase: "switch" },
 ];
 
 export function toCompareFund(f: Fund): CompareFund {
@@ -52,6 +60,7 @@ export function toCompareFund(f: Fund): CompareFund {
     masterInclusionUnknown: f.fees.masterFundExpense.value !== null && f.fees.terIncludesMasterFund.value === null,
     frontEndRate: rate(f.fees.frontEnd),
     backEndRate: rate(f.fees.backEnd),
+    status: fundDataStatus(f),
   };
 }
 

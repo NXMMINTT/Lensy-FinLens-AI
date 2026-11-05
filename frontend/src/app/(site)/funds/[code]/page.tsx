@@ -3,12 +3,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { AppShell } from "@/components/finlens/app/AppShell";
+import { DataStatusBadge } from "@/components/finlens/app/DataStatusBadge";
 import { Card, RiskBadge, RiskMeter, SourceChip } from "@/components/finlens/app/ui";
 import { Disclaimer } from "@/components/finlens/Disclaimer";
 import { Icon } from "@/components/finlens/Icon";
 import { Lensy } from "@/components/finlens/Lensy";
 import { SampleBadge } from "@/components/finlens/SampleBadge";
 import { toCompareFund } from "@/lib/compare";
+import { fundDataStatus } from "@/lib/dataStatus";
 import { NOT_FOUND } from "@/lib/disclaimer";
 import { getFund, getVerifiedFunds } from "@/lib/funds";
 import { baht, pct } from "@/lib/money";
@@ -99,10 +101,9 @@ export default async function FundPage({ params }: Props) {
               {f.riskLevel.value !== null ? <RiskMeter level={f.riskLevel.value} /> : <span className="text-ink-muted">{NOT_FOUND}</span>}
               <Chip s={f.riskLevel} />
             </span>
-            <span className="flex flex-wrap items-center gap-2">
-              <span className="text-ink-muted">ข้อมูล ณ</span>
-              <Value s={f.asOfDate} render={(v) => v} />
-            </span>
+          </div>
+          <div className="mt-1">
+            <DataStatusBadge status={fundDataStatus(f)} />
           </div>
         </div>
         <div className="flex flex-col items-start gap-2 sm:items-end">

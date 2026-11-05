@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import type { AskRef, AskResponse } from "@/lib/ask";
-import { DISCLAIMER } from "@/lib/disclaimer";
+import { DISCLAIMER, NOT_FOUND } from "@/lib/disclaimer";
 
 import { LensyFace } from "../Lensy";
 import { SampleBadge } from "../SampleBadge";
@@ -13,6 +13,13 @@ type FundOption = { code: string; nameTh: string; isSample: boolean };
 type Msg = { id: number; role: "user" | "bot"; text: string; refs?: AskRef[]; assumptions?: string[]; note?: string; kind?: AskResponse["kind"] };
 
 const MAX = 3;
+
+/** Answer status: cites the documents, or says the documents don't have it. Refusals and general knowledge get none. */
+function answerStatus(m: Msg): "cited" | "not_found" | null {
+  if (m.role !== "bot" || (m.kind !== "ai" && m.kind !== "money")) return null;
+  if (m.refs && m.refs.length > 0) return "cited";
+  return m.text.includes(NOT_FOUND) ? "not_found" : null;
+}
 
 export function ChatClient({
   funds,
@@ -122,6 +129,15 @@ export function ChatClient({
                   </span>
                 )}
                 {m.note && <span className="self-start rounded-md bg-sky px-2 py-0.5 text-[12.5px] text-ink-muted">{m.note}</span>}
+                {answerStatus(m) && (
+                  <span
+                    className={`self-start rounded-full border px-2 py-0.5 text-[12px] font-bold ${
+                      answerStatus(m) === "cited" ? "border-success-line bg-success-soft text-success-ink" : "border-sun/60 bg-sun-soft text-sun-ink"
+                    }`}
+                  >
+                    {answerStatus(m) === "cited" ? "✓ อ้างอิงเอกสารแล้ว" : NOT_FOUND}
+                  </span>
+                )}
                 {m.assumptions && (
                   <ul className="m-0 flex flex-col gap-0.5 border-t border-line pt-2 pl-4 text-[12.5px] text-ink-muted">
                     {m.assumptions.map((a) => (
