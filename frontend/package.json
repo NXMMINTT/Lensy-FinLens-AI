@@ -12,7 +12,8 @@
     "test:watch": "vitest",
     "extract": "tsx scripts/extract.ts",
     "line:validate": "tsx scripts/line-validate.ts",
-    "line:richmenu": "tsx scripts/line-richmenu.ts"
+    "line:richmenu": "tsx scripts/line-richmenu.ts",
+    "review": "tsx scripts/review-sheet.ts"
   },
   "dependencies": {
     "@line/bot-sdk": "^11.4.0",

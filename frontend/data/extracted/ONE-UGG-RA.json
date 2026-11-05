@@ -1,0 +1,296 @@
+{
+  "code": "ONE-UGG-RA",
+  "nameTh": {
+    "value": "กองทุนเปิดวรรณ อัลติเมท โกลบอล โกรว์ธ",
+    "page": 1,
+    "quote": "กองทุนเปิดวรรณ อัลติเมท โกลบอล โกรว์ธ",
+    "source": "factsheet"
+  },
+  "amc": {
+    "value": "บริษัทหลักทรัพย์จัดการกองทุน วรรณ จำกัด",
+    "page": 1,
+    "quote": "บริษัทหลักทรัพย์จัดการกองทุน วรรณ จำกัด",
+    "source": "factsheet"
+  },
+  "type": {
+    "value": "กองทุนรวมตราสารทุน",
+    "page": 1,
+    "quote": "ประเภทกองทุนรวม / กลุ่มกองทุนรวม\nกองทุนรวมตราสารทุน",
+    "source": "factsheet"
+  },
+  "isFeeder": {
+    "value": true,
+    "page": 1,
+    "quote": "กองทุนรวมฟีดเดอร์",
+    "source": "factsheet"
+  },
+  "masterFundName": {
+    "value": "Baillie Gifford Worldwide Long Term Global Growth Fund",
+    "page": 1,
+    "quote": "กองทุนที่มีนโยบายลงทุนในหน่วยลงทุนของกองทุน Baillie Gifford Worldwide Long Term Global Growth\nFund (กองทุนหลัก)",
+    "source": "factsheet"
+  },
+  "riskLevel": {
+    "value": null,
+    "page": null,
+    "quote": null,
+    "source": "factsheet"
+  },
+  "asOfDate": {
+    "value": "2026-09-30",
+    "page": 1,
+    "quote": "ข้อมูล ณ วันที่ 30 กันยายน 2569",
+    "source": "factsheet"
+  },
+  "fees": {
+    "frontEnd": {
+      "value": 1.5,
+      "page": 2,
+      "quote": "การขาย 2.14 1.50",
+      "source": "factsheet"
+    },
+    "backEnd": {
+      "value": 0,
+      "page": 2,
+      "quote": "การรับซื้อคืน 1.07 ยกเว้น",
+      "source": "factsheet"
+    },
+    "switching": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "management": {
+      "value": 1.605,
+      "page": 2,
+      "quote": "การจัดการ 2.14 1.605",
+      "source": "factsheet"
+    },
+    "ter": {
+      "value": 1.9046,
+      "page": 2,
+      "quote": "รวมค่าใช้จ่าย 4.28 1.9046",
+      "source": "factsheet"
+    },
+    "masterFundExpense": {
+      "value": 0.72,
+      "page": 7,
+      "quote": "Ongoing Charge: 0.72%",
+      "source": "prospectus"
+    },
+    "otherExpenses": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "terIncludesMasterFund": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "prospectus"
+    }
+  },
+  "risk": {
+    "fxHedging": {
+      "value": "discretionary",
+      "page": 1,
+      "quote": "การป้องกันความเสี่ยง ตามดุลพินิจของผู้จัดการกองทุน\n(dynamic hedging)",
+      "source": "factsheet"
+    },
+    "top5Pct": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "top10Pct": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "topCountry": {
+      "value": {
+        "name": "สหรัฐอเมริกา",
+        "pct": 49.7
+      },
+      "page": 2,
+      "quote": "สหรัฐอเมริกา 49.7",
+      "source": "factsheet"
+    },
+    "topSector": {
+      "value": {
+        "name": "Information Technology",
+        "pct": 37.8
+      },
+      "page": 2,
+      "quote": "Information Technology 37.8",
+      "source": "factsheet"
+    }
+  },
+  "redemption": {
+    "settlementDays": {
+      "value": 4,
+      "page": 2,
+      "quote": "ระยะเวลาการรับเงินค่าขายคืน : T+4 คือ4 วันทำการ\nหลังจากวันทำรายการขายคืน",
+      "source": "factsheet"
+    },
+    "frequency": {
+      "value": "ทุกวันทำการ",
+      "page": 2,
+      "quote": "วันทำการขายคืน : ทุกวันทำการ",
+      "source": "factsheet"
+    },
+    "lockUp": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "prospectus"
+    }
+  },
+  "pastReturns": [
+    {
+      "period": "ytd",
+      "fund": {
+        "value": -12.24,
+        "page": 1,
+        "quote": "ผลการดำเนินงานย้อนหลังแบบปักหมุด (%)\nYTD 3 เดือน 6 เดือน 1 ปี*\nกองทุน -12.24 -0.03 9.78 -18.41",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 11.14,
+        "page": 1,
+        "quote": "ดัชนีชี้วัด 11.14 1.07 15.35 14.21",
+        "source": "factsheet"
+      }
+    },
+    {
+      "period": "3m",
+      "fund": {
+        "value": -0.03,
+        "page": 1,
+        "quote": "YTD 3 เดือน 6 เดือน 1 ปี*\nกองทุน -12.24 -0.03 9.78 -18.41",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 1.07,
+        "page": 1,
+        "quote": "ดัชนีชี้วัด 11.14 1.07 15.35 14.21",
+        "source": "factsheet"
+      }
+    },
+    {
+      "period": "6m",
+      "fund": {
+        "value": 9.78,
+        "page": 1,
+        "quote": "YTD 3 เดือน 6 เดือน 1 ปี*\nกองทุน -12.24 -0.03 9.78 -18.41",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 15.35,
+        "page": 1,
+        "quote": "ดัชนีชี้วัด 11.14 1.07 15.35 14.21",
+        "source": "factsheet"
+      }
+    },
+    {
+      "period": "1y",
+      "fund": {
+        "value": -18.41,
+        "page": 1,
+        "quote": "YTD 3 เดือน 6 เดือน 1 ปี*\nกองทุน -12.24 -0.03 9.78 -18.41",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 14.21,
+        "page": 1,
+        "quote": "ดัชนีชี้วัด 11.14 1.07 15.35 14.21",
+        "source": "factsheet"
+      }
+    },
+    {
+      "period": "3y",
+      "fund": {
+        "value": 9.89,
+        "page": 1,
+        "quote": "3 ปี* 5 ปี* 10 ปี* ตั้งแต่จัดตั้ง*\nกองทุน 9.89 -5.2 8.75 10.02",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 18.01,
+        "page": 1,
+        "quote": "ดัชนีชี้วัด 18.01 8.99 10.76 11.03",
+        "source": "factsheet"
+      }
+    },
+    {
+      "period": "5y",
+      "fund": {
+        "value": -5.2,
+        "page": 1,
+        "quote": "3 ปี* 5 ปี* 10 ปี* ตั้งแต่จัดตั้ง*\nกองทุน 9.89 -5.2 8.75 10.02",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 8.99,
+        "page": 1,
+        "quote": "ดัชนีชี้วัด 18.01 8.99 10.76 11.03",
+        "source": "factsheet"
+      }
+    },
+    {
+      "period": "10y",
+      "fund": {
+        "value": 8.75,
+        "page": 1,
+        "quote": "3 ปี* 5 ปี* 10 ปี* ตั้งแต่จัดตั้ง*\nกองทุน 9.89 -5.2 8.75 10.02",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 10.76,
+        "page": 1,
+        "quote": "ดัชนีชี้วัด 18.01 8.99 10.76 11.03",
+        "source": "factsheet"
+      }
+    },
+    {
+      "period": "sinceInception",
+      "fund": {
+        "value": 10.02,
+        "page": 1,
+        "quote": "3 ปี* 5 ปี* 10 ปี* ตั้งแต่จัดตั้ง*\nกองทุน 9.89 -5.2 8.75 10.02",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 11.03,
+        "page": 1,
+        "quote": "ดัชนีชี้วัด 18.01 8.99 10.76 11.03",
+        "source": "factsheet"
+      }
+    }
+  ],
+  "meta": {
+    "status": "pending",
+    "isSample": false,
+    "extractedAt": "2026-11-05T12:11:28.698Z",
+    "model": "gemini-3.8-flash",
+    "sourceFiles": [
+      {
+        "file": "docs/pdfs/ONE-UGG-RA/factsheet.pdf",
+        "source": "factsheet"
+      },
+      {
+        "file": "docs/pdfs/ONE-UGG-RA/prospectus.pdf",
+        "source": "prospectus"
+      }
+    ],
+    "verifiedBy": null,
+    "notes": [
+      "fees.backEnd: ตัวเลข 0 ไม่อยู่ในข้อความอ้างอิง ตรวจให้แน่ใจ",
+      "masterFundExpense: เติมเองจากหนังสือชี้ชวนหน้า 7 (Ongoing Charge ของกองทุนหลัก) กองทุนหลักมีหลายชนิดหน่วย ให้ตรวจว่าเป็นของ Class B net accumulation ที่ factsheet ระบุ"
+    ]
+  }
+}
