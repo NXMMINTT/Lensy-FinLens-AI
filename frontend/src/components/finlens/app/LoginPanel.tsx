@@ -6,10 +6,14 @@ import { useEffect, useState } from "react";
 import { DISCLAIMER } from "@/lib/disclaimer";
 import { initLiff, isLiffConfigured } from "@/lib/liff";
 
-import { Lensy } from "../Lensy";
 import { Icon } from "../Icon";
 
 type State = "checking" | "idle" | "working";
+
+const PRIVACY = [
+  { title: "ไม่ต้องสมัครสมาชิก ไม่มีรหัสผ่าน", text: "ใช้บัญชี LINE ยืนยันตัวตนอย่างเดียว", icon: "M7 11V8a5 5 0 0 1 10 0v3M5 11h14v10H5z" },
+  { title: "ไม่เก็บชื่อ รูป หรือเบอร์โทร", text: "เก็บแค่รหัสผู้ใช้ที่แปลงแล้ว ย้อนกลับไม่ได้", icon: "M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6zM8.5 12l2.5 2.5 4.5-5" },
+];
 
 async function exchange(): Promise<void> {
   const idToken = liff.getIDToken();
@@ -73,11 +77,13 @@ export function LoginPanel({ next, demoAllowed }: { next: string; demoAllowed: b
   const busy = state !== "idle";
 
   return (
-    <div className="flex w-full max-w-[420px] flex-col items-center gap-5 rounded-[28px] border border-line bg-surface p-7 text-center shadow-[0_20px_50px_rgba(20,46,34,.10)] md:p-9">
-      <Lensy pose="wave" size={150} />
-      <div>
-        <h1 className="m-0 text-[26px] font-bold leading-snug">เข้าสู่ระบบ FinLens AI</h1>
-        <p className="m-0 mt-2 text-ink-body">เข้าสู่ระบบด้วยบัญชี LINE เพื่อดูกองทุน เทียบต้นทุน และถามน้อง Lensy ค่ะ</p>
+    <div className="flex w-full flex-col gap-5">
+      <div className="flex flex-col gap-1.5">
+        <span className="text-[15px] font-semibold text-brand">ยินดีต้อนรับค่ะ</span>
+        <h1 id="login-title" className="m-0 text-[28px] font-bold leading-snug">
+          เข้าสู่ระบบ
+        </h1>
+        <p className="m-0 text-ink-body">ใช้บัญชี LINE ที่มีอยู่แล้ว กดปุ่มเดียวก็เข้าได้เลย</p>
       </div>
 
       {liffOn ? (
@@ -114,11 +120,25 @@ export function LoginPanel({ next, demoAllowed }: { next: string; demoAllowed: b
         </p>
       )}
 
-      <ul className="m-0 flex list-none flex-col gap-1 p-0 text-left text-[13.5px] text-ink-muted">
-        <li>✓ ไม่ต้องสมัครสมาชิก ไม่มีรหัสผ่าน</li>
-        <li>✓ ไม่เก็บชื่อ รูป หรือเบอร์โทร เก็บเฉพาะรหัสที่แปลงแล้วย้อนกลับไม่ได้</li>
+      <ul className="m-0 flex list-none flex-col gap-2.5 p-0">
+        {PRIVACY.map((p) => (
+          <li key={p.title} className="flex items-start gap-3 rounded-2xl bg-brand-tint px-3.5 py-3">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-soft text-brand" aria-hidden="true">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d={p.icon} />
+              </svg>
+            </span>
+            <span className="flex flex-col leading-snug">
+              <b className="text-[14.5px]">{p.title}</b>
+              <span className="text-[13px] text-ink-muted">{p.text}</span>
+            </span>
+          </li>
+        ))}
       </ul>
-      <p className="m-0 text-[13px] text-ink-muted"><Icon name="info" className="mr-1" />{DISCLAIMER}</p>
+      <p className="m-0 flex items-center gap-1.5 border-t border-line pt-4 text-[13px] text-ink-muted">
+        <Icon name="info" />
+        {DISCLAIMER}
+      </p>
     </div>
   );
 }
