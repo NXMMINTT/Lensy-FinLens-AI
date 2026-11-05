@@ -357,7 +357,12 @@ export function LandingFooter() {
           <FinLensLogo height={38} />
           <div className="text-ink-muted">เทียบกองทุนเคียงกัน เห็นค่าธรรมเนียมแฝง ทุกตัวเลขมีเลขหน้าที่มา</div>
         </div>
-        <div className="text-ink-muted">Trinity Hackathon 2026</div>
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-ink-muted">
+          <Link href="/roadmap" className="font-semibold text-brand no-underline hover:underline">
+            แผนในอนาคต
+          </Link>
+          <span>Trinity Hackathon 2026</span>
+        </div>
       </div>
     </footer>
   );
