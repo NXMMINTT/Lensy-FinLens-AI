@@ -9,6 +9,8 @@ import { getFund } from "@/lib/funds";
 import type { Fund } from "@/lib/schema";
 
 export const runtime = "nodejs";
+// The AI call gives up after ANSWER_LIMITS (lib/ai.ts); the route itself may run a little longer.
+export const maxDuration = 60;
 
 const STATUS: Record<AskResponse["kind"], number> = { refusal: 200, money: 200, ai: 200, not_configured: 503, error: 502 };
 

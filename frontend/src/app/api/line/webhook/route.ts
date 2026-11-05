@@ -11,6 +11,11 @@ import { getVerifiedFunds } from "@/lib/funds";
 import { handleText, welcome } from "@/lib/line/bot";
 
 export const runtime = "nodejs";
+// The AI call gives up after ANSWER_LIMITS (lib/ai.ts); this leaves room to send the fallback reply.
+export const maxDuration = 60;
+
+/** The "typing" dots in a 1:1 chat while น้อง Lensy thinks (LINE allows 5–60 s, in steps of 5). */
+const LOADING_SECONDS = 20;
 
 let client: LineBotClient | null = null;
 function lineClient(): LineBotClient {
@@ -27,6 +32,12 @@ async function handleEvent(event: webhook.Event) {
   const funds = getVerifiedFunds();
   if (event.type === "follow" && event.replyToken) return reply(event.replyToken, welcome(funds));
   if (event.type === "message" && event.replyToken && event.message.type === "text") {
+    if (event.source?.type === "user" && event.source.userId) {
+      // fire and forget: a failed animation must never block the reply
+      lineClient()
+        .showLoadingAnimation({ chatId: event.source.userId, loadingSeconds: LOADING_SECONDS })
+        .catch((err: unknown) => console.error("[line/webhook] loading", err instanceof Error ? err.message : err));
+    }
     return reply(event.replyToken, await handleText(event.message.text, funds, answerQuestion));
   }
   if (event.type === "message" && event.replyToken) {

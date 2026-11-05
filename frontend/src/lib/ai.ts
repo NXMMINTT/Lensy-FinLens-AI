@@ -37,18 +37,29 @@ export function stripJsonFences(text: string): string {
   return text.replace(/^\s*```(?:json)?\s*|\s*```\s*$/g, "");
 }
 
+/**
+ * Time limits for a chat call. The default suits the offline extraction script (long PDFs). User-facing
+ * answers pass ANSWER_LIMITS: a LINE reply token and a serverless function both expire long before
+ * 5 minutes, so it is better to fail fast and send a fallback reply than to send nothing.
+ */
+export type ChatLimits = { timeoutMs?: number; maxRetries?: number };
+export const ANSWER_LIMITS: Required<ChatLimits> = { timeoutMs: 20_000, maxRetries: 0 };
+
 /** One chat call that must answer with a JSON object. Returns the parsed object and the model used. */
-export async function chatJson(system: string, user: string): Promise<{ data: unknown; model: string; usage?: OpenAI.CompletionUsage }> {
+export async function chatJson(system: string, user: string, limits: ChatLimits = {}): Promise<{ data: unknown; model: string; usage?: OpenAI.CompletionUsage }> {
   const { model } = aiConfig();
-  const completion = await getClient().chat.completions.create({
-    model,
-    response_format: { type: "json_object" },
-    temperature: 0,
-    messages: [
-      { role: "system", content: system },
-      { role: "user", content: user },
-    ],
-  });
+  const completion = await getClient().chat.completions.create(
+    {
+      model,
+      response_format: { type: "json_object" },
+      temperature: 0,
+      messages: [
+        { role: "system", content: system },
+        { role: "user", content: user },
+      ],
+    },
+    { timeout: limits.timeoutMs, maxRetries: limits.maxRetries },
+  );
   const text = completion.choices[0]?.message?.content;
   if (!text) throw new Error(`AI ไม่ได้ตอบกลับ (finish_reason: ${completion.choices[0]?.finish_reason ?? "ไม่ทราบ"})`);
   try {
