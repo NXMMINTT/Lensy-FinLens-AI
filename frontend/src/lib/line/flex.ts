@@ -178,6 +178,7 @@ export function answerCard(res: AskResponse, fundCodes: string[]): messagingApi.
       body.push(text(`${fundCodes.length > 1 ? `${r.code} ` : ""}${pageRef(r)}: “${r.quote.slice(0, 90)}${r.quote.length > 90 ? "…" : ""}”`, { size: "xxs", color: C.muted }));
     }
   }
+  if (res.note) body.push(text(res.note, { size: "xxs", color: C.muted, margin: "lg" }));
   if (res.assumptions?.length) {
     body.push(text("สมมติฐาน", { size: "xs", color: C.muted, weight: "bold", margin: "lg" }));
     for (const a of res.assumptions) body.push(text(a, { size: "xxs", color: C.muted }));

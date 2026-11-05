@@ -21,7 +21,7 @@ const fundChips = (funds: Fund[], suffix = "") => funds.slice(0, 12).map((f) => 
 export function welcome(funds: Fund[]): Message[] {
   return [
     textMessage(
-      "สวัสดีค่ะ น้อง Lensy เองค่ะ พิมพ์ชื่อหรือรหัสกองทุนมาได้เลย น้องจะสรุปค่าใช้จ่ายทุกชั้น ความเสี่ยงที่ควรรู้ และบอกเลขหน้าในเอกสารให้ค่ะ\n\nข้อมูลเพื่อความเข้าใจ ไม่ใช่คำแนะนำการลงทุนนะคะ",
+      "สวัสดีค่ะ น้อง Lensy เองค่ะ พิมพ์ชื่อหรือรหัสกองทุนมาได้เลย ใส่ 2 กองในข้อความเดียวเพื่อดูเทียบกันก็ได้ค่ะ น้องจะสรุปค่าใช้จ่ายทุกชั้น ความเสี่ยงที่ควรรู้ และบอกเลขหน้าในเอกสารให้ ถ้าเจอศัพท์การเงินที่ไม่เข้าใจ ถามได้เลยนะคะ\n\nข้อมูลเพื่อความเข้าใจ ไม่ใช่คำแนะนำการลงทุนนะคะ",
       quickReplies([...fundChips(funds), { label: MENU.ask, text: MENU.ask }]),
     ),
   ];
@@ -84,7 +84,9 @@ export async function handleText(raw: string, funds: Fund[], ask: Answerer): Pro
 
   const scope = matched.length ? matched : kind === "money" ? funds.slice(0, 3) : [];
   if (scope.length === 0) {
-    return [textMessage("คำถามนี้เกี่ยวกับกองไหนคะ เลือกกองด้านล่างได้เลยค่ะ", quickReplies(funds.slice(0, 12).map((f) => ({ label: f.nameTh.value ?? f.code, text: `${f.code} ${text}` }))))];
+    // no fund named: explain it as general finance knowledge, and offer to ask about a specific fund
+    const card = answerCard(await ask([], text), []);
+    return [{ ...card, quickReply: quickReplies(funds.slice(0, 12).map((f) => ({ label: f.nameTh.value ?? f.code, text: `${f.code} ${text}` }))) }];
   }
   return [answerCard(await ask(scope, rest || text), scope.map((f) => f.code))];
 }

@@ -10,7 +10,7 @@ import { SampleBadge } from "../SampleBadge";
 import { SourceChip } from "./ui";
 
 type FundOption = { code: string; nameTh: string; isSample: boolean };
-type Msg = { id: number; role: "user" | "bot"; text: string; refs?: AskRef[]; assumptions?: string[]; kind?: AskResponse["kind"] };
+type Msg = { id: number; role: "user" | "bot"; text: string; refs?: AskRef[]; assumptions?: string[]; note?: string; kind?: AskResponse["kind"] };
 
 const MAX = 3;
 
@@ -43,7 +43,7 @@ export function ChatClient({ funds, initialCodes, questions, aiReady }: { funds:
     } catch {
       res = { kind: "error", answer: "เชื่อมต่อไม่สำเร็จ ลองใหม่อีกครั้งนะคะ", refs: [] };
     }
-    setMessages((m) => [...m, { id: nextId.current++, role: "bot", text: res.answer, refs: res.refs, assumptions: res.assumptions, kind: res.kind }]);
+    setMessages((m) => [...m, { id: nextId.current++, role: "bot", text: res.answer, refs: res.refs, assumptions: res.assumptions, note: res.note, kind: res.kind }]);
     setBusy(false);
   }
 
@@ -85,7 +85,7 @@ export function ChatClient({ funds, initialCodes, questions, aiReady }: { funds:
           <div className="flex items-end gap-2">
             <LensyFace size={36} />
             <div className="max-w-[85%] rounded-[18px] rounded-bl-md bg-surface px-4 py-3 text-[15px] text-ink-body">
-              สวัสดีค่ะ น้อง Lensy เอง ถามเรื่องค่าใช้จ่าย ความเสี่ยง หรือเงื่อนไขของกองที่เลือกได้เลยค่ะ ทุกคำตอบจะบอกเลขหน้าในเอกสาร
+              สวัสดีค่ะ น้อง Lensy เอง ถามเรื่องค่าใช้จ่าย ความเสี่ยง หรือเงื่อนไขของกองที่เลือก หรือถามศัพท์การเงินที่ไม่เข้าใจก็ได้ค่ะ ตัวเลขของกองจะบอกเลขหน้าในเอกสารทุกครั้ง
             </div>
           </div>
         )}
@@ -109,6 +109,7 @@ export function ChatClient({ funds, initialCodes, questions, aiReady }: { funds:
                     ))}
                   </span>
                 )}
+                {m.note && <span className="self-start rounded-md bg-sky px-2 py-0.5 text-[12.5px] text-ink-muted">{m.note}</span>}
                 {m.assumptions && (
                   <ul className="m-0 flex flex-col gap-0.5 border-t border-line pt-2 pl-4 text-[12.5px] text-ink-muted">
                     {m.assumptions.map((a) => (

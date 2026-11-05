@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { checkAiAnswer, classifyQuestion, moneyAnswer, parseMoneyQuestion, SAMPLE_QUESTIONS } from "./ask";
+import { checkAiAnswer, classifyQuestion, GENERAL_NOTE, moneyAnswer, NEED_FUND_FOR_NUMBERS, parseMoneyQuestion, SAMPLE_QUESTIONS } from "./ask";
 import { getFund } from "./funds";
 import { trueCost } from "./trueCost";
 
@@ -67,6 +67,18 @@ describe("checkAiAnswer", () => {
     const r = checkAiAnswer({ answer: "TER 2.5% ค่ะ", refs: [{ code: "SAMPLE-GLOBAL", page: 9, source: "factsheet", quote: "TER 2.5%" }] }, [g], {});
     expect(r.refs).toHaveLength(0);
     expect(r.answer).toContain("ไม่พบข้อมูลนี้ในเอกสาร");
+  });
+
+  it("labels an answer with no page and no numbers as general knowledge", () => {
+    const r = checkAiAnswer({ answer: "TER (ค่าใช้จ่ายรวม) คือค่าใช้จ่ายที่กองหักจากเงินกองทุนทุกปีค่ะ", refs: [] }, [], {});
+    expect(r.answer).toContain("ค่าใช้จ่ายรวม");
+    expect(r.note).toBe(GENERAL_NOTE);
+  });
+
+  it("never lets a general answer show numbers without a fund document", () => {
+    const r = checkAiAnswer({ answer: "TER ปกติอยู่ที่ราว 1.5% ค่ะ", refs: [] }, [], {});
+    expect(r.answer).toBe(NEED_FUND_FOR_NUMBERS);
+    expect(r.note).toBeUndefined();
   });
 
   it("accepts a quote found in the PDF text on that page", () => {

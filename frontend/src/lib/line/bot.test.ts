@@ -52,9 +52,10 @@ describe("handleText", () => {
     expect(calls[0].question).toBe("ควรซื้อกองไหนดี");
   });
 
-  it("asks which fund when a general question names none", async () => {
+  it("answers a general question with no fund as general knowledge, and offers fund chips", async () => {
     const [m] = await handleText("TER คืออะไร", funds, ask);
-    expect(calls).toHaveLength(0);
+    expect(calls).toEqual([{ codes: [], question: "TER คืออะไร" }]);
+    expect(json(m)).toContain("ตอบทดสอบค่ะ");
     expect(json(m)).toContain("SAMPLE-GLOBAL TER คืออะไร");
   });
 

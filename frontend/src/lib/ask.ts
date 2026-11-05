@@ -15,7 +15,11 @@ import { DEFAULT_ANNUAL_RETURN, MAX_YEARS, MIN_YEARS, trueCost } from "./trueCos
 
 export type AskRef = { code: string; nameTh: string; page: number; source: DocSource; quote: string };
 export type AskKind = "refusal" | "money" | "ai" | "not_configured" | "error";
-export type AskResponse = { kind: AskKind; answer: string; refs: AskRef[]; assumptions?: string[] };
+/** `note` marks an answer that explains general finance knowledge instead of citing a fund document. */
+export type AskResponse = { kind: AskKind; answer: string; refs: AskRef[]; assumptions?: string[]; note?: string };
+
+export const GENERAL_NOTE = "คำอธิบายนี้เป็นความรู้การเงินทั่วไป ไม่ได้มาจากเอกสารของกองใด";
+export const NEED_FUND_FOR_NUMBERS = "ตัวเลขของกองทุนต้องมาจากเอกสารของกองนั้นค่ะ ลองพิมพ์ชื่อกองที่อยากรู้มาด้วยนะคะ";
 
 export const AskRequestSchema = z.object({
   fundCodes: z.array(z.string().min(1).max(40)).min(1).max(3),
@@ -130,10 +134,11 @@ export function mergeRefs(refs: AskRef[]): AskRef[] {
 /* ── AI questions ── */
 
 export const ASK_SYSTEM = [
-  "คุณคือ \"น้อง Lensy\" ผู้ช่วยอธิบายเอกสารกองทุนรวมของ FinLens AI",
+  "คุณคือ \"น้อง Lensy\" ผู้ช่วยเทียบและอธิบายกองทุนรวมของ FinLens AI",
   "บุคลิก: สุภาพ เป็นกันเอง ลงท้าย \"ค่ะ\" ประโยคสั้น ใช้คำง่าย ศัพท์เทคนิคใส่วงเล็บอธิบาย",
   "กติกาที่ห้ามละเมิด:",
-  "1. ตอบจากข้อมูลกองทุนและข้อความเอกสารที่ให้มาเท่านั้น ห้ามใช้ความรู้ภายนอกตอบเรื่องตัวเลขของกองทุน",
+  "1. เรื่องของกองทุน (ตัวเลข ค่าธรรมเนียม ความเสี่ยง เงื่อนไข) ตอบจากข้อมูลกองทุนและข้อความเอกสารที่ให้มาเท่านั้น ห้ามใช้ความรู้ภายนอก",
+  "1.1 ถ้าเป็นคำถามความรู้การเงินทั่วไป (ความหมายของศัพท์หรือแนวคิด เช่น TER, กองทุนรวมฟีดเดอร์, การป้องกันความเสี่ยงค่าเงิน, ดอกเบี้ยทบต้น) อธิบายด้วยความรู้ทั่วไปได้ โดยให้ refs เป็น [] และห้ามใส่ตัวเลขใด ๆ ห้ามพูดถึงราคา ข่าว สถิติตลาด หรือข้อมูลกองที่ไม่ได้ให้มา",
   `2. ถ้าไม่มีข้อมูล ให้ตอบว่า "${NOT_FOUND}" ห้ามเดา`,
   "3. ห้ามแนะนำให้ซื้อหรือขาย ห้ามจัดอันดับว่ากองไหนดีกว่า ห้ามคาดการณ์ผลตอบแทนในอนาคต ห้ามพูดเชียร์",
   "4. ห้ามคำนวณตัวเลขเงินเอง ถ้าผู้ใช้อยากรู้เป็นบาท ให้บอกว่าลองใช้หน้าเทียบต้นทุน",
@@ -158,6 +163,9 @@ export function fundContext(f: Fund): string {
 }
 
 export function askPrompt(funds: Fund[], question: string, pdfText: string): string {
+  if (funds.length === 0) {
+    return ["ไม่มีกองทุนที่ระบุ ตอบได้เฉพาะความรู้การเงินทั่วไปตามกติกาข้อ 1.1 (refs เป็น [] และไม่มีตัวเลข)", "", `คำถาม: ${question}`].join("\n");
+  }
   return [
     "ข้อมูลกองทุนที่ตรวจแล้ว (ใช้เป็นหลัก):",
     ...funds.map(fundContext),
@@ -212,7 +220,10 @@ export function checkAiAnswer(raw: unknown, funds: Fund[], pdfPages: Record<stri
   }
   const answer = parsed.data.answer.trim();
   if (/\d/.test(answer) && refs.length === 0) {
+    if (funds.length === 0) return { kind: "ai", answer: NEED_FUND_FOR_NUMBERS, refs: [] };
     return { kind: "ai", answer: `${NOT_FOUND}ที่ยืนยันเลขหน้าได้ค่ะ ลองถามให้เจาะจงขึ้น หรือดูหน้ากองทุนซึ่งมีเลขหน้าทุกค่านะคะ`, refs: [] };
   }
+  // no page to cite and no numbers: a general-knowledge explanation, labelled as such
+  if (refs.length === 0) return { kind: "ai", answer, refs, note: GENERAL_NOTE };
   return { kind: "ai", answer, refs };
 }
