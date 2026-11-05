@@ -6,6 +6,7 @@
 import sampleGlobal from "../../data/verified/SAMPLE-GLOBAL.json";
 import sampleIndex from "../../data/verified/SAMPLE-INDEX.json";
 import { FundSchema, pctToRate, type DocSource, type Fund, type Sourced } from "@/lib/schema";
+import { RISK_LEVEL_LABEL, RISK_TOPIC_LABEL, riskAlerts, type RiskLevel } from "@/lib/riskRules";
 import { trueCost } from "@/lib/trueCost";
 
 export type { DocSource };
@@ -73,27 +74,28 @@ export const SOURCE_LABEL: Record<DocSource, string> = {
 
 export { baht, pct } from "@/lib/money";
 
-export type RiskLevelTag = "high" | "medium" | "info";
+export type RiskLevelTag = RiskLevel;
 export type SampleRisk = { level: RiskLevelTag; topic: string; detail: string; page: number; source: DocSource };
 
 /**
- * Sample risk alerts for the landing page, built from SAMPLE-GLOBAL. The level labels are chosen here
- * for the demo; real alerts come from lib/riskRules.ts (step 3).
+ * Risk alerts for the landing page: the same rules (lib/riskRules.ts) on the same fund data the app
+ * shows, so a level or number on the home page can never differ from /explain or the fund page.
  */
-const g = SAMPLE_GLOBAL_FUND;
-const fx = need(g.risk.fxHedging, "fxHedging");
-const top10 = need(g.risk.top10Pct, "top10Pct");
-const country = need(g.risk.topCountry, "topCountry");
-const settle = need(g.redemption.settlementDays, "settlementDays");
-export const SAMPLE_RISKS: SampleRisk[] = [
-  { level: "high", topic: "ค่าเงิน", detail: "ป้องกันความเสี่ยงค่าเงินตามดุลยพินิจผู้จัดการกองทุน", page: fx.page, source: fx.source },
-  { level: "medium", topic: "กระจุกตัว", detail: `10 หลักทรัพย์แรกรวมกัน ${top10.value}%`, page: top10.page, source: top10.source },
-  { level: "medium", topic: "ตลาดต่างประเทศ", detail: `ลงทุนใน${country.value.name} ${country.value.pct}%`, page: country.page, source: country.source },
-  { level: "info", topic: "ขายคืน", detail: `ได้รับเงินภายใน ${settle.value} วันทำการ (T+${settle.value})`, page: settle.page, source: settle.source },
-];
+export const SAMPLE_RISKS: SampleRisk[] = riskAlerts(SAMPLE_GLOBAL_FUND).map((a) => ({
+  level: a.level,
+  topic: RISK_TOPIC_LABEL[a.topic],
+  detail: a.title,
+  page: a.refs[0].page,
+  source: a.refs[0].source,
+}));
 
+const RISK_TAG_CLASS: Record<RiskLevelTag, string> = {
+  high: "bg-danger-soft text-danger-ink border-danger-line",
+  medium: "bg-sun-soft text-sun-ink border-sun/60",
+  info: "bg-sky text-ink-body border-sky-line",
+};
 export const RISK_TAG: Record<RiskLevelTag, { label: string; className: string }> = {
-  high: { label: "สูง", className: "bg-danger-soft text-danger-ink border-danger-line" },
-  medium: { label: "ปานกลาง", className: "bg-sun-soft text-sun-ink border-sun/60" },
-  info: { label: "ควรรู้", className: "bg-sky text-ink-body border-sky-line" },
+  high: { label: RISK_LEVEL_LABEL.high, className: RISK_TAG_CLASS.high },
+  medium: { label: RISK_LEVEL_LABEL.medium, className: RISK_TAG_CLASS.medium },
+  info: { label: RISK_LEVEL_LABEL.info, className: RISK_TAG_CLASS.info },
 };
