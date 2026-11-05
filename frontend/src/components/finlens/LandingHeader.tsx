@@ -43,10 +43,9 @@ function ThemeToggle() {
 
 function LogoutButton() {
   async function logout() {
-    await fetch("/api/auth/logout", { method: "POST" }).catch(() => {});
     // load the LINE SDK only when needed, so the promo page stays light
-    const { liffLogout } = await import("@/lib/liff");
-    await liffLogout(); // also log out of LINE, not only our session cookie
+    const { signOut } = await import("@/lib/liff");
+    await signOut(); // our session cookie and LINE (liff.logout)
     window.location.assign("/");
   }
   return (
