@@ -40,6 +40,54 @@ export async function getIdToken(): Promise<string | null> {
   return liff.getIDToken();
 }
 
+/* ── Web login (/login page) ──
+ * LINE only sends the user back to the exact registered Callback URL (the site root): a sub-path
+ * such as /login?next=… gets "400 Bad Request". So the page we want to land on is kept in
+ * sessionStorage, LINE returns to the root, and LiffStateHandler finishes the login there. */
+
+const PENDING_KEY = "finlens.login.next";
+
+/** Only same-site paths ("/x", not "//host" or "https://…"). */
+function safePath(p: string | null | undefined): string | null {
+  return p && p.startsWith("/") && !p.startsWith("//") && !p.startsWith("/\\") ? p : null;
+}
+
+/** Exchanges the LINE ID token for our own session cookie (POST /api/auth/line). */
+export async function exchangeLineToken(): Promise<void> {
+  const idToken = liff.getIDToken();
+  if (!idToken) throw new Error("ไม่ได้รับข้อมูลยืนยันตัวตนจาก LINE");
+  const r = await fetch("/api/auth/line", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ idToken }) });
+  if (!r.ok) throw new Error(((await r.json().catch(() => null)) as { error?: string } | null)?.error ?? "เข้าสู่ระบบไม่สำเร็จ");
+}
+
+/** Sends the user to LINE Login, remembering where to go afterwards. */
+export function startLineLogin(next: string): void {
+  try {
+    sessionStorage.setItem(PENDING_KEY, safePath(next) ?? "/funds");
+  } catch {
+    /* storage blocked: they land on the root and can open the menu from there */
+  }
+  liff.login({ redirectUri: SITE_URL || window.location.origin });
+}
+
+/** Back from LINE Login at the root: finish the session and go to the remembered page. */
+export async function finishPendingLogin(): Promise<void> {
+  let next: string | null = null;
+  try {
+    next = safePath(sessionStorage.getItem(PENDING_KEY));
+    sessionStorage.removeItem(PENDING_KEY);
+  } catch {
+    return;
+  }
+  if (!next || !liff.isLoggedIn()) return;
+  try {
+    await exchangeLineToken();
+    window.location.replace(next);
+  } catch {
+    window.location.replace(`/login?next=${encodeURIComponent(next)}`);
+  }
+}
+
 /** Logs the user out of LINE (LIFF). The caller clears our own session separately. */
 export function liffLogout(): void {
   if (!LIFF_ID) return;

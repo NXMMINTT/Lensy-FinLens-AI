@@ -4,7 +4,7 @@ import liff from "@line/liff";
 import { useEffect, useState } from "react";
 
 import { DISCLAIMER } from "@/lib/disclaimer";
-import { initLiff, isLiffConfigured } from "@/lib/liff";
+import { exchangeLineToken, initLiff, isLiffConfigured, startLineLogin } from "@/lib/liff";
 
 import { Icon } from "../Icon";
 
@@ -15,12 +15,7 @@ const PRIVACY = [
   { title: "ไม่เก็บชื่อ รูป หรือเบอร์โทร", text: "เก็บแค่รหัสผู้ใช้ที่แปลงแล้ว ย้อนกลับไม่ได้", icon: "M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6zM8.5 12l2.5 2.5 4.5-5" },
 ];
 
-async function exchange(): Promise<void> {
-  const idToken = liff.getIDToken();
-  if (!idToken) throw new Error("ไม่ได้รับข้อมูลยืนยันตัวตนจาก LINE");
-  const r = await fetch("/api/auth/line", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ idToken }) });
-  if (!r.ok) throw new Error(((await r.json().catch(() => null)) as { error?: string } | null)?.error ?? "เข้าสู่ระบบไม่สำเร็จ");
-}
+const exchange = exchangeLineToken;
 
 export function LoginPanel({ next, demoAllowed }: { next: string; demoAllowed: boolean }) {
   const liffOn = isLiffConfigured();
@@ -51,9 +46,8 @@ export function LoginPanel({ next, demoAllowed }: { next: string; demoAllowed: b
     try {
       await initLiff();
       if (!liff.isLoggedIn()) {
-        const base = process.env.NEXT_PUBLIC_SITE_URL?.trim() || window.location.origin;
-        liff.login({ redirectUri: `${base}/login?next=${encodeURIComponent(next)}` });
-        return; // navigates to LINE
+        startLineLogin(next);
+        return; // navigates to LINE, which returns to the site root
       }
       await exchange();
       window.location.replace(next);
