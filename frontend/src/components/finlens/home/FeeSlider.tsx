@@ -22,7 +22,8 @@ export function FeeSlider() {
     r: trueCost({ principal: amount, years, annualReturn: DEFAULT_ANNUAL_RETURN, frontEnd: 0, backEnd: 0, annualCost }),
   }));
   const max = Math.max(...rows.map((x) => x.r.feeCost), 1);
-  const diff = rows[1].r.feeCost - rows[0].r.feeCost;
+  // difference of the rounded figures, so it matches the two numbers on screen
+  const diff = Math.round(rows[1].r.feeCost) - Math.round(rows[0].r.feeCost);
 
   return (
     <section id="try" aria-labelledby="slider-title" className="scroll-mt-20 px-5 py-16 md:px-6">

@@ -1,4 +1,4 @@
-import { pct, SAMPLE_ACTIVE as F, sampleAnnualCost, SOURCE_LABEL } from "@/lib/sampleFunds";
+import { pct, SAMPLE_ACTIVE as F, SAMPLE_INDEX as B, sampleAnnualCost, SOURCE_LABEL } from "@/lib/sampleFunds";
 
 import { Lensy } from "../Lensy";
 import { Icon } from "../Icon";
@@ -33,7 +33,7 @@ export function DocumentLens() {
   return (
     <figure
       className="force-light relative m-0 aspect-[480/460] w-full max-w-[480px] select-none text-[#16301F]"
-      aria-label={`ภาพตัวอย่าง: ค่าใช้จ่ายกองไทย ${pct(F.ter.value)} อยู่ใน Factsheet หน้า ${F.ter.page} ส่วนค่าใช้จ่ายกองหลัก ${pct(master.value)} อยู่ในหนังสือชี้ชวนหน้า ${master.page}`}
+      aria-label={`ภาพตัวอย่าง: ค่าใช้จ่ายกองไทย ${pct(F.ter.value)} อยู่ใน Factsheet หน้า ${F.ter.page} ส่วนค่าใช้จ่ายกองหลัก ${pct(master.value)} อยู่ในหนังสือชี้ชวนหน้า ${master.page} ต้นทุนต่อปีรวม กอง A ${pct(sampleAnnualCost(F))} กอง B ${pct(sampleAnnualCost(B))}`}
     >
       {/* prospectus (behind) */}
       <div className="absolute right-[2%] top-0 flex h-[74%] w-[60%] rotate-[4deg] flex-col gap-2 rounded-xl border border-[#DCE5DF] bg-white p-[4%] shadow-[0_18px_40px_rgba(20,46,34,.14)]">
@@ -94,13 +94,16 @@ export function DocumentLens() {
         <Icon name="warn" className="mr-1" />ซ่อนอยู่ในหนังสือชี้ชวน หน้า {master.page} ไม่อยู่ใน Factsheet
       </div>
 
-      {/* result */}
-      <div className="absolute -bottom-[2%] right-[2%] flex flex-col rounded-2xl bg-[#1A7637] px-3.5 py-2 text-white shadow-[0_12px_28px_rgba(26,118,55,.35)]">
-        <span className="text-[11px] opacity-90">ต้นทุนต่อปีรวม</span>
-        <span className="text-[24px] font-extrabold leading-none">{pct(sampleAnnualCost(F))}</span>
-        <span className="mt-0.5 text-[10px] opacity-90">
-          หน้า {F.ter.page} + หน้า {master.page}
-        </span>
+      {/* result: the two sample funds side by side */}
+      <div className="absolute -bottom-[2%] right-[0%] flex flex-col gap-1 rounded-2xl bg-[#1A7637] px-3.5 py-2.5 text-white shadow-[0_12px_28px_rgba(26,118,55,.35)]">
+        <span className="text-[11px] opacity-90">ต้นทุนต่อปีรวม เทียบ 2 กอง</span>
+        {[F, B].map((f, i) => (
+          <span key={f.code} className="flex items-baseline justify-between gap-3">
+            <span className="text-[12px] opacity-90">กอง {i === 0 ? "A" : "B"}</span>
+            <span className="text-[22px] font-extrabold leading-none">{pct(sampleAnnualCost(f))}</span>
+          </span>
+        ))}
+        <span className="text-[10px] opacity-90">รวมค่าใช้จ่ายกองทุนหลักแล้ว</span>
       </div>
 
       <Lensy pose="magnifier" size={150} className="absolute -left-[6%] -top-[8%] animate-bob max-sm:!h-[96px] max-sm:!w-[96px]" />

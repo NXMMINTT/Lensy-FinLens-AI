@@ -1,8 +1,7 @@
-import Link from "next/link";
 
 import { LineAddFriendButton } from "@/components/brand/LineAddFriendButton";
 import { NOT_FOUND, SAMPLE_DATA_LABEL } from "@/lib/disclaimer";
-import { pct, SAMPLE_ACTIVE as F, sampleAnnualCost } from "@/lib/sampleFunds";
+import { pct, SAMPLE_ACTIVE as F, SAMPLE_INDEX as B, sampleAnnualCost } from "@/lib/sampleFunds";
 
 import { AnswerCard } from "./chat";
 import { Disclaimer } from "./Disclaimer";
@@ -22,22 +21,19 @@ export function Hero() {
           <HeroTextDecor />
           <span className="self-start rounded-md border border-brand/30 bg-surface px-3 py-1 text-[14px] font-semibold text-brand">
             <Icon name="search" className="mr-1.5" />
-            ผู้ช่วยอ่านเอกสารกองทุนรวม ใน LINE
+            ผู้ช่วยเทียบกองทุนรวม ใน LINE
           </span>
           <h1 id="hero-title" className="m-0 text-[34px] font-bold leading-[1.3] tracking-tight sm:text-[44px] md:text-[52px]">
-            ส่องค่าธรรมเนียม
+            เทียบกองทุนเคียงกัน
             <br />
-            <span className="marker-green">ที่ซ่อนอยู่</span> ในเอกสารกองทุน
+            เห็น<span className="marker-green-strong">ค่าธรรมเนียมแฝง</span>
           </h1>
           <p className="m-0 max-w-[540px] text-lg text-ink-body">
-            Factsheet กับหนังสือชี้ชวนยาวหลายสิบหน้า น้อง Lensy อ่านให้ แล้วบอกเป็นภาษาง่าย ๆ ว่าเสียค่าอะไร เป็นเงินกี่บาท เสี่ยงเรื่องไหน
-            พร้อมเลขหน้าที่มาทุกครั้ง
+            สองกองอาจลงทุนคล้ายกัน แต่ค่าใช้จ่ายบางชั้นซ่อนอยู่ในหนังสือชี้ชวน ไม่อยู่ใน Factsheet น้อง Lensy อ่านเอกสารของทั้งสองกอง
+            วางค่าใช้จ่ายทุกชั้นเทียบกัน แล้วบอกว่าต่างกันกี่บาท พร้อมเลขหน้าที่มาทุกตัวเลข ดูทีละกองก็ได้ หรือถามศัพท์การเงินที่สงสัยก็ได้ค่ะ
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <LineAddFriendButton label="เพิ่มเพื่อนน้อง Lensy" />
-            <Link href="/funds" className="inline-flex min-h-[52px] items-center rounded-full border-2 border-brand px-6 font-bold text-brand no-underline hover:bg-brand-soft">
-              ลองใช้บนเว็บ
-            </Link>
           </div>
           <Disclaimer />
         </div>
@@ -67,17 +63,21 @@ export function HowItWorks() {
   const steps = [
     {
       no: 1,
-      title: "พิมพ์ชื่อกองทุน",
-      text: "ใน LINE หรือบนเว็บ จะถามเป็นประโยคก็ได้",
-      body: <span className="rounded-2xl rounded-br-sm bg-chat px-3 py-1.5 text-[#0F2A12]">{F.nameTh} มีค่าใช้จ่ายอะไรบ้าง</span>,
+      title: "พิมพ์ชื่อกองที่ลังเล",
+      text: "ใส่ 2 กองในข้อความเดียวได้ ทั้งใน LINE และบนเว็บ",
+      body: (
+        <span className="rounded-2xl rounded-br-sm bg-chat px-3 py-1.5 text-[#0F2A12]">
+          {F.nameTh} กับ {B.nameTh}
+        </span>
+      ),
     },
     {
       no: 2,
-      title: "น้อง Lensy อ่านเอกสาร",
+      title: "น้อง Lensy อ่านเอกสารทั้งสองกอง",
       text: "ดึงค่าจาก Factsheet และหนังสือชี้ชวน ทีมตรวจทีละค่าก่อนใช้จริง",
       body: (
         <span className="flex flex-wrap gap-1.5">
-          {["Factsheet หน้า 1–3", "หนังสือชี้ชวน หน้า 9–14"].map((t) => (
+          {["กอง A · Factsheet + หนังสือชี้ชวน", "กอง B · Factsheet + หนังสือชี้ชวน"].map((t) => (
             <span key={t} className="rounded-md border border-line bg-brand-tint px-2 py-1 text-[13px]">
               <Icon name="doc" size={14} className="mr-1 text-brand" />
               {t}
@@ -88,16 +88,23 @@ export function HowItWorks() {
     },
     {
       no: 3,
-      title: "ได้การ์ดคำตอบ",
-      text: "สั้น อ่านง่าย ทุกตัวเลขมีเลขหน้า",
+      title: "เห็นค่าใช้จ่ายเทียบกัน",
+      text: "ทุกชั้นเคียงกัน ส่วนต่างเป็นบาท ทุกตัวเลขมีเลขหน้า",
       body: (
         <div className="force-light w-full text-[12px]">
           <AnswerCard title="ต้นทุนต่อปีรวม">
-            <div className="flex items-center justify-between gap-2">
-              <b className="text-[18px] text-brand">{pct(sampleAnnualCost(F))}</b>
-              <span className="text-[10px] text-ink-muted">
-                หน้า {F.ter.page} + หน้า {F.masterFundExpense?.page}
-              </span>
+            <div className="flex flex-col gap-1">
+              {[F, B].map((f, i) => (
+                <div key={f.code} className="flex items-center justify-between gap-2">
+                  <span>กอง {i === 0 ? "A" : "B"}</span>
+                  <span className="flex items-baseline gap-2">
+                    <b className="text-[16px] text-brand">{pct(sampleAnnualCost(f))}</b>
+                    <span className="text-[10px] text-ink-muted">
+                      หน้า {f.ter.page} + หน้า {f.masterFundExpense?.page}
+                    </span>
+                  </span>
+                </div>
+              ))}
             </div>
           </AnswerCard>
         </div>
@@ -175,10 +182,10 @@ export function Promises() {
 /* ── Pricing: comparison table ── */
 
 const PLAN_ROWS: [string, boolean, boolean][] = [
-  ["ตรวจค่าธรรมเนียมแฝง", true, true],
-  ["แจ้งเตือนความเสี่ยงที่อาจมองข้าม", true, true],
-  ["คำนวณต้นทุนเป็นบาท เทียบ 2–3 กอง", true, true],
-  ["ถามน้อง Lensy ผ่าน LINE และเว็บ", true, true],
+  ["เทียบค่าธรรมเนียมทุกชั้นของ 2–3 กองเคียงกัน", true, true],
+  ["บอกส่วนต่างเป็นบาท ปรับเงินและจำนวนปีเองได้", true, true],
+  ["อธิบายทีละกอง: ค่าใช้จ่าย เสียกี่บาท ความเสี่ยงที่อาจมองข้าม", true, true],
+  ["ถามน้อง Lensy เรื่องการเงิน ผ่าน LINE และเว็บ", true, true],
   ["ส่องพอร์ต: รวมค่าใช้จ่ายและความเสี่ยงทุกกองที่ถือ", false, true],
   ["เช็กก่อนเชื่อ: เทียบข้อความโฆษณากองทุนกับเอกสารจริง", false, true],
 ];
@@ -243,7 +250,9 @@ export function PricingTable() {
 /* ── FAQ: accordion ── */
 
 const FAQ: [string, string][] = [
-  ["FinLens AI คืออะไร", "ผู้ช่วยอ่านเอกสารกองทุนรวมค่ะ น้อง Lensy สรุปค่าใช้จ่าย ความเสี่ยง และต้นทุนเป็นบาท จาก Fund Factsheet และหนังสือชี้ชวน พร้อมบอกเลขหน้าที่มา"],
+  ["FinLens AI คืออะไร", "ผู้ช่วยเทียบกองทุนรวมค่ะ น้อง Lensy อ่าน Fund Factsheet และหนังสือชี้ชวนของแต่ละกอง แล้ววางค่าใช้จ่ายทุกชั้นเทียบกัน ให้เห็นว่าค่าธรรมเนียมที่มองไม่เห็นต่างกันเท่าไหร่ เป็นเงินกี่บาท พร้อมเลขหน้าที่มา ดูทีละกองก็ได้ว่ามีค่าใช้จ่ายอะไร เสียกี่บาท เสี่ยงเรื่องไหน และถามศัพท์การเงินที่สงสัยได้ด้วย"],
+  ["ถามเรื่องการเงินทั่วไปได้ไหม", "ได้ค่ะ ถามความหมายของศัพท์หรือแนวคิดได้ เช่น TER คืออะไร กองทุนฟีดเดอร์คืออะไร คำตอบแบบนี้จะมีป้ายบอกว่าเป็นความรู้ทั่วไป ส่วนตัวเลขของกองทุน น้องตอบจากเอกสารของกองนั้นเท่านั้น และไม่บอกราคา ข่าว หรือคาดการณ์ตลาด"],
+  ["ค่าธรรมเนียมแฝงคืออะไร", "ค่าใช้จ่ายที่ไม่ได้จ่ายตอนกดซื้อ แต่ถูกหักจากเงินในกองทุนทุกปีค่ะ เช่น กองที่ไปลงทุนต่อในกองต่างประเทศ จะมีค่าใช้จ่ายของกองทุนหลักอีกชั้น ซึ่งมักเขียนไว้ในหนังสือชี้ชวน ไม่อยู่ใน Factsheet น้องรวมทุกชั้นให้ พร้อมบอกหน้าที่เจอ"],
   ["ข้อมูลมาจากไหน เชื่อได้แค่ไหน", "มาจากเอกสารทางการของกองทุนค่ะ ทุกค่ามีเลขหน้าให้เปิดตรวจเอง และทีมตรวจทีละค่าเทียบกับเอกสารก่อนนำมาแสดง ถ้าเอกสารไม่มีข้อมูล น้องจะบอกว่าไม่พบ ไม่เดา"],
   ["บอกได้ไหมว่ากองไหนดีที่สุด", "น้องไม่แนะนำให้ซื้อหรือขาย และไม่จัดอันดับกองทุนค่ะ แต่ช่วยวางค่าใช้จ่ายและความเสี่ยงของแต่ละกองเทียบกันให้ดูได้"],
   ["ตัวเลขเป็นบาทคำนวณยังไง", "คำนวณด้วยสูตรในระบบ ไม่ได้ให้ AI คิดค่ะ ใช้ค่าธรรมเนียมจากเอกสาร กับผลตอบแทนสมมติที่ปรับเองได้ (ค่าเริ่มต้น 6% ต่อปี) ซึ่งเป็นสมมติฐาน ไม่ใช่การคาดการณ์"],
@@ -297,11 +306,11 @@ export function StartCta() {
       <div className="mx-auto flex max-w-[1100px] flex-wrap items-center justify-between gap-8 rounded-[28px] bg-gradient-to-br from-brand to-brand-dark px-8 py-10 text-white md:px-12">
         <div className="flex flex-col gap-3">
           <h2 className="m-0 text-[28px] font-bold leading-snug md:text-[36px]">
-            ก่อนกดซื้อกองไหน
+            ลังเลระหว่าง 2 กอง
             <br />
-            ให้น้อง Lensy ส่องให้ก่อน
+            ให้น้อง Lensy เทียบให้ดูก่อน
           </h2>
-          <p className="m-0 opacity-90">เพิ่มเพื่อนใน LINE แล้วพิมพ์ชื่อกองทุนได้เลยค่ะ</p>
+          <p className="m-0 opacity-90">เพิ่มเพื่อนใน LINE แล้วพิมพ์ชื่อกองที่สนใจได้เลยค่ะ</p>
           <LineAddFriendButton label="เพิ่มเพื่อนน้อง Lensy" className="mt-2 self-start" />
         </div>
         <span className="relative max-sm:hidden">
@@ -320,7 +329,7 @@ export function LandingFooter({ sampleNote = true }: { sampleNote?: boolean } = 
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-col gap-1.5">
             <FinLensLogo height={38} />
-            <div className="text-ink-muted">เข้าใจกองทุนก่อนตัดสินใจ ทุกคำตอบมีเลขหน้าที่มา</div>
+            <div className="text-ink-muted">เทียบกองทุนเคียงกัน เห็นค่าธรรมเนียมแฝง ทุกตัวเลขมีเลขหน้าที่มา</div>
           </div>
           <div className="text-ink-muted">Trinity Hackathon 2026</div>
         </div>

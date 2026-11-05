@@ -141,3 +141,14 @@ button:focus:not(:focus-visible) {
   background: linear-gradient(transparent 58%, rgba(26, 118, 55, 0.16) 58%);
   border-radius: 2px;
 }
+/* Bolder lime marker for the hero headline */
+/* Covers the letters themselves (not the line gap above/below), like a marker pen stroke */
+.marker-green-strong {
+  --mk: rgba(120, 220, 70, 0.5);
+  background: linear-gradient(transparent 22%, var(--mk) 22%, var(--mk) 88%, transparent 88%);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+html.dark .marker-green-strong {
+  --mk: rgba(120, 220, 70, 0.32);
+}

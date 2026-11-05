@@ -21,8 +21,8 @@ export default function HomePage() {
       <main>
         <Hero />
         <SampleNotice />
-        <FeeSlider />
         <FeatureBento />
+        <FeeSlider />
         <HowItWorks />
         <Promises />
         <PricingTable />

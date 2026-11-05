@@ -8,8 +8,8 @@ import { fontVariables } from "../fonts";
 import "../globals.css";
 
 export const metadata: Metadata = {
-  title: "FinLens AI — เข้าใจกองทุนรวมก่อนตัดสินใจ กับน้อง Lensy",
-  description: "น้อง Lensy อ่าน Fund Factsheet และหนังสือชี้ชวนให้ บอกค่าใช้จ่าย ต้นทุนเป็นบาท และความเสี่ยง พร้อมเลขหน้าที่มา ข้อมูลเพื่อความเข้าใจ ไม่ใช่คำแนะนำการลงทุน",
+  title: "FinLens AI — เทียบกองทุนเคียงกัน เห็นค่าธรรมเนียมแฝง กับน้อง Lensy",
+  description: "น้อง Lensy อ่าน Fund Factsheet และหนังสือชี้ชวนของแต่ละกอง วางค่าใช้จ่ายทุกชั้นเทียบกัน บอกส่วนต่างเป็นบาท พร้อมเลขหน้าที่มา ข้อมูลเพื่อความเข้าใจ ไม่ใช่คำแนะนำการลงทุน",
 };
 
 /** Root layout for the public home page. */
