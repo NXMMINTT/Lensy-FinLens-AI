@@ -7,6 +7,14 @@ const SOURCE = { factsheet: "Factsheet", prospectus: "หนังสือช�
  * and the document's as-of date with its page. Missing items read as "not found", never as zero.
  */
 export function DataStatusBadge({ status, compact = false }: { status: DataStatus; compact?: boolean }) {
+  // sample data: say so, and show neither a check mark nor a document date
+  if (status.kind === "sample") {
+    return (
+      <span className="inline-flex items-center gap-1 self-start rounded-full border border-sun/60 bg-sun-soft px-2 py-0.5 text-[12px] font-bold text-sun-ink">
+        ! {status.label}
+      </span>
+    );
+  }
   const ok = status.kind === "verified";
   return (
     <span className="flex flex-col gap-0.5">

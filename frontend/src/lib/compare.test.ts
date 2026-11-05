@@ -21,7 +21,7 @@ describe("toCompareFund", () => {
     const phase = Object.fromEntries(c.layers.map((l) => [l.key, l.phase]));
     expect(phase).toMatchObject({ frontEnd: "buy", ter: "hold", masterFundExpense: "hold", backEnd: "sell", switching: "switch" });
     expect(c.layers.find((l) => l.key === "management")!.note).toContain("ไม่นับซ้ำ");
-    expect(c.status.kind).toBe("verified");
+    expect(c.status.kind).toBe("sample"); // sample data is never shown as checked
   });
 
   it("flags when the documents don't say whether the TER includes the master fund", () => {

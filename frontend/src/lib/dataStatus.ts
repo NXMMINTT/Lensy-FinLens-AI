@@ -5,7 +5,10 @@
  */
 import type { DocSource, Fund, Sourced } from "./schema";
 
-export type DataStatusKind = "verified" | "partial";
+/** `sample`: made-up demo data (meta.isSample); never shown as checked, and has no document date. */
+export type DataStatusKind = "verified" | "partial" | "sample";
+
+export const SAMPLE_STATUS_LABEL = "ข้อมูลตัวอย่าง ไม่ได้ตรวจกับเอกสารจริง";
 
 export type DataStatus = {
   kind: DataStatusKind;
@@ -29,6 +32,7 @@ function keyItems(f: Fund): [string, Sourced<unknown>][] {
 }
 
 export function fundDataStatus(f: Fund): DataStatus {
+  if (f.meta.isSample) return { kind: "sample", label: SAMPLE_STATUS_LABEL, missing: [], asOf: null, isSample: true };
   const missing = keyItems(f)
     .filter(([, s]) => s.value === null)
     .map(([name]) => name);
