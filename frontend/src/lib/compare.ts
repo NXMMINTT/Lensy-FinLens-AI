@@ -56,14 +56,14 @@ export function toCompareFund(f: Fund): CompareFund {
 }
 
 /** Initial selection from ?funds=A,B: known codes only, 2–3 of them, else the first two funds. */
-export function pickInitialCodes(all: CompareFund[], param: string | undefined): string[] {
+export function pickInitialCodes(all: CompareFund[], param: string | undefined, min = 2): string[] {
   const known = new Map(all.map((f) => [f.code.toUpperCase(), f.code]));
   const asked = (param ?? "")
     .split(",")
     .map((c) => known.get(c.trim().toUpperCase()))
     .filter((c): c is string => Boolean(c));
   const unique = [...new Set(asked)].slice(0, 3);
-  if (unique.length >= 2) return unique;
+  if (unique.length >= min) return unique;
   const rest = all.map((f) => f.code).filter((c) => !unique.includes(c));
-  return [...unique, ...rest].slice(0, Math.min(2, all.length));
+  return [...unique, ...rest].slice(0, Math.min(Math.max(min, unique.length), all.length));
 }

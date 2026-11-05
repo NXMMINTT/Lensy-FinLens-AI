@@ -13,8 +13,13 @@ import { Icon } from "../Icon";
 import { CostChart, SERIES_COLORS, type ChartRow, type ChartSeries } from "./CostChart";
 
 const SOURCE_LABEL = { factsheet: "Factsheet", prospectus: "หนังสือชี้ชวน" } as const;
-const MIN_FUNDS = 2;
 const MAX_FUNDS = 3;
+
+/**
+ * "fees": /compare — every fee layer of 2–3 funds side by side, with pages (no baht).
+ * "money": /calculator — fee cost in baht for 1–3 funds, with sliders, chart and assumptions.
+ */
+export type CompareMode = "fees" | "money";
 const AMOUNT_PRESETS = [10_000, 100_000, 500_000, 1_000_000];
 
 type Selected = { code: string; slot: number };
@@ -33,7 +38,8 @@ function PageTag({ page, source }: { page: number | null; source: keyof typeof S
   );
 }
 
-export function CompareTool({ funds, initialCodes }: { funds: CompareFund[]; initialCodes: string[] }) {
+export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[]; initialCodes: string[]; mode: CompareMode }) {
+  const MIN_FUNDS = mode === "fees" ? 2 : 1;
   // Each fund keeps its color slot while selected, so removing one never repaints the others.
   const [selected, setSelected] = useState<Selected[]>(initialCodes.map((code, slot) => ({ code, slot })));
   const [amount, setAmount] = useState(100_000);
@@ -103,7 +109,8 @@ export function CompareTool({ funds, initialCodes }: { funds: CompareFund[]; ini
       <section aria-labelledby="pick-title" className="rounded-[24px] border border-line bg-surface p-5 md:p-6">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h2 id="pick-title" className="m-0 text-[20px] font-bold">
-            เลือกกองที่จะเทียบ <span className="text-[15px] font-medium text-ink-muted">({MIN_FUNDS}–{MAX_FUNDS} กอง)</span>
+            {mode === "fees" ? "เลือกกองที่จะเทียบ" : "เลือกกองที่จะคำนวณ"}{" "}
+            <span className="text-[15px] font-medium text-ink-muted">({MIN_FUNDS}–{MAX_FUNDS} กอง)</span>
           </h2>
           {anySample && <SampleBadge className="!text-[13px]" />}
         </div>
@@ -131,6 +138,8 @@ export function CompareTool({ funds, initialCodes }: { funds: CompareFund[]; ini
         </div>
       </section>
 
+      {mode === "money" && (
+        <>
       {/* inputs */}
       <section aria-label="สมมติฐานการคำนวณ" className="grid gap-5 rounded-[24px] border border-line bg-surface p-5 md:grid-cols-3 md:p-6">
         <label className="flex flex-col gap-2">
@@ -240,7 +249,11 @@ export function CompareTool({ funds, initialCodes }: { funds: CompareFund[]; ini
           </div>
         </section>
       )}
+        </>
+      )}
 
+      {mode === "fees" && (
+        <>
       {/* fee table */}
       <section aria-labelledby="table-title" className="rounded-[24px] border border-line bg-surface">
         <h2 id="table-title" className="m-0 px-5 pt-5 text-[18px] font-bold md:px-6">
@@ -305,9 +318,22 @@ export function CompareTool({ funds, initialCodes }: { funds: CompareFund[]; ini
             </tbody>
           </table>
         </div>
+        <p className="m-0 border-t border-line px-5 py-3 text-[13.5px] text-ink-muted md:px-6">
+          ต้นทุนต่อปีรวม = ค่าใช้จ่ายรวมของกอง (TER) + ค่าใช้จ่ายของกองทุนหลัก ถ้าเอกสารระบุว่า TER ยังไม่รวม · เทียบเฉพาะค่าธรรมเนียม ไม่ได้บอกว่ากองไหนดีกว่า
+        </p>
       </section>
 
-      {/* assumptions */}
+      <a
+        href={`/calculator?funds=${encodeURIComponent(selected.map((s) => s.code).join(","))}`}
+        className="flex flex-wrap items-center justify-between gap-2 rounded-[20px] bg-brand-soft px-5 py-4 font-bold text-brand no-underline hover:underline"
+      >
+        อยากรู้ว่าต่างกันกี่บาท? คำนวณกองที่เลือกเป็นเงินบาท →
+      </a>
+        </>
+      )}
+
+      {mode === "money" && (
+      /* assumptions */
       <section aria-labelledby="assume-title" className="rounded-[24px] border border-line bg-surface p-5 md:p-6">
         <h2 id="assume-title" className="m-0 text-[17px] font-bold">
           สมมติฐานที่ใช้คำนวณ
@@ -318,6 +344,7 @@ export function CompareTool({ funds, initialCodes }: { funds: CompareFund[]; ini
           ))}
         </ul>
       </section>
+      )}
     </div>
   );
 }

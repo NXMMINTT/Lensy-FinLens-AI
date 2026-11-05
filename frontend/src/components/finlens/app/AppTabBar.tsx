@@ -4,8 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const TABS = [
-  { href: "/funds", label: "กองทุน", icon: "M4 19V9m6 10V5m6 14v-7m4 7H2" },
-  { href: "/compare", label: "เปรียบเทียบ", icon: "M3 17l6-6 4 4 8-8M15 7h6v6" },
+  { href: "/funds", label: "เมนู", icon: "M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" },
+  { href: "/compare", label: "เทียบกองทุน", icon: "M3 17l6-6 4 4 8-8M15 7h6v6" },
   { href: "/chat", label: "ถาม Lensy", icon: "M4 5h16v11H8l-4 4V5z" },
 ];
 

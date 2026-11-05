@@ -1,39 +1,35 @@
 import type { Metadata } from "next";
 
 import { AppShell } from "@/components/finlens/app/AppShell";
+import { PageHeader } from "@/components/finlens/app/PageHeader";
 import { CompareTool } from "@/components/finlens/compare/CompareTool";
-import { Disclaimer } from "@/components/finlens/Disclaimer";
 import { pickInitialCodes, toCompareFund } from "@/lib/compare";
 import { getVerifiedFunds } from "@/lib/funds";
 
 export const metadata: Metadata = {
-  title: "เทียบต้นทุนที่แท้จริง | FinLens AI",
-  description: "เทียบค่าธรรมเนียมทุกชั้นของกองทุน 2–3 กอง เป็นเงินบาท พร้อมเลขหน้าในเอกสาร ข้อมูลเพื่อความเข้าใจ ไม่ใช่คำแนะนำการลงทุน",
+  title: "เทียบกองทุน | FinLens AI",
+  description: "วางค่าธรรมเนียมทุกชั้นของกองทุน 2–3 กองเทียบกัน เห็นชั้นที่ซ่อนอยู่ในหนังสือชี้ชวน พร้อมเลขหน้า ข้อมูลเพื่อความเข้าใจ ไม่ใช่คำแนะนำการลงทุน",
 };
 
 export default async function ComparePage({ searchParams }: { searchParams: Promise<{ funds?: string }> }) {
   const { funds: fundsParam } = await searchParams;
   const funds = getVerifiedFunds().map(toCompareFund);
   const initialCodes = pickInitialCodes(funds, fundsParam);
-  const anySample = funds.some((f) => f.isSample);
 
   return (
-    <AppShell sampleNote={anySample}>
-          <header className="flex flex-col gap-2">
-            <span className="self-start rounded-md border border-brand/30 bg-surface px-3 py-1 text-[14px] font-semibold text-brand">True Cost Calculator</span>
-            <h1 className="m-0 text-[30px] font-bold leading-tight md:text-[40px]">
-              เทียบต้นทุนที่แท้จริง <span className="marker-green">เป็นบาท</span>
-            </h1>
-            <p className="m-0 max-w-[720px] text-ink-body">
-              รวมค่าใช้จ่ายทุกชั้นของแต่ละกอง แล้วคำนวณว่าเงินที่ลงทุนจะเสียไปกับค่าธรรมเนียมเท่าไหร่ ทุกตัวเลขมีเลขหน้าในเอกสารให้ตรวจเองได้
-            </p>
-            <Disclaimer />
-          </header>
-          {funds.length < 2 ? (
-            <p className="m-0 rounded-2xl border border-line bg-surface p-6">ยังมีข้อมูลกองทุนที่ตรวจแล้วไม่ถึง 2 กอง จึงยังเทียบไม่ได้</p>
-          ) : (
-            <CompareTool funds={funds} initialCodes={initialCodes} />
-          )}
+    <AppShell sampleNote={funds.some((f) => f.isSample)}>
+      <PageHeader
+        label="เทียบกองทุน"
+        title="เทียบ 2–3 กองเคียงกัน"
+        mark="เห็นค่าธรรมเนียมแฝง"
+        text="ค่าธรรมเนียมทุกชั้นวางเทียบทีละบรรทัด ชั้นที่อยู่ในหนังสือชี้ชวนแต่ไม่อยู่ใน Factsheet มีป้ายเตือน ทุกค่ามีเลขหน้า"
+        pose="magnifier"
+      />
+      {funds.length < 2 ? (
+        <p className="m-0 rounded-2xl border border-line bg-surface p-6">ยังมีข้อมูลกองทุนที่ตรวจแล้วไม่ถึง 2 กอง จึงยังเทียบไม่ได้</p>
+      ) : (
+        <CompareTool funds={funds} initialCodes={initialCodes} mode="fees" />
+      )}
     </AppShell>
   );
 }

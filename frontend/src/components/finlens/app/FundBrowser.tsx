@@ -107,10 +107,10 @@ export function FundBrowser({ funds }: { funds: FundSummary[] }) {
                   ดูรายละเอียด
                 </Link>
                 <Link
-                  href={`/compare?funds=${encodeURIComponent(f.code)}`}
+                  href={`/calculator?funds=${encodeURIComponent(f.code)}`}
                   className="inline-flex min-h-[44px] items-center rounded-full border-2 border-brand px-5 font-bold text-brand no-underline hover:bg-brand-soft"
                 >
-                  เทียบต้นทุน
+                  คำนวณเป็นบาท
                 </Link>
               </div>
             </li>

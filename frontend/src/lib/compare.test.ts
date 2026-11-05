@@ -41,4 +41,10 @@ describe("pickInitialCodes", () => {
     expect(pickInitialCodes(all, undefined)).toEqual(["A", "B"]);
     expect(pickInitialCodes(all, "D,nope")).toEqual(["D", "A"]);
   });
+
+  it("allows a single fund when the page needs only one (the calculator)", () => {
+    expect(pickInitialCodes(all, "D", 1)).toEqual(["D"]);
+    expect(pickInitialCodes(all, undefined, 1)).toEqual(["A"]);
+    expect(pickInitialCodes(all, "b,c", 1)).toEqual(["B", "C"]);
+  });
 });

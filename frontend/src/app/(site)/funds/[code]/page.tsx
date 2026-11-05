@@ -72,8 +72,8 @@ export default async function FundPage({ params }: Props) {
   return (
     <AppShell sampleNote={f.meta.isSample}>
       <nav aria-label="breadcrumb" className="text-[14px] text-ink-muted">
-        <Link href="/funds" className="text-ink-muted no-underline hover:text-brand">
-          กองทุน
+        <Link href="/explain" className="text-ink-muted no-underline hover:text-brand">
+          ดูทีละกอง
         </Link>{" "}
         / <span className="text-ink-body">{f.code}</span>
       </nav>
@@ -116,7 +116,7 @@ export default async function FundPage({ params }: Props) {
             href={`/compare?funds=${encodeURIComponent([f.code, otherCode].filter(Boolean).join(","))}`}
             className="inline-flex min-h-[44px] items-center rounded-full border-2 border-brand px-5 font-bold text-brand no-underline hover:bg-brand-soft"
           >
-            เทียบต้นทุนกับกองอื่น
+            เทียบค่าธรรมเนียมกับกองอื่น
           </Link>
         </div>
       </header>
@@ -180,7 +180,7 @@ export default async function FundPage({ params }: Props) {
               </li>
             ))}
           </ul>
-          <Link href={`/compare?funds=${encodeURIComponent([f.code, otherCode].filter(Boolean).join(","))}`} className="mt-3 inline-block font-bold text-brand underline-offset-4 hover:underline">
+          <Link href={`/calculator?funds=${encodeURIComponent(f.code)}`} className="mt-3 inline-block font-bold text-brand underline-offset-4 hover:underline">
             ดูเป็นเงินบาทตามจำนวนปี →
           </Link>
         </Card>

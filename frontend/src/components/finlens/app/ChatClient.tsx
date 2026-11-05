@@ -14,10 +14,22 @@ type Msg = { id: number; role: "user" | "bot"; text: string; refs?: AskRef[]; as
 
 const MAX = 3;
 
-export function ChatClient({ funds, initialCodes, questions, aiReady }: { funds: FundOption[]; initialCodes: string[]; questions: string[]; aiReady: boolean }) {
+export function ChatClient({
+  funds,
+  initialCodes,
+  initialInput = "",
+  questions,
+  aiReady,
+}: {
+  funds: FundOption[];
+  initialCodes: string[];
+  initialInput?: string;
+  questions: string[];
+  aiReady: boolean;
+}) {
   const [codes, setCodes] = useState<string[]>(initialCodes);
   const [messages, setMessages] = useState<Msg[]>([]);
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(initialInput);
   const [busy, setBusy] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
   const nextId = useRef(1);

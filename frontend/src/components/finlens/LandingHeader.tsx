@@ -19,8 +19,10 @@ const NAV_LANDING = [
 
 /** Dashboard (signed in): the app pages. */
 const NAV_APP = [
-  { href: "/funds", label: "กองทุน" },
-  { href: "/compare", label: "เทียบต้นทุน" },
+  { href: "/funds", label: "เมนู" },
+  { href: "/compare", label: "เทียบกองทุน" },
+  { href: "/explain", label: "ดูทีละกอง" },
+  { href: "/calculator", label: "คำนวณเป็นบาท" },
   { href: "/chat", label: "ถาม Lensy" },
 ];
 

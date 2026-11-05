@@ -54,11 +54,11 @@ export async function handleText(raw: string, funds: Fund[], ask: Answerer): Pro
     return [textMessage(`อยากดู${text}ของกองไหนคะ เลือกด้านล่าง หรือพิมพ์ชื่อกองมาได้เลยค่ะ`, quickReplies(fundChips(funds)))];
   }
   if (text === MENU.calc) {
-    const url = appUrl("/compare");
+    const url = appUrl("/calculator");
     const example = funds[0] ? [{ label: "ลอง 100,000 บาท 10 ปี", text: `${funds[0].code} ลงทุน 100,000 บาท 10 ปี เสียค่าธรรมเนียมกี่บาท` }] : [];
     return [
       textMessage(
-        `อยากรู้ว่าเสียค่าธรรมเนียมกี่บาท พิมพ์แบบนี้ได้เลยค่ะ\n"<ชื่อกอง> ลงทุน 100,000 บาท 10 ปี เสียกี่บาท"${url ? `\n\nหรือเทียบ 2–3 กองพร้อมกราฟที่นี่ค่ะ\n${url}` : ""}`,
+        `อยากรู้ว่าเสียค่าธรรมเนียมกี่บาท พิมพ์แบบนี้ได้เลยค่ะ\n"<ชื่อกอง> ลงทุน 100,000 บาท 10 ปี เสียกี่บาท"${url ? `\n\nหรือคำนวณ 1–3 กองพร้อมกราฟที่นี่ค่ะ\n${url}` : ""}`,
         quickReplies(example),
       ),
     ];

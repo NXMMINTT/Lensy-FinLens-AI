@@ -152,7 +152,7 @@ export function fundCard(f: Fund): messagingApi.FlexMessage {
   }
   body.push(disclaimer());
 
-  const footer = [...uriButton("ดูละเอียด", `/funds/${encodeURIComponent(f.code)}`, true), ...uriButton("เทียบต้นทุนเป็นบาท", `/compare?funds=${encodeURIComponent(f.code)}`)];
+  const footer = [...uriButton("ดูละเอียด", `/funds/${encodeURIComponent(f.code)}`, true), ...uriButton("คำนวณเป็นบาท", `/calculator?funds=${encodeURIComponent(f.code)}`)];
 
   return {
     type: "flex",
