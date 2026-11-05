@@ -35,12 +35,32 @@ export const SAMPLE_QUESTIONS = [
 
 /* ── classify ── */
 
-const ADVICE = /(ควร(จะ)?(ซื้อ|ขาย|ลงทุน|เลือก|ถือ)|ซื้อ(ดี)?(ไหม|มั้ย|หรือเปล่า)|ขาย(ดี)?(ไหม|มั้ย)|กอง(ไหน|ใด)(ดี|เด่น|คุ้ม)|ดีที่สุด|ดีกว่า|แนะนำ(กอง|ให้|หน่อย)|น่า(ซื้อ|ลงทุน|สนใจ)|คุ้มไหม|จะ(ขึ้น|ลง|ได้กำไร|ขาดทุน)|คาดการณ์|ทำนาย|ผลตอบแทน(ใน)?อนาคต|ปีหน้า(จะ|ได้)|อันดับ)/;
-const MONEY = /(\d[\d,]*(\.\d+)?\s*(บาท|แสน|ล้าน|หมื่น|พัน)|เสีย(ค่าธรรมเนียม|ค่าใช้จ่าย|เงิน)?\s*(ไป)?\s*(กี่บาท|เท่า(ไหร่|ไร))|เป็น(เงิน)?(กี่)?บาท)/;
+/** Always refused: asking what to do, which fund to pick, or what will happen. */
+const ADVICE = new RegExp(
+  [
+    "ควร(จะ)?\\s*(ซื้อ|ขาย|ลงทุน|เลือก|ถือ|สับเปลี่ยน)",
+    "(ซื้อ|ขาย|ถือ|เข้า)(ดี|ต่อ|ตอนนี้)?\\s*(ไหม|มั้ย|หรือเปล่า|รึเปล่า|ดีไหม)",
+    "กอง\\s*(ไหน|ใด)\\s*(ดี|เด่น|คุ้ม|น่า|เหมาะ|เสี่ยงน้อย|ปลอดภัย|ได้กำไร)",
+    "(ตัว|อัน)(ไหน|ใด)\\s*(ดี|คุ้ม|น่า)",
+    "เลือก(กอง)?\\s*(ไหน|ใด)",
+    "ดีที่สุด|คุ้มที่สุด|คุ้ม(ไหม|มั้ย)|เหมาะ(กับ)?\\s*(ฉัน|ผม|หนู|เรา|ตัวเอง)",
+    "แนะนำ\\s*(กอง|ให้|หน่อย|ที|ด้วย)",
+    "น่า(ซื้อ|ลงทุน|สนใจ|เข้า)",
+    "จะ(ขึ้น|ลง|ได้กำไร|ขาดทุน|ได้กี่)",
+    "คาดการณ์|ทำนาย|ผลตอบแทน\\s*(ใน)?อนาคต|ปีหน้า\\s*(จะ|ได้)",
+    "จัดอันดับ|อันดับ\\s*(หนึ่ง|1|ที่\\s*1)",
+  ].join("|"),
+);
+/** Refused only when it is not a "why" question: "ทำไมดัชนีให้ผลตอบแทนดีกว่ากอง" asks for an explanation. */
+const COMPARE_JUDGEMENT = /(ดีกว่า|เด่นกว่า|เหนือกว่า|คุ้มกว่า|ชนะ)/;
+const WHY = /^(ทำไม|เพราะ(อะไร|เหตุใด)|อะไรทำให้|เหตุใด)|(ทำไม|เพราะอะไร)\s*$/;
+/** Which fund costs less is answered in baht by trueCost, never by the AI. */
+const MONEY = /(\d[\d,]*(\.\d+)?\s*(บาท|แสน|ล้าน|หมื่น|พัน)|เสีย(ค่าธรรมเนียม|ค่าใช้จ่าย|เงิน)?\s*(ไป)?\s*(กี่บาท|เท่า(ไหร่|ไร))|กี่บาท|เป็น(เงิน)?(กี่)?บาท|ถูกกว่า|แพงกว่า|ต่างกัน\s*(กี่|เท่า))/;
 
 export function classifyQuestion(q: string): "advice" | "money" | "general" {
-  const s = q.replace(/\s+/g, " ");
+  const s = q.replace(/\s+/g, " ").trim();
   if (ADVICE.test(s)) return "advice";
+  if (COMPARE_JUDGEMENT.test(s) && !WHY.test(s)) return "advice";
   if (MONEY.test(s)) return "money";
   return "general";
 }
@@ -198,15 +218,53 @@ function verifiedQuotes(f: Fund): { page: number; source: DocSource; quote: stri
   return out;
 }
 
+/* ── every number in an AI answer needs a source ── */
+
+const THAI_DIGITS = /[๐-๙]/g;
+const toArabic = (s: string) => s.replace(THAI_DIGITS, (d) => String(d.charCodeAt(0) - 0x0e50));
+const NUMBER = /\d[\d,]*(?:\.\d+)?/g;
+/** A small count before or after one of these words ("2 ชั้น", "ข้อ 1") is wording, not a fund figure. */
+const COUNT_AFTER = /^\s*(กอง|ชั้น|ข้อ|อย่าง|ประเภท|เรื่อง|ส่วน|แบบ|ขั้น|วิธี|ทาง)/;
+const COUNT_BEFORE = /(ข้อ(ที่)?|ขั้น(ที่)?|ส่วน(ที่)?)\s*$/;
+
+function numbersIn(text: string): number[] {
+  return [...toArabic(text).matchAll(NUMBER)].map((m) => Number(m[0].replace(/,/g, ""))).filter(Number.isFinite);
+}
+
 /**
- * Keep only refs whose quote is really in the verified data or the PDF text on that page.
- * If the answer has numbers but no ref survives, it is replaced: no number without a page.
+ * Numbers in `answer` that no accepted source backs (project brief rule 1: no number without a page).
+ * A number is backed when it appears (as a value, so 1.07 = 1.0700) in an accepted quote, is a cited
+ * page, comes from the question, is part of a fund code or name, or is a small count ("2 ชั้น").
  */
-export function checkAiAnswer(raw: unknown, funds: Fund[], pdfPages: Record<string, { source: DocSource; pages: string[] }[]>): AskResponse {
+export function unbackedNumbers(answer: string, quotes: string[], pages: number[], question: string, funds: Fund[]): string[] {
+  let text = toArabic(answer);
+  for (const f of funds) {
+    for (const name of [f.code, f.nameTh.value ?? ""].filter(Boolean)) text = text.split(name).join(" ");
+  }
+  const allowed = new Set<number>([...quotes.flatMap(numbersIn), ...pages, ...numbersIn(question)]);
+  const out: string[] = [];
+  for (const m of text.matchAll(NUMBER)) {
+    const value = Number(m[0].replace(/,/g, ""));
+    if (allowed.has(value)) continue;
+    const before = text.slice(Math.max(0, m.index - 8), m.index);
+    const after = text.slice(m.index + m[0].length, m.index + m[0].length + 8);
+    if (Number.isInteger(value) && value <= 10 && (COUNT_AFTER.test(after) || COUNT_BEFORE.test(before))) continue;
+    out.push(m[0]);
+  }
+  return out;
+}
+
+/**
+ * Keep only refs whose quote is really in the verified data or the PDF text on that page, then
+ * check every number in the answer against those refs. An answer with any unbacked number is
+ * replaced: no number without a page.
+ */
+export function checkAiAnswer(raw: unknown, funds: Fund[], pdfPages: Record<string, { source: DocSource; pages: string[] }[]>, question = ""): AskResponse {
   const parsed = AiAnswer.safeParse(raw);
   if (!parsed.success) return { kind: "error", answer: "ขอโทษค่ะ น้อง Lensy ตอบไม่สำเร็จ ลองถามใหม่อีกครั้งนะคะ", refs: [] };
   const byCode = new Map(funds.map((f) => [f.code.toUpperCase(), f]));
   const refs: AskRef[] = [];
+  const acceptedQuotes: string[] = [];
   for (const r of parsed.data.refs) {
     const f = byCode.get(r.code.toUpperCase());
     if (!f) continue;
@@ -216,10 +274,12 @@ export function checkAiAnswer(raw: unknown, funds: Fund[], pdfPages: Record<stri
     const inPdf = docs.some((d) => d.source === r.source && findQuotePage(d.pages, r.quote, r.page) === r.page);
     if ((inData || inPdf) && !refs.some((x) => x.code === f.code && x.page === r.page && x.quote === r.quote)) {
       refs.push({ code: f.code, nameTh: f.nameTh.value ?? f.code, page: r.page, source: r.source, quote: r.quote.slice(0, 300) });
+      acceptedQuotes.push(r.quote);
     }
   }
   const answer = parsed.data.answer.trim();
-  if (/\d/.test(answer) && refs.length === 0) {
+  const unbacked = unbackedNumbers(answer, acceptedQuotes, refs.map((r) => r.page), question, funds);
+  if (unbacked.length) {
     if (funds.length === 0) return { kind: "ai", answer: NEED_FUND_FOR_NUMBERS, refs: [] };
     return { kind: "ai", answer: `${NOT_FOUND}ที่ยืนยันเลขหน้าได้ค่ะ ลองถามให้เจาะจงขึ้น หรือดูหน้ากองทุนซึ่งมีเลขหน้าทุกค่านะคะ`, refs: [] };
   }

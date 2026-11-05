@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { checkAiAnswer, classifyQuestion, GENERAL_NOTE, moneyAnswer, NEED_FUND_FOR_NUMBERS, parseMoneyQuestion, SAMPLE_QUESTIONS } from "./ask";
+import { checkAiAnswer, classifyQuestion, GENERAL_NOTE, moneyAnswer, NEED_FUND_FOR_NUMBERS, parseMoneyQuestion, SAMPLE_QUESTIONS, unbackedNumbers } from "./ask";
 import { getFund } from "./funds";
 import { trueCost } from "./trueCost";
 
@@ -18,6 +18,52 @@ describe("classifyQuestion", () => {
 
   it("sends the four sample questions to the AI", () => {
     for (const q of SAMPLE_QUESTIONS) expect(classifyQuestion(q)).toBe("general");
+  });
+
+  // A fixed set the team can extend: each line is a real way people ask.
+  it.each([
+    "ควรซื้อ SAMPLE-GLOBAL ไหม",
+    "ควรจะขายตอนนี้หรือเปล่า",
+    "ถือต่อดีไหม",
+    "ซื้อตอนนี้ไหม",
+    "กองไหนน่าลงทุน",
+    "กองไหนเสี่ยงน้อยกว่า",
+    "กองไหนเหมาะกับฉัน",
+    "เลือกกองไหนดี",
+    "อันไหนดีกว่ากัน",
+    "SAMPLE-GLOBAL ดีกว่า SAMPLE-INDEX ไหม",
+    "กองนี้คุ้มไหม",
+    "คุ้มที่สุดคือกองไหน",
+    "แนะนำกองให้หน่อย",
+    "จัดอันดับให้หน่อย",
+    "ปีหน้ากองนี้จะได้กี่เปอร์เซ็นต์",
+    "หุ้นโลกจะขึ้นอีกไหม",
+    "คาดการณ์ผลตอบแทนให้หน่อย",
+  ])("refuses advice, ranking or forecast: %s", (q) => {
+    expect(classifyQuestion(q)).toBe("advice");
+  });
+
+  it.each([
+    "กองไหนค่าธรรมเนียมถูกกว่า",
+    "SAMPLE-GLOBAL แพงกว่า SAMPLE-INDEX เท่าไหร่",
+    "สองกองนี้ต่างกันกี่บาท",
+    "ต่างกันเท่าไหร่ถ้าถือ 20 ปี",
+  ])("answers fee comparisons in baht with code, not the AI: %s", (q) => {
+    expect(classifyQuestion(q)).toBe("money");
+  });
+
+  it.each([
+    "ทำไมดัชนีให้ผลตอบแทนดีกว่ากองทุน",
+    "10 อันดับแรกที่กองลงทุนมีอะไรบ้าง",
+    "ขายคืนได้ทุกวันไหม",
+    "ซื้อได้ที่ไหน",
+    "ก่อนลงทุนควรรู้อะไรบ้าง",
+    "มีโอกาสขาดทุนจากค่าเงินไหม",
+    "TER คืออะไร",
+    "กองทุนรวมฟีดเดอร์คืออะไร",
+    "ค่าใช้จ่ายของกองทุนหลักอยู่หน้าไหน",
+  ])("lets explanation questions through: %s", (q) => {
+    expect(classifyQuestion(q)).toBe("general");
   });
 });
 
@@ -79,6 +125,32 @@ describe("checkAiAnswer", () => {
     const r = checkAiAnswer({ answer: "TER ปกติอยู่ที่ราว 1.5% ค่ะ", refs: [] }, [], {});
     expect(r.answer).toBe(NEED_FUND_FOR_NUMBERS);
     expect(r.note).toBeUndefined();
+  });
+
+  it("rejects a number that no accepted quote backs, even when another ref is valid", () => {
+    const r = checkAiAnswer(
+      { answer: "ค่าใช้จ่ายกองหลัก 0.80% ต่อปี และค่าธรรมเนียมแฝงอีก 2.5% ค่ะ", refs: [{ code: "SAMPLE-GLOBAL", page: 14, source: "prospectus", quote: g.fees.masterFundExpense.quote }] },
+      [g],
+      {},
+    );
+    expect(r.refs).toHaveLength(0);
+    expect(r.answer).toContain("ไม่พบข้อมูลนี้ในเอกสาร");
+  });
+
+  it("accepts numbers that match the quote by value, the cited page, the question and small counts", () => {
+    const r = checkAiAnswer(
+      { answer: "มีค่าใช้จ่าย 2 ชั้นค่ะ ชั้นกองหลัก 0.8% ต่อปี อยู่หนังสือชี้ชวนหน้า 14 ถ้าถือ 10 ปีลองดูหน้าเทียบต้นทุนนะคะ", refs: [{ code: "SAMPLE-GLOBAL", page: 14, source: "prospectus", quote: g.fees.masterFundExpense.quote }] },
+      [g],
+      {},
+      "ถือ 10 ปี มีค่าใช้จ่ายอะไรบ้าง",
+    );
+    expect(r.refs).toHaveLength(1);
+    expect(r.answer).toContain("0.8%");
+  });
+
+  it("finds Thai digits too", () => {
+    expect(unbackedNumbers("ค่าธรรมเนียม ๒.๕%", ["ค่าธรรมเนียม 1.5%"], [], "", [])).toEqual(["2.5"]);
+    expect(unbackedNumbers("ค่าธรรมเนียม ๑.๕%", ["ค่าธรรมเนียม 1.50%"], [], "", [])).toEqual([]);
   });
 
   it("accepts a quote found in the PDF text on that page", () => {

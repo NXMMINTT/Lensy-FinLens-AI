@@ -51,7 +51,7 @@ export async function answerQuestion(funds: Fund[], question: string): Promise<A
     }
     if (pdfText.length > MAX_PDF_CHARS) pdfText = pdfText.slice(0, MAX_PDF_CHARS);
     const { data } = await chatJson(ASK_SYSTEM, askPrompt(funds, question, pdfText), ANSWER_LIMITS);
-    return checkAiAnswer(data, funds, pdfPages);
+    return checkAiAnswer(data, funds, pdfPages, question);
   } catch (err) {
     if (err instanceof AiNotConfiguredError) return { kind: "not_configured", answer: NOT_CONFIGURED_ANSWER, refs: [] };
     console.error("[askService]", err instanceof Error ? err.message : err);
