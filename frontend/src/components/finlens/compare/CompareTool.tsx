@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 import type { CompareFund } from "@/lib/compare";
@@ -323,12 +324,12 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
         </p>
       </section>
 
-      <a
+      <Link
         href={`/calculator?funds=${encodeURIComponent(selected.map((s) => s.code).join(","))}`}
         className="flex flex-wrap items-center justify-between gap-2 rounded-[20px] bg-brand-soft px-5 py-4 font-bold text-brand no-underline hover:underline"
       >
         อยากรู้ว่าต่างกันกี่บาท? คำนวณกองที่เลือกเป็นเงินบาท →
-      </a>
+      </Link>
         </>
       )}
 

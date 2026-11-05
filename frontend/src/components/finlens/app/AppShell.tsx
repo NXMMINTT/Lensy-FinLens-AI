@@ -3,7 +3,8 @@ import { LandingFooter } from "../LandingSections";
 import { AppTabBar } from "./AppTabBar";
 
 /** Frame for the dashboard pages: header, content, footer with the disclaimer, phone tab bar. */
-export function AppShell({ children, sampleNote }: { children: React.ReactNode; sampleNote: boolean }) {
+// sampleNote is kept so pages can still say whether they show sample data; the label itself is on the page
+export function AppShell({ children }: { children: React.ReactNode; sampleNote?: boolean }) {
   return (
     <div className="overflow-x-clip text-ink">
       <LandingHeader signedIn />
@@ -11,7 +12,7 @@ export function AppShell({ children, sampleNote }: { children: React.ReactNode; 
         <div className="mx-auto flex max-w-[1100px] flex-col gap-6 px-4 py-8 md:px-6 md:py-10">{children}</div>
       </main>
       <div className="pb-[60px] md:pb-0">
-        <LandingFooter sampleNote={sampleNote} />
+        <LandingFooter />
       </div>
       <AppTabBar />
     </div>

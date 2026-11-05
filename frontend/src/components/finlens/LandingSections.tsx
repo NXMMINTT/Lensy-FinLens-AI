@@ -1,4 +1,4 @@
-
+import Link from "next/link";
 import { LineAddFriendButton } from "@/components/brand/LineAddFriendButton";
 import { NOT_FOUND, SAMPLE_DATA_LABEL } from "@/lib/disclaimer";
 import { pct, SAMPLE_ACTIVE as F, SAMPLE_INDEX as B, sampleAnnualCost } from "@/lib/sampleFunds";
@@ -179,69 +179,98 @@ export function Promises() {
   );
 }
 
-/* ── Pricing: comparison table ── */
+/* ── Pricing: two plan cards ── */
 
-const PLAN_ROWS: [string, boolean, boolean][] = [
-  ["เทียบค่าธรรมเนียมทุกชั้นของ 2–3 กองเคียงกัน", true, true],
-  ["บอกส่วนต่างเป็นบาท ปรับเงินและจำนวนปีเองได้", true, true],
-  ["อธิบายทีละกอง: ค่าใช้จ่าย เสียกี่บาท ความเสี่ยงที่อาจมองข้าม", true, true],
-  ["ถามน้อง Lensy เรื่องการเงิน ผ่าน LINE และเว็บ", true, true],
-  ["ส่องพอร์ต: รวมค่าใช้จ่ายและความเสี่ยงทุกกองที่ถือ", false, true],
-  ["เช็กก่อนเชื่อ: เทียบข้อความโฆษณากองทุนกับเอกสารจริง", false, true],
+const FREE_FEATURES = [
+  "เทียบค่าธรรมเนียมทุกชั้นของ 2–3 กองเคียงกัน",
+  "คำนวณส่วนต่างเป็นบาท ปรับเงินและจำนวนปีเองได้",
+  "อธิบายทีละกอง: ค่าใช้จ่าย เสียกี่บาท ความเสี่ยง",
+  "ถามน้อง Lensy เรื่องการเงิน ผ่าน LINE และเว็บ",
 ];
+const PREMIUM_FEATURES = ["ส่องพอร์ต: รวมค่าใช้จ่ายและความเสี่ยงทุกกองที่ถือ", "เช็กก่อนเชื่อ: เทียบข้อความโฆษณากับเอกสารจริง"];
+
+function Check({ light = false }: { light?: boolean }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[12px] font-bold ${light ? "bg-white text-brand" : "bg-brand-soft text-brand"}`}
+    >
+      ✓
+    </span>
+  );
+}
 
 export function PricingTable() {
   return (
     <section id="pricing" aria-labelledby="pricing-title" className="scroll-mt-20 px-5 py-16 md:px-6">
-      <div className="mx-auto flex max-w-[900px] flex-col gap-8">
+      <div className="mx-auto flex max-w-[920px] flex-col gap-8">
         <div className="text-center">
-          <h2 id="pricing-title" className="relative m-0 inline-block text-[30px] font-bold md:text-[40px]">
+          <h2 id="pricing-title" className="relative m-0 inline-block text-[30px] font-bold md:text-[38px]">
             <TitleDecor />
             ฟีเจอร์หลัก<span className="marker-green">ใช้ฟรี</span>
           </h2>
-          <p className="m-0 mt-2 text-ink-muted">Premium สำหรับคนที่อยากดูทั้งพอร์ต · ช่วงเดโมยังไม่เปิดรับชำระเงิน</p>
+          <p className="m-0 mt-2 text-ink-muted">เทียบกองทุนได้ครบโดยไม่ต้องจ่าย Premium สำหรับคนที่ถือหลายกอง</p>
         </div>
-        <div className="overflow-x-auto rounded-[24px] border border-line bg-surface">
-          <table className="w-full min-w-[520px] border-collapse text-left">
-            <thead>
-              <tr className="border-b border-line">
-                <th className="p-5 align-bottom text-[15px] font-semibold text-ink-muted">ฟีเจอร์</th>
-                <th className="w-[150px] p-5 text-center">
-                  <div className="text-[18px] font-bold">ฟรี</div>
-                  <div className="font-heading text-[30px] font-bold">฿0</div>
-                </th>
-                <th className="w-[170px] bg-brand-soft/60 p-5 text-center">
-                  <div className="flex items-center justify-center gap-2 text-[18px] font-bold text-brand">
-                    Premium <span className="whitespace-nowrap rounded-full bg-sun px-2 py-0.5 text-[11px] text-[#4A3500]">เร็ว ๆ นี้</span>
-                  </div>
-                  <div className="font-heading text-[30px] font-bold">
-                    ฿99<span className="text-[15px] font-medium text-ink-muted"> / เดือน</span>
-                  </div>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {PLAN_ROWS.map(([label, free, premium]) => (
-                <tr key={label} className="border-b border-line-subtle last:border-0">
-                  <td className="px-5 py-3.5">{label}</td>
-                  {[free, premium].map((on, i) => (
-                    <td key={i} className={`px-5 py-3.5 text-center ${i === 1 ? "bg-brand-soft/60" : ""}`}>
-                      {on ? (
-                        <span className="font-bold text-brand" aria-label="มี">
-                          ✓
-                        </span>
-                      ) : (
-                        <span className="text-ink-faint" aria-label="ไม่มี">
-                          —
-                        </span>
-                      )}
-                    </td>
-                  ))}
-                </tr>
+
+        <div className="grid items-stretch gap-5 md:grid-cols-2">
+          {/* free */}
+          <article className="flex flex-col gap-5 rounded-[28px] border border-line bg-surface p-7">
+            <div className="flex flex-col gap-1">
+              <span className="text-[17px] font-bold text-ink-body">ฟรี</span>
+              <span className="font-heading text-[44px] font-bold leading-none">฿0</span>
+              <span className="text-[15px] text-ink-muted">ฟีเจอร์หลักครบ ใช้ได้เลย</span>
+            </div>
+            <ul className="m-0 flex list-none flex-col gap-3 p-0">
+              {FREE_FEATURES.map((f) => (
+                <li key={f} className="flex items-start gap-2.5 text-[15.5px]">
+                  <Check />
+                  {f}
+                </li>
               ))}
-            </tbody>
-          </table>
+            </ul>
+            <Link
+              href="/funds"
+              className="mt-auto inline-flex min-h-[50px] items-center justify-center rounded-full border-2 border-brand px-6 font-bold text-brand no-underline hover:bg-brand-soft"
+            >
+              เริ่มใช้ฟรี
+            </Link>
+          </article>
+
+          {/* premium */}
+          <article className="force-light relative flex flex-col gap-5 overflow-hidden rounded-[28px] bg-gradient-to-br from-brand to-brand-dark p-7 text-white shadow-[0_18px_40px_rgba(26,118,55,.28)]">
+            <span aria-hidden="true" className="pointer-events-none absolute -right-14 -top-14 h-48 w-48 rounded-full bg-white/10" />
+            <Lensy pose="heart" size={104} className="absolute right-3 top-3 max-sm:!h-[80px] max-sm:!w-[80px]" />
+            <div className="relative flex flex-col gap-1">
+              <span className="flex items-center gap-2 text-[17px] font-bold">
+                Premium <span className="rounded-full bg-sun px-2.5 py-0.5 text-[12px] text-[#4A3500]">เร็ว ๆ นี้</span>
+              </span>
+              <span className="font-heading text-[44px] font-bold leading-none">
+                ฿99<span className="text-[16px] font-medium text-white/80"> / เดือน</span>
+              </span>
+              <span className="text-[15px] text-white/85">สำหรับคนที่ถือหลายกอง</span>
+            </div>
+            <ul className="relative m-0 flex list-none flex-col gap-3 p-0">
+              <li className="flex items-start gap-2.5 text-[15.5px] font-semibold">
+                <Check light />
+                ทุกอย่างในแผนฟรี
+              </li>
+              {PREMIUM_FEATURES.map((f) => (
+                <li key={f} className="flex items-start gap-2.5 text-[15.5px]">
+                  <Check light />
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <span
+              aria-disabled="true"
+              className="relative mt-auto inline-flex min-h-[50px] items-center justify-center rounded-full bg-white/15 px-6 font-bold text-white"
+            >
+              เปิดให้ใช้เร็ว ๆ นี้
+            </span>
+          </article>
         </div>
+
+        <p className="m-0 text-center text-[14px] text-ink-muted">ช่วงเดโมยังไม่เปิดรับชำระเงิน · ทุกแผนไม่แนะนำให้ซื้อหรือขายกองใด</p>
       </div>
     </section>
   );
@@ -322,21 +351,16 @@ export function StartCta() {
   );
 }
 
-export function LandingFooter({ sampleNote = true }: { sampleNote?: boolean } = {}) {
+/** The disclaimer and sample labels live on each page itself (hero, page headers, badges), not here. */
+export function LandingFooter() {
   return (
     <footer className="border-t border-line bg-surface">
-      <div className="mx-auto flex max-w-[1200px] flex-col gap-4 px-5 py-8 text-[15px] md:px-6">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex flex-col gap-1.5">
-            <FinLensLogo height={38} />
-            <div className="text-ink-muted">เทียบกองทุนเคียงกัน เห็นค่าธรรมเนียมแฝง ทุกตัวเลขมีเลขหน้าที่มา</div>
-          </div>
-          <div className="text-ink-muted">Trinity Hackathon 2026</div>
+      <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-4 px-5 py-8 text-[15px] md:px-6">
+        <div className="flex flex-col gap-1.5">
+          <FinLensLogo height={38} />
+          <div className="text-ink-muted">เทียบกองทุนเคียงกัน เห็นค่าธรรมเนียมแฝง ทุกตัวเลขมีเลขหน้าที่มา</div>
         </div>
-        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-line pt-4">
-          <Disclaimer className="font-semibold text-ink-body" />
-          {sampleNote && <span className="text-ink-muted">ข้อมูลกองทุนในหน้านี้เป็น{SAMPLE_DATA_LABEL}</span>}
-        </div>
+        <div className="text-ink-muted">Trinity Hackathon 2026</div>
       </div>
     </footer>
   );
