@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: "เทียบค่าธรรมเนียมแฝงของกองทุน ดูทีละกอง คำนวณเป็นบาท และถามน้อง Lensy ข้อมูลเพื่อความเข้าใจ ไม่ใช่คำแนะนำการลงทุน",
 };
 
-/** Dashboard home after LINE login: just the menu; each tile opens its own page. */
+/** App home (open to everyone): just the menu; each tile opens its own page. */
 export default function MenuPage() {
   const anySample = getVerifiedFunds().some((f) => f.meta.isSample);
 

@@ -2,14 +2,15 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { SESSION_COOKIE, verifySession } from "@/lib/session";
 
-/** Dashboard pages and the AI endpoint need a login; the promo home page does not. */
+/**
+ * Only the Premium features, which keep personal data (a portfolio, saved checks), need a login.
+ * Comparing, the calculator, fund pages, the glossary, the checklist and the chat (with /api/ask)
+ * are open, so a visitor can try น้อง Lensy straight from the home page.
+ */
 export async function middleware(req: NextRequest) {
   const session = await verifySession(req.cookies.get(SESSION_COOKIE)?.value);
   if (session) return NextResponse.next();
 
-  if (req.nextUrl.pathname.startsWith("/api/")) {
-    return NextResponse.json({ kind: "error", answer: "กรุณาเข้าสู่ระบบก่อนค่ะ", refs: [] }, { status: 401 });
-  }
   const login = req.nextUrl.clone();
   login.pathname = "/login";
   login.search = `?next=${encodeURIComponent(req.nextUrl.pathname + req.nextUrl.search)}`;
@@ -17,17 +18,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/funds/:path*",
-    "/explain/:path*",
-    "/compare/:path*",
-    "/calculator/:path*",
-    "/chat/:path*",
-    "/glossary/:path*",
-    "/checklist/:path*",
-    "/portfolio/:path*",
-    "/claim-check/:path*",
-    "/premium/:path*",
-    "/api/ask",
-  ],
+  matcher: ["/portfolio/:path*", "/claim-check/:path*", "/premium/:path*"],
 };
