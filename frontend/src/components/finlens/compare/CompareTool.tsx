@@ -8,7 +8,7 @@ import { FEE_PHASES } from "@/lib/feePhases";
 import { NOT_FOUND, NOT_IN_DOCS } from "@/lib/disclaimer";
 import { baht, docPct, pct } from "@/lib/money";
 import { useTheme } from "@/lib/theme";
-import { DEFAULT_ANNUAL_RETURN, MAX_YEARS, MIN_YEARS, trueCost, type TrueCostResult } from "@/lib/trueCost";
+import { ASSET_CLASS_LABEL, DEFAULT_ANNUAL_RETURN, defaultReturnFor, MAX_YEARS, MIN_YEARS, trueCost, type TrueCostResult } from "@/lib/trueCost";
 import type { DocSource } from "@/lib/schema";
 import { sourceRef } from "@/lib/sources";
 
@@ -45,7 +45,9 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
   const [selected, setSelected] = useState<Selected[]>(initialCodes.map((code, slot) => ({ code, slot })));
   const [amount, setAmount] = useState(100_000);
   const [years, setYears] = useState(10);
+  // the assumed return follows the kind of funds chosen until the user moves the slider
   const [returnPct, setReturnPct] = useState(DEFAULT_ANNUAL_RETURN * 100);
+  const [returnTouched, setReturnTouched] = useState(false);
 
   const byCode = useMemo(() => new Map(funds.map((f) => [f.code, f])), [funds]);
   const chosen = selected.map((s) => ({ ...s, fund: byCode.get(s.code)! })).filter((s) => s.fund);
@@ -68,7 +70,12 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
   }, [selected]);
 
   const principal = Math.max(0, Math.min(100_000_000, Math.round(amount) || 0));
-  const annualReturn = returnPct / 100;
+  const classes = chosen.map((s) => s.fund.assetClass);
+  const suggestedPct = defaultReturnFor(classes) * 100;
+  const usedPct = returnTouched ? returnPct : suggestedPct;
+  const lowDefault = suggestedPct < DEFAULT_ANNUAL_RETURN * 100;
+  const defaultReason = lowDefault ? ` สำหรับ${[...new Set(classes)].map((c) => ASSET_CLASS_LABEL[c]).join("และ")}` : "";
+  const annualReturn = usedPct / 100;
 
   const results = chosen.map((s) => {
     const f = s.fund;
@@ -93,7 +100,7 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
 
   const assumptions = [
     `ลงทุนครั้งเดียว ${principal.toLocaleString("th-TH")} บาท ถือ ${years} ปี แล้วขายทั้งหมด`,
-    `สมมติผลตอบแทนก่อนหักค่าใช้จ่าย ${returnPct.toFixed(1)}% ต่อปี ทุกกองเท่ากัน เป็นสมมติฐานเพื่อเทียบค่าใช้จ่ายเท่านั้น ไม่ใช่การคาดการณ์ผลตอบแทน`,
+    `สมมติผลตอบแทนก่อนหักค่าใช้จ่าย ${usedPct.toFixed(1)}% ต่อปี ทุกกองเท่ากัน เป็นสมมติฐานเพื่อเทียบค่าใช้จ่ายเท่านั้น ไม่ใช่การคาดการณ์ผลตอบแทน`,
     "ต้นทุนต่อปีรวม = ค่าใช้จ่ายรวมของกอง (TER) + ค่าใช้จ่ายของกองทุนหลัก ถ้าเอกสารระบุว่า TER ยังไม่รวม",
     "ไม่รวมภาษี ค่าธรรมเนียมการสับเปลี่ยน และค่าใช้จ่ายที่เอกสารไม่ได้ระบุเป็นตัวเลข",
     "คำนวณด้วยสูตรในระบบ ไม่ได้ให้ AI คิดตัวเลข",
@@ -179,10 +186,28 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
         </label>
         <label className="flex flex-col gap-2">
           <span className="flex justify-between font-semibold">
-            ผลตอบแทนสมมติ <b className="text-brand">{returnPct.toFixed(1)}% ต่อปี</b>
+            ผลตอบแทนสมมติ <b className="text-brand">{usedPct.toFixed(1)}% ต่อปี</b>
           </span>
-          <input type="range" min={0} max={12} step={0.5} value={returnPct} onChange={(e) => setReturnPct(Number(e.target.value))} className="h-2 cursor-pointer accent-[#1A7637]" />
-          <span className="text-[12px] text-ink-faint">สมมติฐาน ไม่ใช่การคาดการณ์ (ค่าเริ่มต้น 6%)</span>
+          <input
+            type="range"
+            min={0}
+            max={12}
+            step={0.5}
+            value={usedPct}
+            onChange={(e) => {
+              setReturnPct(Number(e.target.value));
+              setReturnTouched(true);
+            }}
+            className="h-2 cursor-pointer accent-[#1A7637]"
+          />
+          <span className="flex flex-wrap items-center gap-x-2 text-[12px] text-ink-faint">
+            สมมติฐาน ไม่ใช่การคาดการณ์ (ค่าเริ่มต้น {suggestedPct}%{defaultReason})
+            {returnTouched && usedPct !== suggestedPct && (
+              <button type="button" onClick={() => setReturnTouched(false)} className="font-semibold text-brand underline-offset-2 hover:underline">
+                ใช้ค่าเริ่มต้น
+              </button>
+            )}
+          </span>
         </label>
       </section>
 

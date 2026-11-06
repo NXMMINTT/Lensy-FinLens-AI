@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { trueCost } from "./trueCost";
+import { assetClassOf, DEFAULT_ANNUAL_RETURN, DEFAULT_RETURN_BY_CLASS, defaultReturnFor, trueCost } from "./trueCost";
 
 const base = { principal: 100_000, years: 10, annualReturn: 0.06, frontEnd: 0, backEnd: 0, annualCost: 0 };
 
@@ -70,5 +70,23 @@ describe("trueCost", () => {
     expect(diff).toBeGreaterThan(13_500);
     expect(diff).toBeLessThan(13_700);
     expect(Math.round(diff)).toBe(13_599);
+  });
+});
+
+describe("default assumed return by kind of fund", () => {
+  it("reads the kind from the fund type", () => {
+    expect(assetClassOf("กองทุนตลาดเงิน")).toBe("money");
+    expect(assetClassOf("ตราสารหนี้ไทย")).toBe("bond");
+    expect(assetClassOf("Feeder หุ้นสหรัฐ S&P 500 (Passive)")).toBe("other");
+    expect(assetClassOf(null)).toBe("other");
+  });
+
+  it("starts lower for money market and fixed income funds, 6% otherwise", () => {
+    expect(defaultReturnFor(["money"])).toBe(DEFAULT_RETURN_BY_CLASS.money);
+    expect(defaultReturnFor(["money", "bond"])).toBe(DEFAULT_RETURN_BY_CLASS.bond);
+    expect(defaultReturnFor(["bond", "other"])).toBe(DEFAULT_ANNUAL_RETURN);
+    expect(defaultReturnFor([])).toBe(DEFAULT_ANNUAL_RETURN);
+    expect(DEFAULT_RETURN_BY_CLASS.money).toBeLessThan(DEFAULT_ANNUAL_RETURN);
+    expect(DEFAULT_RETURN_BY_CLASS.bond).toBeLessThan(DEFAULT_ANNUAL_RETURN);
   });
 });

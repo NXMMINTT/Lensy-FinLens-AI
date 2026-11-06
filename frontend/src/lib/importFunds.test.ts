@@ -77,3 +77,12 @@ describe("labels for imported funds", () => {
     expect(sec.dataSource).toContain("Settrade");
   });
 });
+
+describe("kind of fund for the calculator", () => {
+  it("knows the imported money market and fixed income funds", async () => {
+    const { toCompareFund } = await import("./compare");
+    expect(toCompareFund(getFund("SCBMONEY(A)")!).assetClass).toBe("money");
+    expect(toCompareFund(getFund("KFAFIX-A")!).assetClass).toBe("bond");
+    expect(toCompareFund(getFund("B-INNOTECH")!).assetClass).toBe("other");
+  });
+});

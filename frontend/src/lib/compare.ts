@@ -6,6 +6,7 @@ import { fundDataStatus, type DataStatus } from "./dataStatus";
 import type { FeePhase } from "./feePhases";
 import { totalAnnualCostRate } from "./funds";
 import { pctToRate, type Fund, type Sourced } from "./schema";
+import { assetClassOf, type AssetClass } from "./trueCost";
 
 export type FeeLayerKey = "frontEnd" | "backEnd" | "switching" | "management" | "ter" | "masterFundExpense" | "otherExpenses";
 
@@ -40,6 +41,8 @@ export type CompareFund = {
   code: string;
   nameTh: string;
   isSample: boolean;
+  /** money market / fixed income / other: picks the default assumed return */
+  assetClass: AssetClass;
   asOfDate: Sourced<string>;
   layers: FeeLayer[];
   /** TER + master fund expense as a rate; null = TER not in the documents, cannot calculate */
@@ -70,6 +73,7 @@ export function toCompareFund(f: Fund): CompareFund {
     code: f.code,
     nameTh: f.nameTh.value ?? f.code,
     isSample: f.meta.isSample,
+    assetClass: assetClassOf(f.type.value),
     asOfDate: f.asOfDate,
     layers: LAYERS.map((l) => {
       const item = f.fees[l.key];

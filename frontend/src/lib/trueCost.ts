@@ -62,3 +62,33 @@ export function trueCost(input: TrueCostInput): TrueCostResult {
   const gross = principal * (1 + annualReturn) ** years;
   return { start, values, end, gross, feeCost: gross - end };
 }
+
+/* ── default assumed return by kind of fund ── */
+
+export type AssetClass = "money" | "bond" | "other";
+
+/**
+ * Default assumed yearly return before fees, by kind of fund. Assumptions to compare costs, not
+ * forecasts; the user can change them. Money market and fixed income funds start lower so the
+ * baht figures are not inflated by an equity-like return.
+ */
+export const DEFAULT_RETURN_BY_CLASS: Record<AssetClass, number> = { money: 0.02, bond: 0.03, other: DEFAULT_ANNUAL_RETURN };
+
+export const ASSET_CLASS_LABEL: Record<AssetClass, string> = { money: "กองตลาดเงิน", bond: "กองตราสารหนี้", other: "กองทั่วไป" };
+
+/** Kind of fund from its type as written in the documents. */
+export function assetClassOf(type: string | null): AssetClass {
+  if (!type) return "other";
+  if (/ตลาดเงิน|money\s*market/i.test(type)) return "money";
+  if (/ตราสารหนี้|fixed\s*income|bond/i.test(type)) return "bond";
+  return "other";
+}
+
+/**
+ * One assumed return applies to every selected fund, so the default is the highest of their
+ * defaults: any fund outside money market / fixed income keeps the usual 6%.
+ */
+export function defaultReturnFor(classes: AssetClass[]): number {
+  if (classes.length === 0) return DEFAULT_ANNUAL_RETURN;
+  return Math.max(...classes.map((c) => DEFAULT_RETURN_BY_CLASS[c]));
+}
