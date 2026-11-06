@@ -25,6 +25,7 @@ export const config = {
     "/chat/:path*",
     "/glossary/:path*",
     "/checklist/:path*",
+    "/stocks/:path*",
     "/portfolio/:path*",
     "/claim-check/:path*",
     "/premium/:path*",

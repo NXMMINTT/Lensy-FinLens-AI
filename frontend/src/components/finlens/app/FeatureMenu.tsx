@@ -18,6 +18,7 @@ const TILES: Tile[] = [
   { title: "ถามน้อง Lensy", text: "ศัพท์การเงิน ถามได้เลย", pose: "idea", href: "/chat" },
   { title: "คลังศัพท์กองทุน", text: "TER ฟีดเดอร์ ค่าเงิน อธิบายง่าย ๆ", pose: "question", href: "/glossary", badge: "new" },
   { title: "เช็กลิสต์ก่อนซื้อ", text: "ต้องเปิดดูอะไรในเอกสารบ้าง", pose: "shield", href: "/checklist", badge: "new" },
+  { title: "ข้อมูลหุ้น", text: "P/E P/BV ปันผล Beta ของหุ้นไทย 20 ตัว", pose: "chart", href: "/stocks", badge: "new" },
   { title: "ส่องพอร์ต", text: "รวมค่าใช้จ่ายทุกกองที่ถือ", pose: "chart", href: "/portfolio", badge: "soon" },
   { title: "เช็กก่อนเชื่อ", text: "เทียบคำโฆษณากับเอกสารจริง", pose: "laptop", href: "/claim-check", badge: "soon" },
   { title: "อัปเกรด Premium", text: "ดูฟีเจอร์และราคา", pose: "heart", href: "/premium" },
