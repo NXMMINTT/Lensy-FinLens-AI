@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { GENERAL_NOTE } from "@/lib/ask";
-import { baht, pct, RISK_TAG, SAMPLE_ACTIVE, SAMPLE_CALC, SAMPLE_INDEX, SAMPLE_RISKS, sampleAnnualCost, sampleTrueCost } from "@/lib/sampleFunds";
+import { baht, pct, RISK_TAG, SAMPLE_ACTIVE, SAMPLE_CALC, SAMPLE_INDEX, SAMPLE_RISKS, sampleTrueCost } from "@/lib/sampleFunds";
 
 import { PageRef } from "../chat";
 import { TitleDecor } from "../Decor";
@@ -60,8 +60,8 @@ function CompareScene() {
     <>
       {funds.map((f, i) => (
         <Sheet key={f.code} label={`กอง ${i === 0 ? "A" : "B"}`} className={`h-[150px] w-[34%] ${i === 0 ? "left-[30%]" : "left-[63%]"}`}>
-          <span className="text-[12px] leading-tight">ต้นทุนต่อปีรวม</span>
-          <b className="text-[22px] leading-none text-[#1A7637]">{pct(sampleAnnualCost(f))}</b>
+          <span className="text-[12px] leading-tight">ค่าใช้จ่ายระหว่างถือ</span>
+          <b className="text-[18px] leading-none text-[#1A7637]">{f.masterFundExpense ? "2 ชั้น" : "1 ชั้น"}</b>
           <span className="text-[10px] text-[#7A8C81]">
             หน้า {f.ter.page} + หน้า {f.masterFundExpense?.page}
           </span>

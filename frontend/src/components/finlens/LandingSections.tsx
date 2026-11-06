@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { LineAddFriendButton } from "@/components/brand/LineAddFriendButton";
 import { NOT_FOUND, SAMPLE_DATA_LABEL } from "@/lib/disclaimer";
-import { pct, SAMPLE_ACTIVE as F, SAMPLE_INDEX as B, sampleAnnualCost } from "@/lib/sampleFunds";
+import { SAMPLE_ACTIVE as F, SAMPLE_INDEX as B } from "@/lib/sampleFunds";
 
 import { AnswerCard } from "./chat";
 import { Disclaimer } from "./Disclaimer";
@@ -21,7 +21,7 @@ export function Hero() {
           <HeroTextDecor />
           <span className="self-start rounded-md border border-brand/30 bg-surface px-3 py-1 text-[14px] font-semibold text-brand">
             <Icon name="search" className="mr-1.5" />
-            ผู้ช่วยเทียบกองทุนรวม ใน LINE
+            ผู้ช่วยเทียบกองทุนรวม ใน LINE และเว็บ
           </span>
           <h1 id="hero-title" className="m-0 text-[34px] font-bold leading-[1.3] tracking-tight sm:text-[44px] md:text-[52px]">
             เทียบกองทุนเคียงกัน
@@ -33,7 +33,14 @@ export function Hero() {
             วางค่าใช้จ่ายทุกชั้นเทียบกัน แล้วบอกว่าต่างกันกี่บาท พร้อมเลขหน้าที่มาทุกตัวเลข ดูทีละกองก็ได้ หรือถามศัพท์การเงินที่สงสัยก็ได้ค่ะ
           </p>
           <div className="flex flex-wrap items-center gap-3">
-            <LineAddFriendButton label="เพิ่มเพื่อนน้อง Lensy" />
+            {/* one main button: try it now, no login */}
+            <Link
+              href="/compare"
+              className="inline-flex min-h-[52px] items-center gap-2 rounded-full bg-brand px-7 text-[17px] font-bold text-white no-underline shadow-[0_10px_24px_rgba(26,118,55,.25)] hover:bg-brand-dark"
+            >
+              ลองเทียบ 2 กอง
+              <span aria-hidden="true">→</span>
+            </Link>
           </div>
           <Disclaimer />
         </div>
@@ -92,16 +99,14 @@ export function HowItWorks() {
       text: "ทุกชั้นเคียงกัน ส่วนต่างเป็นบาท ทุกตัวเลขมีเลขหน้า",
       body: (
         <div className="force-light w-full text-[12px]">
-          <AnswerCard title="ต้นทุนต่อปีรวม">
+          <AnswerCard title="ค่าใช้จ่ายทุกชั้น">
             <div className="flex flex-col gap-1">
               {[F, B].map((f, i) => (
                 <div key={f.code} className="flex items-center justify-between gap-2">
                   <span>กอง {i === 0 ? "A" : "B"}</span>
-                  <span className="flex items-baseline gap-2">
-                    <b className="text-[16px] text-brand">{pct(sampleAnnualCost(f))}</b>
-                    <span className="text-[10px] text-ink-muted">
-                      หน้า {f.ter.page} + หน้า {f.masterFundExpense?.page}
-                    </span>
+                  <span className="text-[11px] text-ink-muted">
+                    กองไทย หน้า {f.ter.page}
+                    {f.masterFundExpense ? ` + กองหลัก หน้า ${f.masterFundExpense.page}` : ""}
                   </span>
                 </div>
               ))}
