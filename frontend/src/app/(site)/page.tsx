@@ -1,5 +1,6 @@
 import { FeatureBento } from "@/components/finlens/home/FeatureBento";
 import { FeeSlider } from "@/components/finlens/home/FeeSlider";
+import { LineDemo } from "@/components/finlens/home/LineDemo";
 import { LandingHeader } from "@/components/finlens/LandingHeader";
 import {
   FaqAccordion,
@@ -23,6 +24,7 @@ export default function HomePage() {
         <Hero />
         <SampleNotice />
         <FeatureBento />
+        <LineDemo />
         <FeeSlider />
         <HowItWorks />
         <Promises />
