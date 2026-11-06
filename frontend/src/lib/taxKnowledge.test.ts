@@ -16,16 +16,17 @@ afterEach(() => {
 });
 
 describe("data/knowledge/tax-funds.md", () => {
-  it("covers RMF, SSF and Thai ESG, with TODO slots for the team", () => {
-    for (const h of ["## RMF", "## SSF", "## Thai ESG"]) expect(raw).toContain(h);
-    expect(raw).toMatch(/TODO.*sec\.or\.th/);
-    expect(raw).toMatch(/TODO.*rd\.go\.th/);
+  it("covers RMF, SSF and Thai ESG, with TODO items for the team", () => {
+    for (const h of ["RMF (กองทุนรวมเพื่อการเลี้ยงชีพ)", "SSF (กองทุนรวมเพื่อการออม)", "Thai ESG (กองทุนรวมไทยเพื่อความยั่งยืน)"]) expect(raw).toContain(h);
+    expect(raw).toContain("TODO");
   });
 
-  it("never sends unchecked TODO lines or the team's notes to the model", () => {
+  it("never sends TODO lines, the team's TODO checklist or the file header to the model", () => {
     expect(knowledge).not.toContain("TODO");
-    expect(knowledge).not.toContain("วิธีแก้ไข (สำหรับทีม)");
+    expect(knowledge).not.toContain("ยืนยันเงื่อนไข Thai ESG ที่ซื้อตั้งแต่ปี 2570"); // checklist item under "## TODO …"
+    expect(knowledge).not.toContain("ให้ AI สรุปจากไฟล์นี้เท่านั้น"); // header
     expect(knowledge).toContain("กองทุนรวมเพื่อการเลี้ยงชีพ");
+    expect(knowledge).toContain("300,000 บาท");
   });
 });
 
@@ -43,7 +44,7 @@ describe("tax questions", () => {
   });
 
   it("drop an answer that states conditions not in the standard text (e.g. a made-up cap)", () => {
-    const r = checkTaxAnswer({ answer: "RMF ลดหย่อนได้สูงสุด 500,000 บาท ถือ 5 ปีค่ะ" }, knowledge, "RMF ลดหย่อนได้เท่าไร");
+    const r = checkTaxAnswer({ answer: "RMF ลดหย่อนได้สูงสุด 750,000 บาท ถือ 7 ปีค่ะ" }, knowledge, "RMF ลดหย่อนได้เท่าไร");
     expect(r.answer.startsWith(TAX_NOT_IN_TEXT)).toBe(true);
     expect(r.answer.endsWith(TAX_NOTE)).toBe(true);
   });
@@ -66,6 +67,14 @@ describe("tax-year line", () => {
   it("appears once even when the model says it too", () => {
     const r = checkTaxAnswer({ answer: "RMF เป็นกองทุนเพื่อการเลี้ยงชีพค่ะ ทั้งนี้เงื่อนไขอาจเปลี่ยนตามปีภาษีค่ะ" }, knowledge, "RMF คืออะไร");
     expect(r.answer.match(/เงื่อนไขอาจเปลี่ยนตามปีภาษี/g)).toHaveLength(1);
+    expect(r.answer.endsWith(TAX_NOTE)).toBe(true);
+  });
+});
+
+describe("tax answers with real conditions", () => {
+  it("keep numbers that are in the standard text", () => {
+    const r = checkTaxAnswer({ answer: "Thai ESG ลดหย่อนได้ไม่เกิน 30% ของเงินได้ และไม่เกิน 300,000 บาทค่ะ" }, knowledge, "Thai ESG ลดหย่อนได้เท่าไร");
+    expect(r.answer).toContain("300,000 บาท");
     expect(r.answer.endsWith(TAX_NOTE)).toBe(true);
   });
 });
