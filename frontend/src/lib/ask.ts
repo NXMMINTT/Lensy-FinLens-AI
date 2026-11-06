@@ -167,12 +167,14 @@ export const ASK_SYSTEM = [
   "บุคลิก: สุภาพ เป็นกันเอง ลงท้าย \"ค่ะ\" ประโยคสั้น ใช้คำง่าย ศัพท์เทคนิคใส่วงเล็บอธิบาย",
   "กติกาที่ห้ามละเมิด:",
   "1. เรื่องของกองทุน (ตัวเลข ค่าธรรมเนียม ความเสี่ยง เงื่อนไข) ตอบจากข้อมูลกองทุนและข้อความเอกสารที่ให้มาเท่านั้น ห้ามใช้ความรู้ภายนอก",
-  "1.1 ถ้าเป็นคำถามความรู้การเงินทั่วไป (ความหมายของศัพท์หรือแนวคิด เช่น TER, กองทุนรวมฟีดเดอร์, การป้องกันความเสี่ยงค่าเงิน, ดอกเบี้ยทบต้น) อธิบายด้วยความรู้ทั่วไปได้ โดยให้ refs เป็น [] และห้ามใส่ตัวเลขใด ๆ ห้ามพูดถึงราคา ข่าว สถิติตลาด หรือข้อมูลกองที่ไม่ได้ให้มา",
+  "1.1 ถ้าเป็นคำถามความรู้การเงินทั่วไป (ศัพท์หรือแนวคิด เช่น TER, P/E, กองทุนรวมฟีดเดอร์, RMF / SSF / Thai ESG, กองทุนรวมต่างจากหุ้นอย่างไร, ดอกเบี้ยทบต้น) ให้ type เป็น \"general\" และ refs เป็น [] อธิบายด้วยความรู้ทั่วไปเป็นภาษาง่าย 3–5 ประโยค",
+  "1.2 คำตอบ general ใส่ตัวอย่างตัวเลขสั้น ๆ ได้ 1 ตัวอย่างเท่านั้น และต้องขึ้นต้นด้วยคำว่า \"ตัวอย่าง\" หรือ \"สมมติ\" ใช้ตัวเลขกลม ๆ ที่สมมติขึ้น ห้ามใช้ตัวเลขของกองที่ให้มา ห้ามพูดถึงราคา ข่าว สถิติตลาด อัตราภาษีหรือเพดานลดหย่อนที่เป็นตัวเลขจริง และห้ามคาดการณ์",
+  "1.3 ถ้าคำถามเกี่ยวกับกองที่ให้มา (ค่าธรรมเนียม ความเสี่ยง ต้นทุน เงื่อนไข) ให้ type เป็น \"fund\" และตอบตามกติกาข้อ 1 และ 5",
   `2. ถ้าไม่มีข้อมูล ให้ตอบว่า "${NOT_FOUND}" ห้ามเดา`,
   "3. ห้ามแนะนำให้ซื้อหรือขาย ห้ามจัดอันดับว่ากองไหนดีกว่า ห้ามคาดการณ์ผลตอบแทนในอนาคต ห้ามพูดเชียร์",
   "4. ห้ามคำนวณตัวเลขเงินเอง ถ้าผู้ใช้อยากรู้เป็นบาท ให้บอกว่าลองใช้หน้าเทียบต้นทุน",
   "5. ทุกตัวเลขที่พูดถึงต้องใส่ใน refs พร้อมรหัสกอง เลขหน้า แหล่ง และ quote ที่คัดลอกตรงจากข้อมูลที่ให้มา",
-  "ตอบเป็น JSON: {\"answer\": \"<คำตอบไม่เกิน 6 ประโยค>\", \"refs\": [{\"code\": \"<รหัสกอง>\", \"page\": <เลขหน้า>, \"source\": \"factsheet\" | \"prospectus\", \"quote\": \"<ข้อความ>\"}]}",
+  "ตอบเป็น JSON: {\"type\": \"fund\" | \"general\", \"answer\": \"<คำตอบไม่เกิน 6 ประโยค>\", \"refs\": [{\"code\": \"<รหัสกอง>\", \"page\": <เลขหน้า>, \"source\": \"factsheet\" | \"prospectus\", \"quote\": \"<ข้อความ>\"}]}",
 ].join("\n");
 
 /** Verified values with their pages, as compact lines the model can quote from. */
@@ -193,7 +195,7 @@ export function fundContext(f: Fund): string {
 
 export function askPrompt(funds: Fund[], question: string, pdfText: string): string {
   if (funds.length === 0) {
-    return ["ไม่มีกองทุนที่ระบุ ตอบได้เฉพาะความรู้การเงินทั่วไปตามกติกาข้อ 1.1 (refs เป็น [] และไม่มีตัวเลข)", "", `คำถาม: ${question}`].join("\n");
+    return ["ไม่มีกองทุนที่ระบุ ตอบได้เฉพาะความรู้การเงินทั่วไปตามกติกาข้อ 1.1 และ 1.2 (type เป็น general, refs เป็น [])", "", `คำถาม: ${question}`].join("\n");
   }
   return [
     "ข้อมูลกองทุนที่ตรวจแล้ว (ใช้เป็นหลัก):",
@@ -205,6 +207,8 @@ export function askPrompt(funds: Fund[], question: string, pdfText: string): str
 }
 
 const AiAnswer = z.object({
+  /** "general" = finance knowledge, not from a fund document. Missing = treated as a fund answer. */
+  type: z.enum(["fund", "general"]).catch("fund"),
   answer: z.string().min(1),
   refs: z
     .array(z.object({ code: z.string(), page: z.number().int().positive(), source: z.enum(["factsheet", "prospectus"]), quote: z.string().min(1) }))
@@ -263,6 +267,49 @@ export function unbackedNumbers(answer: string, quotes: string[], pages: number[
   return out;
 }
 
+/* ── general finance knowledge ── */
+
+export const TAX_NOTE = "เงื่อนไขอาจเปลี่ยนตามปีภาษี ควรเช็กกับ ก.ล.ต. หรือกรมสรรพากรอีกครั้ง";
+/** Tax-linked products and rules that change by tax year. */
+const TAX_TOPIC = /(RMF|SSF|ESG|ภาษี|ลดหย่อน|สรรพากร|ประกันบำนาญ|PVD|กองทุนสำรองเลี้ยงชีพ)/i;
+/** A number in a general answer must be presented as a made-up example. */
+const EXAMPLE_WORD = /(ตัวอย่าง|สมมติ|เช่น)/;
+
+/** Appends the "rules change by tax year" line when the question or answer is about tax-linked products. */
+export function withTaxNote(answer: string, question: string): string {
+  if (!TAX_TOPIC.test(question) && !TAX_TOPIC.test(answer)) return answer;
+  return answer.includes(TAX_NOTE) ? answer : `${answer} ${TAX_NOTE}`;
+}
+
+/** Decimal figures from the selected funds' verified data: a general answer must not reuse them. */
+function fundNumbers(funds: Fund[]): Set<number> {
+  const out = new Set<number>();
+  for (const f of funds) {
+    for (const v of verifiedQuotes(f)) for (const n of numbersIn(v.quote)) if (!Number.isInteger(n)) out.add(n);
+  }
+  return out;
+}
+
+/** "this fund" or a selected fund's code / name: the answer is about that fund, not general knowledge. */
+function mentionsFund(answer: string, funds: Fund[]): boolean {
+  if (/กองนี้|กองทุนนี้/.test(answer)) return true;
+  return funds.some((f) => answer.toUpperCase().includes(f.code.toUpperCase()) || (f.nameTh.value !== null && answer.includes(f.nameTh.value)));
+}
+
+/**
+ * A general answer may show numbers only inside a made-up example (it says "ตัวอย่าง" / "สมมติ" /
+ * "เช่น"), must not talk about a selected fund, and must not reuse a precise figure (2+ decimals,
+ * e.g. 1.07) from the selected funds' documents. Round example numbers like 1.5% stay allowed.
+ */
+export function generalAnswerOk(answer: string, funds: Fund[]): boolean {
+  if (mentionsFund(answer, funds)) return false;
+  const tokens = [...toArabic(answer).matchAll(NUMBER)].map((m) => m[0].replace(/,/g, ""));
+  if (tokens.length === 0) return true;
+  if (!EXAMPLE_WORD.test(answer)) return false;
+  const fromFunds = fundNumbers(funds);
+  return !tokens.some((s) => (s.split(".")[1]?.length ?? 0) >= 2 && fromFunds.has(Number(s)));
+}
+
 /**
  * Keep only refs whose quote is really in the verified data or the PDF text on that page, then
  * check every number in the answer against those refs. An answer with any unbacked number is
@@ -287,12 +334,16 @@ export function checkAiAnswer(raw: unknown, funds: Fund[], pdfPages: Record<stri
     }
   }
   const answer = parsed.data.answer.trim();
+  // general finance knowledge: a short made-up example is allowed, fund figures are not
+  if (parsed.data.type === "general" && refs.length === 0 && generalAnswerOk(answer, funds)) {
+    return { kind: "ai", answer: withTaxNote(answer, question), refs: [], note: GENERAL_NOTE };
+  }
   const unbacked = unbackedNumbers(answer, acceptedQuotes, refs.map((r) => r.page), question, funds);
   if (unbacked.length) {
     if (funds.length === 0) return { kind: "ai", answer: NEED_FUND_FOR_NUMBERS, refs: [] };
     return { kind: "ai", answer: `${NOT_FOUND}ที่ยืนยันเลขหน้าได้ค่ะ ลองถามให้เจาะจงขึ้น หรือดูหน้ากองทุนซึ่งมีเลขหน้าทุกค่านะคะ`, refs: [] };
   }
   // no page to cite and no numbers: a general-knowledge explanation, labelled as such
-  if (refs.length === 0) return { kind: "ai", answer, refs, note: GENERAL_NOTE };
+  if (refs.length === 0) return { kind: "ai", answer: withTaxNote(answer, question), refs, note: GENERAL_NOTE };
   return { kind: "ai", answer, refs };
 }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { checkAiAnswer, classifyQuestion, GENERAL_NOTE, moneyAnswer, NEED_FUND_FOR_NUMBERS, parseMoneyQuestion, SAMPLE_QUESTIONS, unbackedNumbers } from "./ask";
+import { checkAiAnswer, classifyQuestion, GENERAL_NOTE, moneyAnswer, NEED_FUND_FOR_NUMBERS, parseMoneyQuestion, SAMPLE_QUESTIONS, TAX_NOTE, unbackedNumbers } from "./ask";
 import { getFund } from "./funds";
 import { trueCost } from "./trueCost";
 
@@ -72,6 +72,9 @@ describe("classifyQuestion", () => {
     "ค่าใช้จ่ายของกองทุนหลักอยู่หน้าไหน",
     "ผลตอบแทนย้อนหลัง 1 ปีเท่าไร",
     "กองนี้มีค่าใช้จ่ายอะไรที่ควรระวัง?",
+    "RMF กับ Thai ESG ต่างกันยังไง",
+    "P/E คืออะไร",
+    "กองทุนรวมต่างจากหุ้นยังไง",
   ])("lets explanation questions through: %s", (q) => {
     expect(classifyQuestion(q)).toBe("general");
   });
@@ -161,6 +164,39 @@ describe("checkAiAnswer", () => {
   it("finds Thai digits too", () => {
     expect(unbackedNumbers("ค่าธรรมเนียม ๒.๕%", ["ค่าธรรมเนียม 1.5%"], [], "", [])).toEqual(["2.5"]);
     expect(unbackedNumbers("ค่าธรรมเนียม ๑.๕%", ["ค่าธรรมเนียม 1.50%"], [], "", [])).toEqual([]);
+  });
+
+  it("lets a general-knowledge answer show one made-up example, labelled as general knowledge", () => {
+    const r = checkAiAnswer(
+      { type: "general", answer: "P/E คืออัตราส่วนราคาหุ้นต่อกำไรต่อหุ้นค่ะ ตัวอย่าง หุ้นราคา 100 บาท กำไรต่อหุ้น 10 บาท P/E เท่ากับ 10 เท่า", refs: [] },
+      [],
+      {},
+      "P/E คืออะไร",
+    );
+    expect(r.answer).toContain("100 บาท");
+    expect(r.note).toBe(GENERAL_NOTE);
+    expect(r.answer).not.toContain(TAX_NOTE);
+  });
+
+  it("adds the tax-year note to general answers about RMF / SSF / Thai ESG", () => {
+    const r = checkAiAnswer({ type: "general", answer: "RMF เป็นกองทุนเพื่อการเลี้ยงชีพค่ะ ส่วน Thai ESG ลงทุนในบริษัทไทยที่ใส่ใจความยั่งยืน", refs: [] }, [], {}, "RMF กับ Thai ESG ต่างกันยังไง");
+    expect(r.answer.endsWith(TAX_NOTE)).toBe(true);
+    expect(r.note).toBe(GENERAL_NOTE);
+  });
+
+  it("still blocks numbers in a general answer that are not a made-up example, or that are the fund's own figures", () => {
+    expect(checkAiAnswer({ type: "general", answer: "TER ปกติอยู่ที่ราว 1.5% ค่ะ", refs: [] }, [], {}).answer).toBe(NEED_FUND_FOR_NUMBERS);
+    const leak = checkAiAnswer({ type: "general", answer: "TER คือค่าใช้จ่ายรวมต่อปีค่ะ ตัวอย่าง กองนี้ 1.07% ต่อปี", refs: [] }, [g], {}, "TER คืออะไร");
+    expect(leak.answer).toContain("ไม่พบข้อมูลนี้ในเอกสาร");
+    expect(leak.note).toBeUndefined();
+    const precise = checkAiAnswer({ type: "general", answer: "TER คือค่าใช้จ่ายรวมต่อปีค่ะ ตัวอย่าง TER 1.07% ต่อปี", refs: [] }, [g], {}, "TER คืออะไร");
+    expect(precise.note).toBeUndefined(); // 1.07 is SAMPLE-GLOBAL's own TER
+  });
+
+  it("allows a round example number even if a selected fund happens to have it (1.5%)", () => {
+    const r = checkAiAnswer({ type: "general", answer: "TER คือค่าใช้จ่ายรวมต่อปีค่ะ สมมติ TER 1.5% เงิน 100 บาทจะเสียราว 1.5 บาทต่อปี", refs: [] }, [g], {}, "TER คืออะไร");
+    expect(r.note).toBe(GENERAL_NOTE);
+    expect(r.answer).toContain("1.5%");
   });
 
   it("accepts a quote found in the PDF text on that page", () => {
