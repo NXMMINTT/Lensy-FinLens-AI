@@ -5,12 +5,12 @@
 import type { messagingApi } from "@line/bot-sdk";
 
 import type { AskResponse } from "../ask";
-import { DISCLAIMER, SAMPLE_DATA_LABEL } from "../disclaimer";
+import { DISCLAIMER, MASTER_COST_NOTE, SAMPLE_DATA_LABEL } from "../disclaimer";
 import { totalAnnualCostRate } from "../funds";
 import { docPct, pct } from "../money";
 import { riskAlerts, RISK_LEVEL_LABEL, type RiskLevel } from "../riskRules";
 import type { DocSource, Fund, Sourced } from "../schema";
-import { SOURCE_LABEL } from "../sources";
+import { sourceRef } from "../sources";
 
 type Message = messagingApi.Message;
 type FlexComponent = messagingApi.FlexComponent;
@@ -30,7 +30,6 @@ const C = {
   skySoft: "#EEF7F4",
 } as const;
 
-const SOURCE: Record<DocSource, string> = SOURCE_LABEL;
 const LEVEL_STYLE: Record<RiskLevel, { bg: string; fg: string }> = {
   high: { bg: C.dangerSoft, fg: C.dangerInk },
   medium: { bg: C.sunSoft, fg: C.sunInk },
@@ -46,7 +45,8 @@ export function appUrl(path: string): string | null {
 }
 
 const text = (t: string, o: Partial<messagingApi.FlexText> = {}): messagingApi.FlexText => ({ type: "text", text: t, wrap: true, size: "sm", color: C.body, ...o });
-const pageRef = (s: { page: number | null; source: DocSource }) => (s.page === null ? "" : `หน้า ${s.page} · ${SOURCE[s.source]}`);
+/** "หน้า 2 · Factsheet", or just the source when it gives no page (e.g. SEC data). */
+const pageRef = (s: { page: number | null; source: DocSource }) => sourceRef(s.page, s.source);
 
 function disclaimer(): FlexComponent {
   return text(DISCLAIMER, { size: "xxs", color: C.muted, margin: "md" });
@@ -74,7 +74,7 @@ function uriButton(label: string, path: string, primary = false): FlexComponent[
 
 function refsLine(items: Sourced<unknown>[]): string {
   return items
-    .filter((s) => s.value !== null && s.page !== null)
+    .filter((s) => s.value !== null)
     .map(pageRef)
     .filter((v, i, a) => a.indexOf(v) === i)
     .join(" + ");
@@ -108,12 +108,13 @@ export function fundCard(f: Fund): messagingApi.FlexMessage {
           : [
               text("ต้นทุนต่อปีรวม", { size: "xs", color: C.muted }),
               text(pct(total), { size: "xxl", weight: "bold", color: C.brand }),
-              text(refsLine([f.fees.ter, master]), { size: "xxs", color: C.muted }),
+              // a Flex text may not be empty
+              ...(refsLine([f.fees.ter, master]) ? [text(`ที่มา: ${refsLine([f.fees.ter, master])}`, { size: "xxs", color: C.muted })] : []),
             ],
     },
   ];
 
-  if (master.value !== null && master.source === "prospectus") {
+  if (master.value !== null && master.source !== "factsheet") {
     body.push({
       type: "box",
       layout: "vertical",
@@ -121,7 +122,7 @@ export function fundCard(f: Fund): messagingApi.FlexMessage {
       cornerRadius: "md",
       paddingAll: "8px",
       margin: "sm",
-      contents: [text(`ค่าใช้จ่ายกองหลัก ${docPct(master.value)} อยู่ในหนังสือชี้ชวน ไม่อยู่ใน Factsheet (${pageRef(master)})`, { size: "xs", color: C.sunInk, weight: "bold" })],
+      contents: [text(`ค่าใช้จ่ายกองหลัก ${docPct(master.value)} (${pageRef(master)}) ${MASTER_COST_NOTE}`, { size: "xs", color: C.sunInk, weight: "bold" })],
     });
   }
 

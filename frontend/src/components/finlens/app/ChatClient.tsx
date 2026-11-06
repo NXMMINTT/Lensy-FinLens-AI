@@ -86,6 +86,7 @@ export function ChatClient({
             >
               {on ? "✓ " : "+ "}
               {f.nameTh}
+              {f.isSample && <span className="ml-1 text-[12px] font-normal text-sun-ink">(ข้อมูลตัวอย่าง)</span>}
             </button>
           );
         })}
@@ -104,7 +105,7 @@ export function ChatClient({
           <div className="flex items-end gap-2">
             <LensyFace size={36} />
             <div className="max-w-[85%] rounded-[18px] rounded-bl-md bg-surface px-4 py-3 text-[15px] text-ink-body">
-              สวัสดีค่ะ น้อง Lensy เอง ถามเรื่องค่าใช้จ่าย ความเสี่ยง หรือเงื่อนไขของกองที่เลือก หรือถามศัพท์การเงินที่ไม่เข้าใจก็ได้ค่ะ ตัวเลขของกองจะบอกเลขหน้าในเอกสารทุกครั้ง
+              สวัสดีค่ะ น้อง Lensy เอง ถามเรื่องค่าใช้จ่าย ความเสี่ยง หรือเงื่อนไขของกองที่เลือก หรือถามศัพท์การเงินที่ไม่เข้าใจก็ได้ค่ะ ตัวเลขของกองจะบอกที่มาทุกครั้ง
             </div>
           </div>
         )}

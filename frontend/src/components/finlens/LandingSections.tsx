@@ -23,7 +23,7 @@ export function Hero() {
           <HeroTextDecor />
           <span className="self-start rounded-md border border-brand/30 bg-surface px-3 py-1 text-[14px] font-semibold text-brand">
             <Icon name="search" className="mr-1.5" />
-            ผู้ช่วยเทียบกองทุนรวม ใน LINE และเว็บ
+            ผู้ช่วยการเงิน ใน LINE และเว็บ
           </span>
           <h1 id="hero-title" className="m-0 text-[32px] font-bold leading-[1.3] tracking-tight sm:text-[42px] md:text-[48px]">
             ผู้ช่วยการเงินที่ทำให้เห็น

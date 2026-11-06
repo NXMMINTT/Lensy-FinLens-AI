@@ -69,7 +69,8 @@ describe("pickInitialCodes", () => {
 
   it("allows a single fund when the page needs only one (the calculator)", () => {
     expect(pickInitialCodes(all, "D", 1)).toEqual(["D"]);
-    expect(pickInitialCodes(all, undefined, 1)).toEqual(["A"]);
+    expect(pickInitialCodes(all, undefined, 1)).toEqual(["A", "B"]); // starts with the two featured funds
+    expect(pickInitialCodes(all, undefined, 1, 1)).toEqual(["A"]);
     expect(pickInitialCodes(all, "b,c", 1)).toEqual(["B", "C"]);
   });
 });

@@ -88,8 +88,11 @@ export function toCompareFund(f: Fund): CompareFund {
   };
 }
 
-/** Initial selection from ?funds=A,B: known codes only, 2–3 of them, else the first two funds. */
-export function pickInitialCodes(all: CompareFund[], param: string | undefined, min = 2): string[] {
+/**
+ * Initial selection from ?funds=A,B: known codes only, up to 3 of them (at least `min`), else the
+ * first `fallback` funds of the list (the featured real funds come first).
+ */
+export function pickInitialCodes(all: CompareFund[], param: string | undefined, min = 2, fallback = 2): string[] {
   const known = new Map(all.map((f) => [f.code.toUpperCase(), f.code]));
   const asked = (param ?? "")
     .split(",")
@@ -97,6 +100,7 @@ export function pickInitialCodes(all: CompareFund[], param: string | undefined, 
     .filter((c): c is string => Boolean(c));
   const unique = [...new Set(asked)].slice(0, 3);
   if (unique.length >= min) return unique;
+  if (unique.length === 0) return all.slice(0, Math.min(Math.max(min, fallback), all.length)).map((f) => f.code);
   const rest = all.map((f) => f.code).filter((c) => !unique.includes(c));
   return [...unique, ...rest].slice(0, Math.min(Math.max(min, unique.length), all.length));
 }

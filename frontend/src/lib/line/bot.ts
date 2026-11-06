@@ -4,7 +4,7 @@
  */
 import type { messagingApi } from "@line/bot-sdk";
 
-import { classifyQuestion, SAMPLE_QUESTIONS, type AskResponse } from "../ask";
+import { classifyQuestion, EXAMPLE_QUESTIONS, type AskResponse } from "../ask";
 import type { Fund } from "../schema";
 import { answerCard, appUrl, fundCard, quickReplies, textMessage } from "./flex";
 
@@ -16,13 +16,20 @@ export const MENU = { fees: "ค่าใช้จ่าย", risks: "ควา�
 
 const GREETING = /^(สวัสดี|หวัดดี|hi|hello|hey|เริ่ม|start|help|ช่วยด้วย|เมนู|menu)/i;
 
-const fundChips = (funds: Fund[], suffix = "") => funds.slice(0, 12).map((f) => ({ label: f.nameTh.value ?? f.code, text: `${f.code}${suffix}` }));
+/** Fund buttons: featured real funds first (list order), labelled by code so they fit LINE's 20 characters. */
+const fundChips = (funds: Fund[], suffix = "") => funds.slice(0, 12).map((f) => ({ label: f.meta.isSample ? `${f.code} (ตัวอย่าง)` : f.code, text: `${f.code}${suffix}` }));
+
+/** The example questions as quick replies (same set as /chat). */
+export const exampleChips = () => EXAMPLE_QUESTIONS.map((q) => ({ label: q.short, text: q.line }));
+
+/** Words that only join fund names: "เทียบ A กับ B" is a request for both cards. */
+const JOINERS = /เทียบ|ระหว่าง|กับ|และ|vs\.?|,|ต่างกันยังไง|ต่างกันอย่างไร/gi;
 
 export function welcome(funds: Fund[]): Message[] {
   return [
     textMessage(
-      "สวัสดีค่ะ น้อง Lensy เองค่ะ พิมพ์ชื่อหรือรหัสกองทุนมาได้เลย ใส่ 2 กองในข้อความเดียวเพื่อดูเทียบกันก็ได้ค่ะ น้องจะสรุปค่าใช้จ่ายทุกชั้น ความเสี่ยงที่ควรรู้ และบอกเลขหน้าในเอกสารให้ ถ้าเจอศัพท์การเงินที่ไม่เข้าใจ ถามได้เลยนะคะ\n\nข้อมูลเพื่อความเข้าใจ ไม่ใช่คำแนะนำการลงทุนนะคะ",
-      quickReplies([...fundChips(funds), { label: MENU.ask, text: MENU.ask }]),
+      "สวัสดีค่ะ น้อง Lensy เองค่ะ พิมพ์ชื่อหรือรหัสกองทุนมาได้เลย ใส่ 2 กองในข้อความเดียวเพื่อดูเทียบกันก็ได้ค่ะ น้องจะสรุปค่าใช้จ่ายทุกชั้น ความเสี่ยงที่ควรรู้ และบอกที่มาของทุกตัวเลข ถ้าเจอศัพท์การเงินที่ไม่เข้าใจ ถามได้เลยนะคะ\n\nข้อมูลเพื่อความเข้าใจ ไม่ใช่คำแนะนำการลงทุนนะคะ",
+      quickReplies([...exampleChips(), ...fundChips(funds).slice(0, 8), { label: MENU.ask, text: MENU.ask }]),
     ),
   ];
 }
@@ -64,11 +71,10 @@ export async function handleText(raw: string, funds: Fund[], ask: Answerer): Pro
     ];
   }
   if (text === MENU.ask) {
-    const f = funds[0];
     return [
       textMessage(
-        "ถามเรื่องค่าใช้จ่าย ความเสี่ยง หรือเงื่อนไขของกองได้เลยค่ะ ใส่ชื่อกองในคำถามด้วยนะคะ เช่น ลองกดคำถามด้านล่างค่ะ",
-        f ? quickReplies(SAMPLE_QUESTIONS.map((q) => ({ label: q, text: `${f.code} ${q}` }))) : undefined,
+        "ถามเรื่องค่าใช้จ่าย ความเสี่ยง หรือเงื่อนไขของกอง หรือศัพท์การเงินทั่วไปได้เลยค่ะ ถ้าถามเรื่องตัวเลขของกอง ใส่ชื่อกองในคำถามด้วยนะคะ ลองกดคำถามด้านล่างค่ะ",
+        quickReplies(exampleChips()),
       ),
     ];
   }
@@ -76,8 +82,8 @@ export async function handleText(raw: string, funds: Fund[], ask: Answerer): Pro
   const matched = matchFunds(text, funds).slice(0, 3);
   const rest = stripFundNames(text, matched);
 
-  // just a fund name or code -> its summary card(s)
-  if (matched.length && rest.length < 3) return matched.map(fundCard);
+  // just a fund name or code, or "เทียบ A กับ B" -> their summary card(s)
+  if (matched.length && rest.replace(JOINERS, "").trim().length < 3) return matched.map(fundCard);
 
   const kind = classifyQuestion(text);
   if (kind === "advice") return [answerCard(await ask(matched.length ? matched : funds.slice(0, 1), text), matched.map((f) => f.code))];
@@ -86,7 +92,7 @@ export async function handleText(raw: string, funds: Fund[], ask: Answerer): Pro
   if (scope.length === 0) {
     // no fund named: explain it as general finance knowledge, and offer to ask about a specific fund
     const card = answerCard(await ask([], text), []);
-    return [{ ...card, quickReply: quickReplies(funds.slice(0, 12).map((f) => ({ label: f.nameTh.value ?? f.code, text: `${f.code} ${text}` }))) }];
+    return [{ ...card, quickReply: quickReplies(funds.slice(0, 12).map((f) => ({ label: f.meta.isSample ? `${f.code} (ตัวอย่าง)` : f.code, text: `${f.code} ${text}` }))) }];
   }
   return [answerCard(await ask(scope, rest || text), scope.map((f) => f.code))];
 }

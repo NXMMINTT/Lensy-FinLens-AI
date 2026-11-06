@@ -8,7 +8,7 @@ import { getVerifiedFunds } from "@/lib/funds";
 
 export const metadata: Metadata = {
   title: "เทียบกองทุน | FinLens AI",
-  description: "วางค่าธรรมเนียมทุกชั้นของกองทุน 2–3 กองเทียบกัน เห็นชั้นที่ไม่อยู่ใน Factsheet ของกองไทย ทุกตัวเลขบอกที่มา ข้อมูลเพื่อความเข้าใจ ไม่ใช่คำแนะนำการลงทุน",
+  description: "วางค่าธรรมเนียมทุกชั้นของกองทุน 2–3 กองเทียบกัน เห็นชั้นที่ Factsheet ของกองไทยไม่ได้แสดง ทุกตัวเลขบอกที่มา ข้อมูลเพื่อความเข้าใจ ไม่ใช่คำแนะนำการลงทุน",
 };
 
 export default async function ComparePage({ searchParams }: { searchParams: Promise<{ funds?: string }> }) {
@@ -22,7 +22,7 @@ export default async function ComparePage({ searchParams }: { searchParams: Prom
         label="เทียบกองทุน"
         title="เทียบ 2–3 กองเคียงกัน"
         mark="เห็นค่าธรรมเนียมแฝง"
-        text="ค่าธรรมเนียมทุกชั้นวางเทียบทีละบรรทัด ชั้นที่ไม่อยู่ใน Factsheet ของกองไทยมีป้ายเตือน ทุกตัวเลขบอกที่มา"
+        text="ค่าธรรมเนียมทุกชั้นวางเทียบทีละบรรทัด ชั้นที่ Factsheet ของกองไทยไม่ได้แสดงมีป้ายเตือน ทุกตัวเลขบอกที่มา"
         pose="magnifier"
       />
       {funds.length < 2 ? (

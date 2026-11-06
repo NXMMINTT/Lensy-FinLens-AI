@@ -7,7 +7,7 @@
 import { z } from "zod";
 
 import { NOT_FOUND } from "./disclaimer";
-import { totalAnnualCostRate } from "./funds";
+import { FEATURED_FUND_CODES, totalAnnualCostRate } from "./funds";
 import { baht, pct } from "./money";
 import { findQuotePage, skeleton } from "./pdfText";
 import { pctToRate, type DocSource, type Fund, type Sourced } from "./schema";
@@ -26,6 +26,23 @@ export const AskRequestSchema = z.object({
   fundCodes: z.array(z.string().min(1).max(40)).min(1).max(3),
   question: z.string().trim().min(2).max(500),
 });
+
+/**
+ * Example questions shown on /chat and in LINE (the same set the home page used).
+ * `short` fits a LINE quick reply button (20 characters); `line` is what LINE sends, naming the
+ * funds when the question needs them.
+ */
+const [FA, FB] = FEATURED_FUND_CODES;
+export const EXAMPLE_QUESTIONS: { question: string; short: string; line: string }[] = [
+  { question: "TER คืออะไร", short: "TER คืออะไร", line: "TER คืออะไร" },
+  { question: "RMF กับ Thai ESG ต่างกันยังไง", short: "RMF กับ Thai ESG", line: "RMF กับ Thai ESG ต่างกันยังไง" },
+  { question: `เทียบ ${FA} กับ ${FB}`, short: "เทียบ 2 กอง", line: `เทียบ ${FA} กับ ${FB}` },
+  {
+    question: "ลงทุน 100,000 บาท 10 ปี เสียค่าธรรมเนียมกี่บาท",
+    short: "100,000 บาท 10 ปี",
+    line: `${FA} ${FB} ลงทุน 100,000 บาท 10 ปี เสียค่าธรรมเนียมกี่บาท`,
+  },
+];
 
 export const SAMPLE_QUESTIONS = [
   "กองทุนนี้มีค่าใช้จ่ายอะไรที่ควรระวัง?",

@@ -10,6 +10,16 @@ import path from "node:path";
 import { FundSchema, pctToRate, type Fund } from "./schema";
 
 export const VERIFIED_DIR = path.join(process.cwd(), "data", "verified");
+
+/** The two real funds every page and LINE start with (home page example, compare, calculator, chat). */
+export const FEATURED_FUND_CODES = ["B-INNOTECH", "K-US500X-A(A)"] as const;
+
+/** Featured funds first (in that order), then the other real funds, then sample data last. */
+export function fundOrder(f: Fund): number {
+  const featured = FEATURED_FUND_CODES.findIndex((c) => c.toUpperCase() === f.code.toUpperCase());
+  if (featured >= 0) return featured;
+  return f.meta.isSample ? 2000 : 1000;
+}
 export const IMPORTED_FILE = path.join(process.cwd(), "data", "funds", "real", "funds.json");
 
 /** Imported funds; a file that fails validation stops the build instead of showing bad data. */
@@ -44,7 +54,9 @@ export function getVerifiedFunds(dir = VERIFIED_DIR): Fund[] {
   if (dir !== VERIFIED_DIR) return funds;
   // the verified files come first; an imported fund with the same code is skipped
   const seen = new Set(funds.map((f) => f.code.toUpperCase()));
-  cache = [...funds, ...importedFunds().filter((f) => !seen.has(f.code.toUpperCase()))];
+  const all = [...funds, ...importedFunds().filter((f) => !seen.has(f.code.toUpperCase()))];
+  // stable sort: within a group the files keep their order
+  cache = all.map((f, i) => ({ f, i })).sort((a, b) => fundOrder(a.f) - fundOrder(b.f) || a.i - b.i).map((x) => x.f);
   return cache;
 }
 

@@ -39,7 +39,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
               <MascotDecor light />
             </span>
             <div className="flex flex-col gap-1">
-              <span className="text-[14px] font-semibold text-white/80">ผู้ช่วยเทียบกองทุนรวม</span>
+              <span className="text-[14px] font-semibold text-white/80">ผู้ช่วยการเงิน</span>
               <p className="m-0 font-heading text-[26px] font-bold leading-tight md:text-[32px]">
                 เทียบกองทุนเคียงกัน
                 <br />

@@ -22,7 +22,7 @@ const TILE = W / 4;
 const OUT = path.join("assets", "line-richmenu.jpg");
 
 const TILES = [
-  { label: MENU.fees, sub: "ทุกชั้น พร้อมเลขหน้า", pose: "lensy-coins.png" },
+  { label: MENU.fees, sub: "ทุกชั้น บอกที่มา", pose: "lensy-coins.png" },
   { label: MENU.risks, sub: "ที่อาจถูกมองข้าม", pose: "lensy-checklist.png" },
   { label: MENU.calc, sub: "ค่าธรรมเนียมเป็นบาท", pose: "lensy-chart.png" },
   { label: MENU.ask, sub: "อธิบายง่าย ๆ", pose: "lensy-idea.png" },

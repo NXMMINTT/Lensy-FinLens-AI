@@ -167,7 +167,7 @@ export default async function FundPage({ params }: Props) {
 
           {master.value !== null && master.source === "prospectus" && (
             <p className="m-0 mt-3 rounded-xl bg-sun-soft px-3 py-2 text-[14px] text-sun-ink">
-              <b><Icon name="warn" className="mr-1" />ค่าใช้จ่ายของกองทุนหลักอยู่ในหนังสือชี้ชวน ไม่อยู่ใน Factsheet</b> ถ้าดูแค่ Factsheet จะเห็นค่าใช้จ่ายไม่ครบ
+              <b><Icon name="warn" className="mr-1" />{MASTER_COST_NOTE}</b> ถ้าดูแค่ Factsheet จะเห็นค่าใช้จ่ายไม่ครบ
             </p>
           )}
           {master.value !== null && master.source === "master" && (

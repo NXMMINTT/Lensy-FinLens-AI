@@ -349,7 +349,7 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
                           <span className="flex flex-col">
                             <b className="text-ink">{docPct(item.value)}</b>
                             <PageTag page={item.page} source={item.source} />
-                            {hidden && <span className="text-[12px] font-semibold text-sun-ink"><Icon name="warn" className="mr-1" />{item.source === "master" ? MASTER_COST_NOTE : "อยู่ในหนังสือชี้ชวน ไม่อยู่ใน Factsheet"}</span>}
+                            {hidden && <span className="text-[12px] font-semibold text-sun-ink"><Icon name="warn" className="mr-1" />{MASTER_COST_NOTE}</span>}
                           </span>
                         )}
                       </td>

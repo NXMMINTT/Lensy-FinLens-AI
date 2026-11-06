@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { moneyAnswer, refusal, type AskResponse } from "../ask";
-import { DISCLAIMER, SAMPLE_DATA_LABEL } from "../disclaimer";
+import { EXAMPLE_QUESTIONS, moneyAnswer, refusal, type AskResponse } from "../ask";
+import { DISCLAIMER, MASTER_COST_NOTE, SAMPLE_DATA_LABEL } from "../disclaimer";
 import { getVerifiedFunds } from "../funds";
 import type { Fund } from "../schema";
 import { handleText, matchFunds, MENU, welcome } from "./bot";
@@ -29,10 +29,21 @@ describe("matchFunds", () => {
 });
 
 describe("handleText", () => {
-  it("greets with fund chips and the disclaimer line", async () => {
-    const m = await handleText("สวัสดีค่ะ", funds, ask);
-    expect(json(m)).toContain("ไม่ใช่คำแนะนำการลงทุน");
-    expect(json(m)).toContain("SAMPLE-GLOBAL");
+  it("greets with the example questions, the featured real funds first, and the disclaimer line", async () => {
+    const s = json(await handleText("สวัสดีค่ะ", funds, ask));
+    expect(s).toContain("ไม่ใช่คำแนะนำการลงทุน");
+    for (const q of EXAMPLE_QUESTIONS) expect(s).toContain(q.short);
+    expect(s.indexOf('"label":"B-INNOTECH"')).toBeLessThan(s.indexOf('"label":"K-US500X-A(A)"'));
+    expect(s).not.toContain("SAMPLE-GLOBAL"); // sample funds are last, past the buttons
+  });
+
+  it("sends both cards for \"เทียบ A กับ B\" and \"A กับ B\"", async () => {
+    for (const q of ["B-INNOTECH กับ K-US500X-A(A)", "เทียบ B-INNOTECH กับ K-US500X-A(A)"]) {
+      const m = await handleText(q, funds, ask);
+      expect(m.map((x) => x.type)).toEqual(["flex", "flex"]);
+      expect(json(m)).toContain("2.272%");
+    }
+    expect(calls).toHaveLength(0);
   });
 
   it("sends a summary card when the message is just a fund code or name", async () => {
@@ -56,13 +67,14 @@ describe("handleText", () => {
     const [m] = await handleText("TER คืออะไร", funds, ask);
     expect(calls).toEqual([{ codes: [], question: "TER คืออะไร" }]);
     expect(json(m)).toContain("ตอบทดสอบค่ะ");
-    expect(json(m)).toContain("SAMPLE-GLOBAL TER คืออะไร");
+    expect(json(m)).toContain("B-INNOTECH TER คืออะไร");
   });
 
   it("handles the rich menu words", async () => {
     expect(json(await handleText(MENU.fees, funds, ask))).toContain("กองไหน");
     expect(json(await handleText(MENU.calc, funds, ask))).toContain("ลงทุน 100,000 บาท 10 ปี");
-    expect(json(await handleText(MENU.ask, funds, ask))).toContain("SAMPLE-GLOBAL");
+    const ask4 = json(await handleText(MENU.ask, funds, ask));
+    for (const q of EXAMPLE_QUESTIONS) expect(ask4).toContain(q.short);
   });
 });
 
@@ -71,17 +83,24 @@ describe("flex cards", () => {
     const s = json(fundCard(funds.find((f) => f.code === "SAMPLE-GLOBAL")!));
     expect(s).toContain("1.87%");
     expect(s).toContain("หน้า 14 · หนังสือชี้ชวน");
-    expect(s).toContain("ไม่อยู่ใน Factsheet");
+    expect(s).toContain(MASTER_COST_NOTE);
     expect(s).toContain(SAMPLE_DATA_LABEL);
     expect(s).toContain(DISCLAIMER);
   });
 
   it("answer card keeps the refusal, assumptions and the disclaimer", () => {
     expect(json(answerCard(refusal(), []))).toContain(DISCLAIMER);
-    const money = moneyAnswer(funds.slice(0, 1), "ลงทุน 100,000 บาท 10 ปี เสียกี่บาท");
+    const money = moneyAnswer(funds.filter((f) => f.code === "SAMPLE-GLOBAL"), "ลงทุน 100,000 บาท 10 ปี เสียกี่บาท");
     const s = json(answerCard(money, ["SAMPLE-GLOBAL"]));
     expect(s).toContain("ไม่ใช่การคาดการณ์");
     expect(s).toContain("หน้า 14");
+  });
+
+  it("fund card for SEC data says where each figure came from (no empty text)", () => {
+    const card = fundCard(funds.find((f) => f.code === "SCBMONEY(A)")!);
+    const s = json(card);
+    expect(s).toContain("ข้อมูลจาก ก.ล.ต.");
+    expect(s).not.toContain('"text":""');
   });
 
   it("links open inside LINE through LIFF when it is set", () => {

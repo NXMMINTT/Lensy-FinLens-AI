@@ -4,12 +4,12 @@
  * trueCost (lib/trueCost.ts) and riskAlerts (lib/riskRules.ts). Nothing here is typed in by hand.
  * Server-side only (reads the fund files).
  */
-import { getFund, totalAnnualCostRate } from "./funds";
+import { FEATURED_FUND_CODES, getFund, totalAnnualCostRate } from "./funds";
 import { RISK_LEVEL_LABEL, RISK_TOPIC_LABEL, riskAlerts, type RiskLevel } from "./riskRules";
 import { pctToRate, type DocSource, type Fund, type Sourced } from "./schema";
 import { DEFAULT_ANNUAL_RETURN, feeGapBaht, trueCost, type TrueCostResult } from "./trueCost";
 
-export const HOME_FUND_CODES = ["B-INNOTECH", "K-US500X-A(A)"] as const;
+export const HOME_FUND_CODES = FEATURED_FUND_CODES;
 
 /** A figure with where it came from; page is null when the source gives none. */
 export type HomeSourced = { value: number; page: number | null; source: DocSource };
