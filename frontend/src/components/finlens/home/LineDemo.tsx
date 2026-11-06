@@ -53,6 +53,10 @@ function CompareScreen() {
             ) : (
               <span className="text-ink-muted">กองทุนหลัก: {NOT_FOUND}</span>
             )}
+            <span className="mt-0.5 flex items-baseline justify-between gap-2 border-t border-line-subtle pt-1">
+              <b>ต้นทุนต่อปีรวม</b>
+              <b className="text-[14px] text-brand">{pct(f.annualCostRate)}</b>
+            </span>
           </div>
         ))}
         <span className="text-[10.5px] font-semibold leading-snug text-[#7A5200]">⚠ {MASTER_COST_NOTE}</span>
@@ -63,12 +67,13 @@ function CompareScreen() {
 
 /* 2. one fund → the risks people tend to miss, labelled by the app's rules */
 function RiskScreen() {
-  const [A] = homeFunds();
+  // fund B: its verified record gives the fuller risk picture (currency, concentration, …)
+  const [, B] = homeFunds();
   return (
     <ChatScreen>
-      <UserMsg>{A.code}</UserMsg>
+      <UserMsg>{B.code}</UserMsg>
       <AnswerCard title="ความเสี่ยงที่ควรรู้">
-        {homeRisks(A).slice(0, 3).map((r) => (
+        {homeRisks(B).slice(0, 3).map((r) => (
           <div key={`${r.topic}-${r.detail}`} className="flex flex-col gap-0.5 border-b border-line-subtle pb-1.5 last:border-0 last:pb-0">
             <span className="flex items-center gap-1.5">
               <span className={`rounded-full border px-1.5 text-[10px] font-bold ${RISK_TAG[r.level].className}`}>{RISK_TAG[r.level].label}</span>
@@ -111,15 +116,6 @@ function MoneyScreen() {
   );
 }
 
-/** A tilted note stuck beside the phone (text only, no figures). */
-function Sticker({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return (
-    <span className={`absolute hidden animate-bob items-center gap-1.5 whitespace-nowrap rounded-2xl border border-line bg-surface px-3.5 py-2 text-[14px] font-semibold text-ink shadow-[0_10px_24px_rgba(20,46,34,.10)] xl:inline-flex ${className}`}>
-      {children}
-    </span>
-  );
-}
-
 /** Fills the wide empty space around the step card and the phone: dots, a soft circle, stickers. */
 function Backdrop() {
   return (
@@ -143,14 +139,6 @@ function Backdrop() {
         <Paw className="right-[4%] top-[52%] h-9 w-9 rotate-12 opacity-70" color={DECOR.bright} />
         <Curl className="right-[14%] bottom-[8%] h-10 w-10" color={DECOR.mint} />
       </span>
-
-      {/* stickers around the phone (wide screens only) */}
-      <Sticker className="left-[calc(50%+440px)] top-[48%] -rotate-2 [animation-delay:700ms]">
-        <span className="text-brand">✓</span> คำนวณด้วยสูตร ไม่ใช่ AI
-      </Sticker>
-      <Sticker className="left-[calc(50%+90px)] top-[7%] -rotate-3 [animation-delay:1400ms]">
-        <span className="text-brand">✓</span> ไม่เชียร์ ไม่จัดอันดับ
-      </Sticker>
     </span>
   );
 }
@@ -170,9 +158,9 @@ export function LineDemo() {
           </>
         }
         steps={[
-          ["พิมพ์ 2 กองในข้อความเดียว", "น้องวางค่าใช้จ่ายทุกชั้นเทียบกัน ชั้นที่ Factsheet ของกองไทยไม่ได้แสดงก็เห็น"],
-          ["พิมพ์ชื่อกองเดียว", "ดูความเสี่ยงที่อาจมองข้าม ป้ายมาจากกฎ ไม่ใช่ AI ตัดสิน"],
-          ["ถามเป็นบาท", "น้องคำนวณด้วยสูตร บอกส่วนต่างเป็นเงิน และบอกสมมติฐานทุกครั้ง"],
+          ["พิมพ์ 2 กองในข้อความเดียว", "น้องวางค่าใช้จ่ายทุกชั้นเทียบกัน รวมถึงชั้นที่ Factsheet ไม่ได้แสดง"],
+          ["พิมพ์ชื่อกองเดียว", "น้องเตือนความเสี่ยงที่มักมองข้าม เช่น ค่าเงิน และการลงทุนกระจุกตัว"],
+          ["ถามว่าเสียกี่บาท", "น้องคำนวณให้ว่าแต่ละกองเสียค่าธรรมเนียมเป็นเงินเท่าไร และต่างกันเท่าไร"],
         ]}
         backdrop={<Backdrop />}
         visuals={[<CompareScreen key="compare" />, <RiskScreen key="risk" />, <MoneyScreen key="money" />]}

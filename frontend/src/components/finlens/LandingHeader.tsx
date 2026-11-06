@@ -62,24 +62,25 @@ function LogoutButton() {
 export function LandingHeader({ signedIn = false }: { signedIn?: boolean } = {}) {
   const path = usePathname();
   return (
-    <header className="sticky top-0 z-20 bg-surface/95 shadow-[0_1px_0_rgb(var(--line))] backdrop-blur">
-      <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-3 px-4 py-2.5 md:px-6">
-        <Link href="/" className="rounded-xl no-underline" aria-label="FinLens AI หน้าแรก">
-          <FinLensLogo height={34} />
+    // floating capsule: the bar sits off the page edge, rounded, with a soft shadow
+    <header className="pointer-events-none sticky top-0 z-20 px-3 pt-3 md:px-6">
+      <div className="pointer-events-auto mx-auto flex max-w-[1120px] items-center justify-between gap-2 rounded-full border border-line bg-surface/90 py-1.5 pl-3 pr-1.5 shadow-[0_8px_24px_-12px_rgb(0_0_0/0.25)] backdrop-blur md:pl-4">
+        <Link href="/" className="shrink-0 rounded-full no-underline" aria-label="FinLens AI หน้าแรก">
+          <FinLensLogo height={32} />
         </Link>
-        <nav aria-label="เมนูหลัก" className="hidden text-base md:flex">
+        <nav aria-label="เมนูหลัก" className="hidden items-center gap-0.5 text-[15px] md:flex">
           {(signedIn ? NAV_APP : NAV_LANDING).map((n) => (
             <Link
               key={n.href}
               href={n.href}
               aria-current={signedIn && (path === n.href || path.startsWith(`${n.href}/`)) ? "page" : undefined}
-              className="inline-flex min-h-[44px] items-center px-3.5 font-medium text-ink-body aria-[current=page]:font-bold aria-[current=page]:text-brand no-underline hover:text-brand"
+              className="inline-flex min-h-[40px] items-center whitespace-nowrap rounded-full px-3.5 font-medium text-ink-body no-underline hover:bg-brand-soft hover:text-brand aria-[current=page]:bg-brand-soft aria-[current=page]:font-bold aria-[current=page]:text-brand"
             >
               {n.label}
             </Link>
           ))}
         </nav>
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-1.5">
           <ThemeToggle />
           {signedIn && <LogoutButton />}
           <Link

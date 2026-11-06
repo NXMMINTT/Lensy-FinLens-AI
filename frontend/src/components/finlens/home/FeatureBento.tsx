@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { GENERAL_NOTE } from "@/lib/ask";
-import { HOME_CALC, homeFeeDifference, homeFunds, homeRisks, homeTrueCost, MASTER_COST_NOTE, RISK_TAG } from "@/lib/homeFunds";
+import { HOME_CALC, homeFeeDifference, homeFunds, homeRisks, homeTrueCost, RISK_TAG } from "@/lib/homeFunds";
 import { baht, docPct, pct } from "@/lib/money";
 import { SOURCE_LABEL, sourceRef } from "@/lib/sources";
 
@@ -82,7 +82,7 @@ function MoneyScene() {
   const r = homeTrueCost(f);
   return (
     <>
-      <Sheet label={f.nameTh} className="left-[32%] h-[168px] w-[56%]">
+      <Sheet label={f.code} className="left-[32%] h-[168px] w-[56%]">
         <span className="flex justify-between text-[12.5px]">
           <span>เงินลงทุน</span>
           <b>{HOME_CALC.principal.toLocaleString("th-TH")} บาท</b>
@@ -96,8 +96,7 @@ function MoneyScene() {
         </span>
         <span className="text-[10px] text-[#7A8C81]">สมมติผลตอบแทน {pct(HOME_CALC.annualReturn, 0)} ต่อปี ไม่ใช่การคาดการณ์</span>
       </Sheet>
-      <Note className="left-6 top-1 bg-white text-[#1A7637]">ปรับเงินและจำนวนปีได้</Note>
-      <Note className="right-4 top-12 bg-[#1A7637] text-white">เสียค่าธรรมเนียม {baht(r.feeCost)}</Note>
+      <Note className="right-4 top-2 bg-[#1A7637] text-white">เสียค่าธรรมเนียม {baht(r.feeCost)}</Note>
       <Peek pose="coins" className="left-1" />
     </>
   );
@@ -122,7 +121,7 @@ function ExplainScene() {
         </span>
         <span className="mt-auto text-[10px] text-[#7A8C81]">{sourceRef(master.page, master.source)}</span>
       </Sheet>
-      <Note className="right-[22%] top-2 max-w-[52%] bg-[#FFF4D1] text-[12px] leading-snug text-[#7A5200]">⚠ {MASTER_COST_NOTE}</Note>
+      <Note className="right-[24%] top-2 bg-[#FFF4D1] text-[13px] text-[#7A5200]">⚠ Factsheet ไม่ได้แสดงค่านี้</Note>
       <Peek pose="checklist" className="right-2" />
     </>
   );
@@ -164,7 +163,7 @@ export function FeatureBento() {
           <Card href="/compare" title="เทียบ 2 กองเคียงกัน" text="วางค่าใช้จ่ายทุกชั้นเทียบกัน ชั้นที่ซ่อนอยู่ก็เห็น">
             <CompareScene />
           </Card>
-          <Card href="/calculator" title="ค่าธรรมเนียมเป็นบาท" text="ไม่ใช่แค่เปอร์เซ็นต์ บอกเลยว่าเสียเงินไปกี่บาท คำนวณด้วยสูตร">
+          <Card href="/calculator" title="เสียค่าธรรมเนียมไปกี่บาท" text="ค่าธรรมเนียมในเอกสารเขียนเป็น % น้องคำนวณให้ว่าคิดเป็นเงินเท่าไร ตามจำนวนปีที่ถือ">
             <MoneyScene />
           </Card>
           <Card href="/explain" title="ดูทีละกองแบบเข้าใจง่าย" text="มีค่าใช้จ่ายอะไร ซ่อนอยู่หน้าไหน เสี่ยงเรื่องไหน">

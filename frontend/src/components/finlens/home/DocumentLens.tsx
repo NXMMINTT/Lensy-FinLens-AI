@@ -1,4 +1,4 @@
-import { homeFunds, MASTER_COST_NOTE } from "@/lib/homeFunds";
+import { homeFunds } from "@/lib/homeFunds";
 import { docPct, pct } from "@/lib/money";
 import type { DocSource } from "@/lib/schema";
 import { SOURCE_LABEL, sourceRef } from "@/lib/sources";
@@ -91,23 +91,21 @@ export function DocumentLens() {
       </div>
 
       {/* callout */}
-      <div className="absolute right-0 top-[47%] max-w-[37%] rounded-xl max-sm:hidden bg-[#FFF4D1] px-2.5 py-1.5 text-[10.5px] font-semibold leading-snug text-[#7A5200] shadow-sm">
+      <div className="absolute right-0 top-[57%] max-w-[37%] rounded-xl max-sm:hidden bg-[#FFF4D1] px-2.5 py-1.5 text-[10.5px] font-semibold leading-snug text-[#7A5200] shadow-sm">
         <Icon name="warn" className="mr-1" />
-        {MASTER_COST_NOTE}
+        Factsheet ไม่ได้แสดงค่านี้
       </div>
 
       {/* result: the two real funds side by side */}
       <div className="absolute -bottom-[2%] right-[0%] flex flex-col gap-1 rounded-2xl bg-[#1A7637] px-3.5 py-2.5 text-white shadow-[0_12px_28px_rgba(26,118,55,.35)]">
-        <span className="text-[11px] opacity-90">ต้นทุนต่อปีรวม เทียบ 2 กอง</span>
+        <span className="text-[11px] opacity-90">ต้นทุนจริงต่อปี</span>
         {[A, B].map((f) => (
           <span key={f.code} className="flex items-baseline justify-between gap-3">
             <span className="text-[12px] opacity-90">{f.code}</span>
             <span className="text-[22px] font-extrabold leading-none">{pct(f.annualCostRate)}</span>
           </span>
         ))}
-        <span className="max-w-[190px] text-[10px] leading-snug opacity-90">
-          รวมค่าใช้จ่ายกองหลักแล้ว{A.masterInclusionUnknown || B.masterInclusionUnknown ? " (เอกสารไม่ระบุว่า TER รวมไว้แล้วหรือไม่ จึงบวกเพิ่ม)" : ""}
-        </span>
+        <span className="text-[10px] opacity-80">รวมค่าใช้จ่ายกองหลักแล้ว</span>
       </div>
 
       <Lensy pose="magnifier" size={150} className="absolute -left-[6%] -top-[8%] animate-bob max-sm:!h-[96px] max-sm:!w-[96px]" />

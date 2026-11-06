@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 
 import { AppShell } from "@/components/finlens/app/AppShell";
 import { FeatureMenu } from "@/components/finlens/app/FeatureMenu";
-import { Icon } from "@/components/finlens/Icon";
 import { MascotDecor } from "@/components/finlens/Decor";
 import { Lensy } from "@/components/finlens/Lensy";
 import { getVerifiedFunds } from "@/lib/funds";
@@ -22,10 +21,6 @@ export default function MenuPage() {
         <div className="flex max-w-[620px] flex-col gap-2">
           <h1 className="m-0 text-[28px] font-bold leading-tight md:text-[36px]">สวัสดีค่ะ วันนี้อยากให้น้องช่วยเรื่องไหนคะ</h1>
           <p className="m-0 opacity-90">เลือกจากเมนูด้านล่างได้เลยค่ะ ตัวเลขของกองกดดูข้อความในเอกสารได้ทุกตัว</p>
-          <p className="m-0 text-[14px] opacity-80">
-            <Icon name="info" className="mr-1" />
-            ข้อมูลเพื่อความเข้าใจ ไม่ใช่คำแนะนำการลงทุน
-          </p>
         </div>
         <span className="relative mr-4 max-sm:hidden">
           <Lensy pose="wave" size={130} />
