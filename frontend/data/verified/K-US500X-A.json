@@ -1,0 +1,287 @@
+{
+  "code": "K-US500X-A(A)",
+  "nameTh": {
+    "value": "กองทุนเปิดเค หุ้นยูเอส พาสซีฟ-A ชนิดสะสมมูลค่า",
+    "page": 1,
+    "quote": "กองทุนเปดเค หุนยูเอส พาสซีฟ-A ชนิดสะสมมูลคา",
+    "source": "factsheet"
+  },
+  "amc": {
+    "value": "บริษัทหลักทรัพย์จัดการกองทุน กสิกรไทย จำกัด",
+    "page": 1,
+    "quote": "บริษัทหลักทรัพยจัดการกองทุน กสิกรไทย จํากัด",
+    "source": "factsheet"
+  },
+  "type": {
+    "value": "กองทุนรวมตราสารทุนต่างประเทศ / กองทุนรวมฟีดเดอร์",
+    "page": 1,
+    "quote": "กองทุนรวมตราสารทุนตางประเทศ / กองทุนรวมฟดเดอร",
+    "source": "factsheet"
+  },
+  "isFeeder": {
+    "value": true,
+    "page": 1,
+    "quote": "กองทุนรวมตราสารทุนตางประเทศ / กองทุนรวมฟดเดอร",
+    "source": "factsheet"
+  },
+  "masterFundName": {
+    "value": "iShares Core S&P 500 ETF",
+    "page": 1,
+    "quote": "ลงทุนในกองทุน iShares Core S&P 500 ETF (กองทุนหลัก)",
+    "source": "factsheet"
+  },
+  "riskLevel": {
+    "value": 6,
+    "page": 1,
+    "quote": "ระดับความเสี่ยง\nตํ่า 1 2 3 4 5 6 7 8 สูง\nความเสี่ยงสูง",
+    "source": "factsheet"
+  },
+  "asOfDate": {
+    "value": "2026-09-30",
+    "page": 1,
+    "quote": "ขอมูล ณ วันที่ 30 กันยายน 2569",
+    "source": "factsheet"
+  },
+  "fees": {
+    "frontEnd": {
+      "value": 0,
+      "page": 2,
+      "quote": "การขาย 3.00 ยกเวน",
+      "source": "factsheet"
+    },
+    "backEnd": {
+      "value": 0.15,
+      "page": 2,
+      "quote": "การรับซื้อคืน 3.00 0.15",
+      "source": "factsheet"
+    },
+    "switching": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "management": {
+      "value": 0.535,
+      "page": 2,
+      "quote": "การจัดการ 3.2100 0.5350",
+      "source": "factsheet"
+    },
+    "ter": {
+      "value": 0.6375,
+      "page": 2,
+      "quote": "รวมคาใชจาย 4.8685 0.6375",
+      "source": "factsheet"
+    },
+    "masterFundExpense": {
+      "value": 0.03,
+      "page": 42,
+      "quote": "ค่าใช้จ่ายทั้งหมด (Total Expense Ratio): ร้อยละ 0.03 ต่อปีของมูลค่าทรัพย์สินสุทธิของกองทุน",
+      "source": "prospectus"
+    },
+    "otherExpenses": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "terIncludesMasterFund": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "prospectus"
+    },
+    "rebate": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "prospectus"
+    }
+  },
+  "risk": {
+    "fxHedging": {
+      "value": "discretionary",
+      "page": 1,
+      "quote": "การปองกันความเสี่ยง FX ตามดุลยพินิจ",
+      "source": "factsheet"
+    },
+    "top5Pct": {
+      "value": 25.24,
+      "page": 2,
+      "quote": "NVIDIA CORP 7.51\nAPPLE INC 6.58\nMICROSOFT CORP 4.29\nAMAZON COM INC 3.61\nALPHABET INC CLASS A 3.25",
+      "source": "factsheet"
+    },
+    "top10Pct": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "topCountry": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "topSector": {
+      "value": {
+        "name": "Information Technology",
+        "pct": 37.96
+      },
+      "page": 2,
+      "quote": "Information Technology 37.96",
+      "source": "factsheet"
+    }
+  },
+  "redemption": {
+    "settlementDays": {
+      "value": 3,
+      "page": 2,
+      "quote": "ระยะเวลาการรับเงินคาขายคืน : T+3",
+      "source": "factsheet"
+    },
+    "frequency": {
+      "value": "ทุกวันทำการซื้อขาย",
+      "page": 2,
+      "quote": "วันทําการขายคืน : ทุกวันทําการซื้อขาย",
+      "source": "factsheet"
+    },
+    "lockUp": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    }
+  },
+  "pastReturns": [
+    {
+      "period": "ytd",
+      "fund": {
+        "value": 9.99,
+        "page": 1,
+        "quote": "กองทุน 9.99 1.82 16.04 12.42",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 10.82,
+        "page": 1,
+        "quote": "ดัชนีชี้วัด 10.82 1.72 16.56 13.42",
+        "source": "factsheet"
+      }
+    },
+    {
+      "period": "3m",
+      "fund": {
+        "value": 1.82,
+        "page": 1,
+        "quote": "กองทุน 9.99 1.82 16.04 12.42",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 1.72,
+        "page": 1,
+        "quote": "ดัชนีชี้วัด 10.82 1.72 16.56 13.42",
+        "source": "factsheet"
+      }
+    },
+    {
+      "period": "6m",
+      "fund": {
+        "value": 16.04,
+        "page": 1,
+        "quote": "กองทุน 9.99 1.82 16.04 12.42",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 16.56,
+        "page": 1,
+        "quote": "ดัชนีชี้วัด 10.82 1.72 16.56 13.42",
+        "source": "factsheet"
+      }
+    },
+    {
+      "period": "1y",
+      "fund": {
+        "value": 12.42,
+        "page": 1,
+        "quote": "กองทุน 9.99 1.82 16.04 12.42",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 13.42,
+        "page": 1,
+        "quote": "ดัชนีชี้วัด 10.82 1.72 16.56 13.42",
+        "source": "factsheet"
+      }
+    },
+    {
+      "period": "3y",
+      "fund": {
+        "value": 18.08,
+        "page": 1,
+        "quote": "กองทุน 18.08 10.06 N/A 9.33",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 19.33,
+        "page": 1,
+        "quote": "ดัชนีชี้วัด 19.33 11.61 N/A 11.06",
+        "source": "factsheet"
+      }
+    },
+    {
+      "period": "5y",
+      "fund": {
+        "value": 10.06,
+        "page": 1,
+        "quote": "กองทุน 18.08 10.06 N/A 9.33",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 11.61,
+        "page": 1,
+        "quote": "ดัชนีชี้วัด 19.33 11.61 N/A 11.06",
+        "source": "factsheet"
+      }
+    },
+    {
+      "period": "sinceInception",
+      "fund": {
+        "value": 9.33,
+        "page": 1,
+        "quote": "กองทุน 18.08 10.06 N/A 9.33",
+        "source": "factsheet"
+      },
+      "benchmark": {
+        "value": 11.06,
+        "page": 1,
+        "quote": "ดัชนีชี้วัด 19.33 11.61 N/A 11.06",
+        "source": "factsheet"
+      }
+    }
+  ],
+  "meta": {
+    "status": "verified",
+    "isSample": false,
+    "extractedAt": null,
+    "model": null,
+    "sourceFiles": [
+      {
+        "file": "docs/pdfs/K-US500X-A/factsheet.pdf",
+        "source": "factsheet"
+      },
+      {
+        "file": "docs/pdfs/K-US500X-A/prospectus.pdf",
+        "source": "prospectus"
+      }
+    ],
+    "verifiedBy": "ตรวจเทียบกับ PDF ทีละค่า (6 พ.ย. 2569) · รอทีม econ ลงชื่อยืนยัน",
+    "notes": [
+      "top5Pct / topSector: ข้อมูลของกองหลัก (iShares Core S&P 500 ETF) ณ 30 มิ.ย. 69 ตามที่ Factsheet แสดง",
+      "switching: Factsheet ระบุว่าใช้อัตราที่สูงกว่าระหว่างค่ารับซื้อคืนกองต้นทางกับค่าขายกองปลายทาง จึงไม่มีตัวเลขเดียว",
+      "ค่าซื้อขายหลักทรัพย์ขาเข้า 0.10% (เก็บเข้ากองทุนเมื่อซื้อ) ยังไม่มีช่องในสคีมา จึงไม่ได้รวมในต้นทุน",
+      "terIncludesMasterFund: เอกสารไม่ระบุ ระบบจึงบวกค่าใช้จ่ายกองหลัก 0.03% เพิ่มและแสดงหมายเหตุ",
+      "riskLevel: ระดับในเอกสารเป็นภาพ ช่องที่ระบายสีคือ 6 (ข้อความอ้างอิงคือป้ายใต้ภาพ)"
+    ]
+  }
+}

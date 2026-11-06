@@ -31,9 +31,9 @@
     "source": "factsheet"
   },
   "riskLevel": {
-    "value": null,
-    "page": null,
-    "quote": null,
+    "value": 6,
+    "page": 1,
+    "quote": "ระดับความเสี่ยง\nเสี่ยงสูง",
     "source": "factsheet"
   },
   "asOfDate": {
@@ -56,9 +56,9 @@
       "source": "factsheet"
     },
     "switching": {
-      "value": null,
-      "page": null,
-      "quote": null,
+      "value": 1.5,
+      "page": 2,
+      "quote": "การสับเปลี่ยนหน่วยลงทุนเข้า 2.14 1.50",
       "source": "factsheet"
     },
     "management": {
@@ -90,6 +90,12 @@
       "page": null,
       "quote": null,
       "source": "prospectus"
+    },
+    "rebate": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "prospectus"
     }
   },
   "risk": {
@@ -100,9 +106,9 @@
       "source": "factsheet"
     },
     "top5Pct": {
-      "value": null,
-      "page": null,
-      "quote": null,
+      "value": 36.4,
+      "page": 2,
+      "quote": "NVIDIA 8.0\nASML 7.7\nAmazon.com 7.3\nTSMC 7.0\nCloudflare 6.4",
       "source": "factsheet"
     },
     "top10Pct": {
@@ -273,7 +279,7 @@
     }
   ],
   "meta": {
-    "status": "pending",
+    "status": "verified",
     "isSample": false,
     "extractedAt": "2026-11-05T12:11:28.698Z",
     "model": "gemini-3.8-flash",
@@ -287,10 +293,11 @@
         "source": "prospectus"
       }
     ],
-    "verifiedBy": null,
+    "verifiedBy": "ตรวจเทียบกับ PDF ทีละค่า (6 พ.ย. 2569) · รอทีม econ ลงชื่อยืนยัน",
     "notes": [
-      "fees.backEnd: ตัวเลข 0 ไม่อยู่ในข้อความอ้างอิง ตรวจให้แน่ใจ",
-      "masterFundExpense: เติมเองจากหนังสือชี้ชวนหน้า 7 (Ongoing Charge ของกองทุนหลัก) กองทุนหลักมีหลายชนิดหน่วย ให้ตรวจว่าเป็นของ Class B net accumulation ที่ factsheet ระบุ"
+      "masterFundExpense: Ongoing Charge 0.72% ในหนังสือชี้ชวนหน้า 7 เป็นของกองหลัก ชนิด Class B USD Accumulation ที่กองนี้ลงทุน",
+      "terIncludesMasterFund: เอกสารไม่ระบุ ระบบจึงบวกค่าใช้จ่ายกองหลักเพิ่มและแสดงหมายเหตุ",
+      "riskLevel: ระดับในเอกสารเป็นภาพ ช่องที่ระบายสีคือ 6 (ข้อความอ้างอิงคือป้ายใต้ภาพ)"
     ]
   }
 }

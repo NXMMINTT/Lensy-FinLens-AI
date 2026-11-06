@@ -90,6 +90,12 @@
       "page": null,
       "quote": null,
       "source": "prospectus"
+    },
+    "rebate": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "prospectus"
     }
   },
   "risk": {
@@ -100,7 +106,7 @@
       "source": "factsheet"
     },
     "top5Pct": {
-      "value": 38.12,
+      "value": 37.07,
       "page": 2,
       "quote": "NVIDIA Corporation 9.46\nMicrosoft Corporation 8.49\nAlphabet Inc. 7.17\nAmazon.com, Inc. 7.11\nApple Inc. 4.84",
       "source": "factsheet"
@@ -144,9 +150,9 @@
       "source": "prospectus"
     },
     "lockUp": {
-      "value": "50 หน่วย",
-      "page": 2,
-      "quote": "ยอดคงเหลือขั้นตํ่า: 50 หน่วย",
+      "value": null,
+      "page": null,
+      "quote": null,
       "source": "factsheet"
     }
   },
@@ -273,7 +279,7 @@
     }
   ],
   "meta": {
-    "status": "pending",
+    "status": "verified",
     "isSample": false,
     "extractedAt": "2026-11-04T12:14:14.889Z",
     "model": "gemini-3.5-flash-lite",
@@ -287,12 +293,11 @@
         "source": "prospectus"
       }
     ],
-    "verifiedBy": null,
+    "verifiedBy": "ตรวจเทียบกับ PDF ทีละค่า (6 พ.ย. 2569) · รอทีม econ ลงชื่อยืนยัน",
     "notes": [
-      "fees.backEnd: ตัวเลข 0 ไม่อยู่ในข้อความอ้างอิง ตรวจให้แน่ใจ",
-      "fees.management: ได้ค่า 1.3375 แต่หาข้อความอ้างอิงในเอกสารไม่เจอ ตั้งเป็น null (ตรวจในเอกสารเอง)",
-      "risk.top5Pct: ตัวเลข 38.12 ไม่อยู่ในข้อความอ้างอิง ตรวจให้แน่ใจ",
-      "management: เติมเองจาก factsheet หน้า 2 ค่า 'เก็บจริง' 1.3375 (สูงสุดไม่เกิน 1.6050)"
+      "top5Pct: รวม 5 อันดับแรกในหน้า 2 = 37.07% (ค่าที่ AI ดึงมาเดิม 38.12 ผิด)",
+      "lockUp: ไม่มีระยะเวลาห้ามขาย ('ยอดคงเหลือขั้นต่ำ 50 หน่วย' ไม่ใช่ lock-up)",
+      "terIncludesMasterFund: เอกสารไม่ระบุ ระบบจึงบวกค่าใช้จ่ายกองหลัก 0.55% เพิ่มและแสดงหมายเหตุ"
     ]
   }
 }
