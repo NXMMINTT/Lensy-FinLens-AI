@@ -6,7 +6,7 @@ type Tile = { title: string; text: string; pose: LensyPose; href: string };
 
 /** The core of FinLens: big tiles. */
 const MAIN: Tile[] = [
-  { title: "เทียบกองทุน", text: "ค่าใช้จ่ายทุกชั้นของ 2–3 กองเคียงกัน", pose: "magnifier", href: "/compare" },
+  { title: "เทียบกองทุน", text: "ค่าใช้จ่ายทุกชั้นของหลายกองเคียงกัน", pose: "magnifier", href: "/compare" },
   { title: "ดูทีละกอง", text: "ค่าใช้จ่าย ซ่อนอยู่หน้าไหน เสี่ยงเรื่องไหน", pose: "checklist", href: "/explain" },
   { title: "เสียค่าธรรมเนียมไปกี่บาท", text: "คำนวณเป็นเงิน ตามจำนวนปีที่ถือ", pose: "coins", href: "/calculator" },
   { title: "ถามน้อง Lensy", text: "ศัพท์และเรื่องการเงิน ถามได้เลย", pose: "idea", href: "/chat" },

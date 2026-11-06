@@ -5,24 +5,25 @@ import { Fragment, useEffect, useMemo, useState } from "react";
 
 import type { CompareFund } from "@/lib/compare";
 import { FEE_PHASES } from "@/lib/feePhases";
-import { MASTER_COST_NOTE, NOT_FOUND, NOT_IN_DOCS } from "@/lib/disclaimer";
+import { NOT_FOUND, NOT_IN_DOCS } from "@/lib/disclaimer";
 import { baht, docPct, pct } from "@/lib/money";
 import { useTheme } from "@/lib/theme";
 import { ASSET_CLASS_LABEL, DEFAULT_ANNUAL_RETURN, defaultReturnFor, feeGapBaht, MAX_YEARS, MIN_YEARS, trueCost, type TrueCostResult } from "@/lib/trueCost";
-import type { DocSource } from "@/lib/schema";
 import { sourceRef } from "@/lib/sources";
 
 import { DataStatusBadge } from "../app/DataStatusBadge";
 import { SampleBadge } from "../SampleBadge";
 import { Icon } from "../Icon";
+import { Lensy } from "../Lensy";
 import { CostChart, SERIES_COLORS, type ChartRow, type ChartSeries } from "./CostChart";
+import { searchFunds } from "@/lib/fundSearch";
+import { MAX_COMPARE_FUNDS } from "@/lib/limits";
 
-
-const MAX_FUNDS = 3;
+const MAX_FUNDS = MAX_COMPARE_FUNDS;
 
 /**
- * "fees": /compare — every fee layer of 2–3 funds side by side, with pages (no baht).
- * "money": /calculator — fee cost in baht for 1–3 funds, with sliders, chart and assumptions.
+ * "fees": /compare — every fee layer of up to MAX_COMPARE_FUNDS funds side by side, with pages (no baht).
+ * "money": /calculator — fee cost in baht for the chosen funds, with sliders, chart and assumptions.
  */
 export type CompareMode = "fees" | "money";
 const AMOUNT_PRESETS = [10_000, 100_000, 500_000, 1_000_000];
@@ -34,15 +35,140 @@ function Swatch({ slot }: { slot: number }) {
   return <i className="inline-block h-3 w-3 shrink-0 rounded-full" style={{ background: SERIES_COLORS[resolved][slot] }} aria-hidden="true" />;
 }
 
-/** Where a figure came from: "หน้า 2 · Factsheet", or just the source when it has no page (SEC data). */
-function PageTag({ page, source }: { page: number | null; source: DocSource }) {
-  return <span className="whitespace-nowrap text-[12px] text-ink-muted">{sourceRef(page, source)}</span>;
+/**
+ * The fund list stays in view (in its own scroll box, with a filter on top). Picked funds show as
+ * chips with their chart colour. Before the first comparison, a button starts it.
+ */
+function FundPicker({
+  funds,
+  selected,
+  min,
+  started,
+  startLabel,
+  onToggle,
+  onStart,
+}: {
+  funds: CompareFund[];
+  selected: Selected[];
+  min: number;
+  started: boolean;
+  startLabel: string;
+  onToggle: (code: string) => void;
+  onStart: () => void;
+}) {
+  const [query, setQuery] = useState("");
+  const byCode = new Map(funds.map((f) => [f.code, f]));
+  const full = selected.length >= MAX_FUNDS;
+  const { list: options, total } = searchFunds(funds, query);
+  const searching = query.trim().length > 0;
+
+  return (
+    <div className="mt-4 flex flex-col gap-4">
+      {selected.length > 0 && (
+        <ul className="m-0 flex list-none flex-wrap gap-2 p-0" aria-label="กองที่เลือก">
+          {selected.map((s) => {
+            const f = byCode.get(s.code);
+            if (!f) return null;
+            return (
+              <li key={s.code} className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-brand/40 bg-brand-soft py-1 pl-3.5 pr-1.5 text-[15px] font-semibold text-ink">
+                <Swatch slot={s.slot} />
+                <span className="max-w-[260px] truncate">{f.nameTh}</span>
+                <button
+                  type="button"
+                  onClick={() => onToggle(s.code)}
+                  aria-label={`เอา ${f.nameTh} ออก`}
+                  className="flex h-8 w-8 items-center justify-center rounded-full text-[18px] leading-none text-ink-muted hover:bg-surface hover:text-ink"
+                >
+                  ×
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      <div className="flex flex-col gap-2 rounded-2xl border border-line p-2">
+        <div className="relative">
+          <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-ink-muted">
+            <Icon name="search" />
+          </span>
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="ค้นหาชื่อหรือรหัสกอง"
+            aria-label="ค้นหากอง"
+            className="min-h-[44px] w-full rounded-xl bg-line-subtle pl-11 pr-4 text-[15px] text-ink placeholder:text-ink-faint focus:outline-none focus:ring-2 focus:ring-brand/40"
+          />
+        </div>
+        <p className="m-0 px-2 text-[12.5px] text-ink-muted">
+          {searching
+            ? total > options.length
+              ? `พบ ${total.toLocaleString("th-TH")} กอง แสดง ${options.length} กองที่ตรงที่สุด พิมพ์เพิ่มเพื่อให้แคบลง`
+              : total > 0
+                ? `พบ ${total} กอง`
+                : ""
+            : "แนะนำ · พิมพ์ชื่อหรือรหัสเพื่อค้นหากองอื่น"}
+        </p>
+        <ul className="m-0 grid list-none gap-1 p-0 sm:grid-cols-2">
+          {options.length === 0 && <li className="px-3 py-2.5 text-[14px] text-ink-muted">ไม่พบกองที่ตรงกับคำค้น ลองพิมพ์รหัสกอง เช่น KFUS</li>}
+          {options.map((f) => {
+            const sel = selected.find((s) => s.code === f.code);
+            const disabled = !sel && full;
+            return (
+              <li key={f.code}>
+                <button
+                  type="button"
+                  onClick={() => onToggle(f.code)}
+                  aria-pressed={Boolean(sel)}
+                  disabled={disabled}
+                  className={`flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
+                    sel ? "bg-brand-soft" : "hover:bg-line-subtle"
+                  }`}
+                >
+                  <span
+                    aria-hidden="true"
+                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${sel ? "border-transparent" : "border-line"}`}
+                  >
+                    {sel && <Swatch slot={sel.slot} />}
+                  </span>
+                  <span className="flex min-w-0 flex-col">
+                    <span className="truncate text-[14.5px] font-semibold text-ink">
+                      {f.nameTh} {f.isSample && <span className="text-[11px] font-medium text-sun-ink">(ตัวอย่าง)</span>}
+                    </span>
+                    <span className="text-[12.5px] text-ink-muted">{f.code}</span>
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+
+      {!started && (
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={onStart}
+            disabled={selected.length < min}
+            className="inline-flex min-h-[50px] items-center rounded-full bg-brand px-8 text-[16px] font-bold text-white hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            {startLabel}
+          </button>
+          {selected.length < min && <span className="text-[14px] text-ink-muted">เลือกกองที่สนใจจากรายการด้านบนก่อนนะคะ</span>}
+        </div>
+      )}
+    </div>
+  );
 }
 
 export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[]; initialCodes: string[]; mode: CompareMode }) {
   const MIN_FUNDS = mode === "fees" ? 2 : 1;
   // Each fund keeps its color slot while selected, so removing one never repaints the others.
   const [selected, setSelected] = useState<Selected[]>(initialCodes.map((code, slot) => ({ code, slot })));
+  // nothing is compared until the user presses the button (a link that names funds starts at once)
+  const [started, setStarted] = useState(initialCodes.length >= MIN_FUNDS);
+  const showResults = started && selected.length >= MIN_FUNDS;
   const [amount, setAmount] = useState(100_000);
   const [years, setYears] = useState(10);
   // the assumed return follows the kind of funds chosen until the user moves the slider
@@ -54,20 +180,21 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
 
   function toggle(code: string) {
     setSelected((cur) => {
-      if (cur.some((s) => s.code === code)) return cur.length > MIN_FUNDS ? cur.filter((s) => s.code !== code) : cur;
+      if (cur.some((s) => s.code === code)) return cur.filter((s) => s.code !== code);
       if (cur.length >= MAX_FUNDS) return cur;
       const used = new Set(cur.map((s) => s.slot));
-      const slot = [0, 1, 2].find((n) => !used.has(n))!;
+      const slot = Array.from({ length: MAX_FUNDS }, (_, n) => n).find((n) => !used.has(n))!;
       return [...cur, { code, slot }];
     });
   }
 
   // keep the URL shareable (e.g. from LINE) without a page reload
   useEffect(() => {
+    if (!started) return;
     const url = new URL(window.location.href);
     url.searchParams.set("funds", selected.map((s) => s.code).join(","));
     window.history.replaceState(null, "", url);
-  }, [selected]);
+  }, [selected, started]);
 
   const principal = Math.max(0, Math.min(100_000_000, Math.round(amount) || 0));
   const classes = chosen.map((s) => s.fund.assetClass);
@@ -118,34 +245,22 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h2 id="pick-title" className="m-0 text-[20px] font-bold">
             {mode === "fees" ? "เลือกกองที่จะเทียบ" : "เลือกกองที่จะคำนวณ"}{" "}
-            <span className="text-[15px] font-medium text-ink-muted">({MIN_FUNDS}–{MAX_FUNDS} กอง)</span>
           </h2>
           {anySample && <SampleBadge className="!text-[13px]" />}
         </div>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {funds.map((f) => {
-            const sel = selected.find((s) => s.code === f.code);
-            const disabled = sel ? selected.length <= MIN_FUNDS : selected.length >= MAX_FUNDS;
-            return (
-              <button
-                key={f.code}
-                type="button"
-                onClick={() => toggle(f.code)}
-                aria-pressed={Boolean(sel)}
-                disabled={disabled && !sel}
-                className={`inline-flex min-h-[44px] items-center gap-2 rounded-full border px-4 text-[15px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
-                  sel ? "border-brand bg-brand-soft text-ink" : "border-line bg-surface text-ink-body hover:border-brand"
-                }`}
-              >
-                {sel ? <Swatch slot={sel.slot} /> : <span className="text-ink-faint">+</span>}
-                {f.nameTh}
-                {f.isSample && <span className="text-[11px] font-medium text-sun-ink">(ตัวอย่าง)</span>}
-              </button>
-            );
-          })}
-        </div>
+        <FundPicker
+          funds={funds}
+          selected={selected}
+          min={MIN_FUNDS}
+          started={started}
+          startLabel={mode === "fees" ? "เทียบเลย" : "คำนวณเลย"}
+          onToggle={toggle}
+          onStart={() => setStarted(true)}
+        />
       </section>
 
+      {showResults && (
+        <>
       {mode === "money" && (
         <>
       {/* inputs */}
@@ -216,7 +331,7 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
         <h2 id="result-title" className="m-0 text-[22px] font-bold">
           ค่าธรรมเนียมเป็นบาท ใน {years} ปี
         </h2>
-        <div className={`grid gap-4 ${results.length === 3 ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
+        <div className={`grid gap-4 ${results.length === 4 ? "md:grid-cols-2 xl:grid-cols-4" : results.length === 3 ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
           {results.map((x) => (
             <article key={x.code} className="flex flex-col gap-2 rounded-[20px] border border-line bg-surface p-5">
               <div className="flex items-center gap-2 font-semibold">
@@ -286,91 +401,108 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
           <h2 id="table-title" className="m-0 text-[18px] font-bold">
             Fee X-Ray: ค่าใช้จ่ายทุกชั้น แยกตามช่วงที่จ่าย
           </h2>
-          <p className="m-0 text-[13.5px] text-ink-muted">ทุกตัวเลขบอกที่มา ค่าที่รวมอยู่ใน TER แล้วจะแสดงไว้ให้รู้ แต่ไม่นับซ้ำ</p>
+          <p className="m-0 text-[13.5px] text-ink-muted">ชี้ที่ตัวเลขเพื่อดูว่ามาจากเอกสารหน้าไหน · ช่องสีเหลืองคือค่าใช้จ่ายที่ Factsheet ไม่ได้แสดง</p>
         </div>
-        <div className="overflow-x-auto p-2 md:p-3">
-          <table className="w-full min-w-[560px] border-collapse text-left text-[14.5px]">
+        <div className="overflow-x-auto px-3 pb-3 md:px-4">
+          <table className="w-full min-w-[620px] table-fixed border-collapse overflow-hidden rounded-2xl text-left text-[15px]">
+            <colgroup>
+              <col className="w-[30%]" />
+              {chosen.map((s) => (
+                <col key={s.code} />
+              ))}
+            </colgroup>
             <thead>
-              <tr className="border-b border-line">
-                <th className="p-3 font-semibold text-ink-muted">รายการ</th>
+              <tr className="bg-brand-dark text-white">
+                <th className="p-3" aria-label="รายการ" />
                 {chosen.map((s) => (
-                  <th key={s.code} className="p-3 align-top font-semibold">
-                    <span className="flex flex-col gap-1.5">
-                      <span className="flex items-center gap-1.5">
-                        <Swatch slot={s.slot} />
-                        {s.fund.nameTh}
+                  <th key={s.code} className="p-3 align-top font-normal">
+                    <span className="flex flex-col gap-1">
+                      <span className="flex items-center gap-1.5 text-[16px] font-bold">
+                        <span className="flex rounded-full ring-2 ring-white">
+                          <Swatch slot={s.slot} />
+                        </span>
+                        {s.code}
                       </span>
-                      <DataStatusBadge status={s.fund.status} />
+                      <span className="line-clamp-2 text-[12.5px] leading-snug text-white/75">{s.fund.nameTh}</span>
+                      {/* only a warning shows here (sample / incomplete data); checked funds need no badge */}
+                      {s.fund.status.kind !== "verified" && <DataStatusBadge status={s.fund.status} chipOnly />}
                     </span>
                   </th>
+                ))}
+              </tr>
+              {/* the number that matters, first */}
+              <tr className="border-b-2 border-brand/20 bg-brand-soft">
+                <th scope="row" className="p-3 text-left font-bold text-ink">
+                  ต้นทุนต่อปีรวม
+                </th>
+                {chosen.map((s) => (
+                  <td key={s.code} className="p-3">
+                    {s.fund.annualCostRate === null ? (
+                      <span className="text-[13px] text-ink-muted">คำนวณไม่ได้</span>
+                    ) : (
+                      <b className="text-[22px] leading-none text-brand">{pct(s.fund.annualCostRate)}</b>
+                    )}
+                  </td>
                 ))}
               </tr>
             </thead>
             <tbody>
               {FEE_PHASES.map((ph) => {
-                const layers = (chosen[0]?.fund.layers ?? []).filter((l) => l.phase === ph.phase);
+                // rows where no chosen fund has a figure say nothing: leave them out
+                const layers = (chosen[0]?.fund.layers ?? []).filter(
+                  (l) =>
+                    l.phase === ph.phase &&
+                    chosen.some((s) => {
+                      const own = s.fund.layers.find((x) => x.key === l.key);
+                      return own && (own.item.value !== null || own.remainder);
+                    }),
+                );
                 if (layers.length === 0) return null;
                 return (
                   <Fragment key={ph.phase}>
-                    <tr className="border-b border-line bg-brand-tint">
-                      <td colSpan={chosen.length + 1} className="px-3 py-2">
-                        <b className="text-[14.5px] text-brand">{ph.title}</b>{" "}
-                        <span className="text-[12.5px] text-ink-muted">· {ph.how}</span>
+                    <tr className="bg-brand text-white">
+                      <td colSpan={chosen.length + 1} className="px-3 py-2 text-[14px] font-bold">
+                        {ph.title} <span className="font-normal text-white/80">· {ph.phase === "hold" ? "ต่อปี" : "ต่อครั้ง"}</span>
                       </td>
                     </tr>
-              {layers.map((layer) => (
-                <tr key={layer.key} className="border-b border-line-subtle">
-                  <td className="p-3 pl-5 text-ink-body">
-                    {layer.label} <span className="text-[12px] text-ink-faint">({layer.unit})</span>
-                    {layer.note && <span className="block text-[12px] text-ink-muted">{layer.note}</span>}
-                  </td>
-                  {chosen.map((s) => {
-                    const own = s.fund.layers.find((l) => l.key === layer.key)!;
-                    const item = own.item;
-                    const rest = own.remainder;
-                    const hidden = layer.key === "masterFundExpense" && item.value !== null && (item.source === "prospectus" || item.source === "master");
-                    return (
-                      <td key={s.code} className={`p-3 align-top ${hidden ? "bg-sun-soft" : ""}`}>
-                        {item.value === null && rest ? (
-                          // no separate figure in the documents: show the rest of the TER, not "not found"
-                          <span className="flex flex-col">
-                            <b className="text-ink">{docPct(rest.value)}</b>
-                            <span className="text-[12px] text-ink-muted">
-                              ส่วนที่เหลือ รวมอยู่ใน TER แล้ว (TER {docPct(rest.ter.value!)} − ค่าจัดการ {docPct(rest.management.value!)})
-                            </span>
-                            <PageTag page={rest.ter.page} source={rest.ter.source} />
-                            {(rest.management.page !== rest.ter.page || rest.management.source !== rest.ter.source) && (
-                              <PageTag page={rest.management.page} source={rest.management.source} />
-                            )}
-                          </span>
-                        ) : item.value === null ? (
-                          <span className="text-[13px] text-ink-muted">{own.emptyText ?? NOT_IN_DOCS}</span>
-                        ) : (
-                          <span className="flex flex-col">
-                            <b className="text-ink">
-                              {own.sign === -1 ? "-" : ""}
-                              {docPct(item.value)}
-                            </b>
-                            <PageTag page={item.page} source={item.source} />
-                            {hidden && <span className="text-[12px] font-semibold text-sun-ink"><Icon name="warn" className="mr-1" />{MASTER_COST_NOTE}</span>}
-                          </span>
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
+                    {layers.map((layer) => {
+                      const isMaster = layer.key === "masterFundExpense";
+                      // already inside the TER: shown as a breakdown under it, never added again
+                      const insideTer = layer.key === "management" || layer.key === "otherExpenses";
+                      return (
+                        <tr key={layer.key} className="border-b border-line-subtle">
+                          <td className={`p-3 align-top ${insideTer ? "pl-8 text-[14px] text-ink-muted" : "text-ink"}`}>
+                            {insideTer ? `${layer.label.replace("ค่าธรรมเนียม", "ค่า")} (อยู่ใน TER แล้ว)` : layer.label}
+                          </td>
+                          {chosen.map((s) => {
+                            const own = s.fund.layers.find((l) => l.key === layer.key)!;
+                            const item = own.item;
+                            const rest = own.remainder;
+                            const hidden = isMaster && item.value !== null && (item.source === "prospectus" || item.source === "master");
+                            const value = item.value !== null ? item.value : rest ? rest.value : null;
+                            const ref = item.value !== null ? item : rest ? rest.ter : null;
+                            return (
+                              <td key={s.code} className={`p-3 align-top ${hidden ? "bg-sun-soft" : ""}`}>
+                                {value === null || !ref ? (
+                                  <span className="text-[13.5px] text-ink-faint">{own.emptyText ? "ไม่มี (ลงทุนตรง)" : NOT_IN_DOCS}</span>
+                                ) : (
+                                  // the source of every figure shows on hover (title)
+                                  <span className="flex flex-col" title={sourceRef(ref.page, ref.source)}>
+                                    <span className={insideTer ? "text-ink-muted" : "font-bold text-ink"}>
+                                      {own.sign === -1 ? "-" : ""}
+                                      {docPct(value)}
+                                    </span>
+                                  </span>
+                                )}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      );
+                    })}
                   </Fragment>
                 );
               })}
-              <tr className="bg-brand-soft/70">
-                <td className="p-3 font-bold">ต้นทุนต่อปีรวม (TER + กองทุนหลัก)</td>
-                {chosen.map((s) => (
-                  <td key={s.code} className="p-3 font-bold text-ink">
-                    {s.fund.annualCostRate === null ? <span className="text-[13px] font-normal text-ink-muted">คำนวณไม่ได้</span> : pct(s.fund.annualCostRate)}
-                  </td>
-                ))}
-              </tr>
             </tbody>
           </table>
         </div>
@@ -379,12 +511,23 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
         </p>
       </section>
 
-      <Link
-        href={`/calculator?funds=${encodeURIComponent(selected.map((s) => s.code).join(","))}`}
-        className="flex flex-wrap items-center justify-between gap-2 rounded-[20px] bg-brand-soft px-5 py-4 font-bold text-brand no-underline hover:underline"
-      >
-        อยากรู้ว่าต่างกันกี่บาท? คำนวณกองที่เลือกเป็นเงินบาท →
-      </Link>
+      {/* next step: the same funds, in baht */}
+      <section className="flex flex-wrap items-center justify-between gap-4 rounded-[24px] border border-brand/15 bg-gradient-to-r from-brand-soft to-brand-tint py-4 pl-4 pr-5 md:pl-5 md:pr-6">
+        <div className="flex items-center gap-4">
+          <Lensy pose="coins" size={72} className="shrink-0 max-sm:!h-[56px] max-sm:!w-[56px]" />
+          <div className="flex flex-col gap-0.5">
+            <b className="text-[18px] text-ink">อยากรู้ว่าต่างกันกี่บาท?</b>
+            <span className="text-[14px] text-ink-muted">ใช้กองที่เลือกไว้ ปรับเงินลงทุนและจำนวนปีได้เอง</span>
+          </div>
+        </div>
+        <Link
+          href={`/calculator?funds=${encodeURIComponent(selected.map((s) => s.code).join(","))}`}
+          className="group inline-flex min-h-[48px] items-center gap-2 rounded-full bg-brand-dark px-6 font-bold text-white no-underline hover:bg-brand max-sm:w-full max-sm:justify-center"
+        >
+          คำนวณเป็นเงินบาท
+          <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">→</span>
+        </Link>
+      </section>
         </>
       )}
 
@@ -400,6 +543,8 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
           ))}
         </ul>
       </section>
+      )}
+        </>
       )}
     </div>
   );

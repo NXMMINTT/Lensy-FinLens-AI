@@ -13,6 +13,7 @@ import { findQuotePage, skeleton } from "./pdfText";
 import { pctToRate, sourcedEntries, type DocSource, type Fund, type Sourced } from "./schema";
 import { SOURCE_LABEL } from "./sources";
 import { DEFAULT_ANNUAL_RETURN, MAX_YEARS, MIN_YEARS, trueCost } from "./trueCost";
+import { MAX_COMPARE_FUNDS } from "./limits";
 
 /** page is null when the figure's source gives none (e.g. SEC data): the source is named instead. */
 export type AskRef = { code: string; nameTh: string; page: number | null; source: DocSource; quote: string };
@@ -25,7 +26,7 @@ export const GENERAL_NOTE = "คำอธิบายนี้เป็นคว
 export const NEED_FUND_FOR_NUMBERS = "ตัวเลขของกองทุนต้องมาจากเอกสารของกองนั้นค่ะ ลองพิมพ์ชื่อกองที่อยากรู้มาด้วยนะคะ";
 
 export const AskRequestSchema = z.object({
-  fundCodes: z.array(z.string().min(1).max(40)).min(1).max(3),
+  fundCodes: z.array(z.string().min(1).max(40)).min(1).max(MAX_COMPARE_FUNDS),
   question: z.string().trim().min(2).max(500),
 });
 

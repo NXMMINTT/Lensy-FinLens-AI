@@ -6,7 +6,7 @@ import { SOURCE_LABEL as SOURCE } from "@/lib/sources";
  * Data status for one fund: "checked against the documents" or "incomplete" (with what is missing),
  * and the document's as-of date with its page. Missing items read as "not found", never as zero.
  */
-export function DataStatusBadge({ status, compact = false }: { status: DataStatus; compact?: boolean }) {
+export function DataStatusBadge({ status, compact = false, chipOnly = false }: { status: DataStatus; compact?: boolean; chipOnly?: boolean }) {
   // sample data: say so, and show neither a check mark nor a document date
   if (status.kind === "sample") {
     return (
@@ -16,6 +16,16 @@ export function DataStatusBadge({ status, compact = false }: { status: DataStatu
     );
   }
   const ok = status.kind === "verified";
+  if (chipOnly) {
+    return (
+      <span
+        title={status.asOf ? `ข้อมูล ณ ${thaiDate(status.asOf.value)}` : undefined}
+        className={`inline-flex items-center gap-1 self-start rounded-full px-2 py-0.5 text-[11.5px] font-bold ${ok ? "bg-success-soft text-success-ink" : "bg-sun-soft text-sun-ink"}`}
+      >
+        {ok ? "✓" : "!"} {status.label}
+      </span>
+    );
+  }
   return (
     <span className="flex flex-col gap-0.5">
       <span

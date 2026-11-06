@@ -13,7 +13,7 @@ export const metadata: Metadata = { title: "เข้าสู่ระบบ | 
 
 /** What the user gets after logging in (the main menu tiles). */
 const PERKS: { pose: LensyPose; title: string; text: string }[] = [
-  { pose: "magnifier", title: "เทียบกองทุน", text: "ค่าธรรมเนียมแฝงของ 2–3 กองเคียงกัน" },
+  { pose: "magnifier", title: "เทียบกองทุน", text: "ค่าธรรมเนียมแฝงของหลายกองเคียงกัน" },
   { pose: "coins", title: "คำนวณเป็นบาท", text: "ค่าธรรมเนียมกินเงินไปเท่าไหร่" },
   { pose: "idea", title: "ถามน้อง Lensy", text: "ศัพท์การเงิน ถามได้เลย" },
 ];

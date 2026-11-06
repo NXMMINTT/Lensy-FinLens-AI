@@ -55,11 +55,12 @@ describe("toCompareFund", () => {
 });
 
 describe("pickInitialCodes", () => {
-  const all = ["A", "B", "C", "D"].map((code) => ({ ...toCompareFund(g), code }));
+  const all = ["A", "B", "C", "D", "E"].map((code) => ({ ...toCompareFund(g), code }));
 
-  it("uses the codes in the URL when 2–3 are known", () => {
+  it("uses the codes in the URL, up to MAX_COMPARE_FUNDS of them", () => {
     expect(pickInitialCodes(all, "c,a")).toEqual(["C", "A"]);
-    expect(pickInitialCodes(all, "A,B,C,D")).toEqual(["A", "B", "C"]);
+    expect(pickInitialCodes(all, "A,B,C,D")).toEqual(["A", "B", "C", "D"]);
+    expect(pickInitialCodes(all, "A,B,C,D,E")).toEqual(["A", "B", "C", "D"]);
   });
 
   it("falls back to the first funds when the URL has fewer than two known codes", () => {

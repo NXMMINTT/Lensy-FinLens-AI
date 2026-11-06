@@ -7,6 +7,7 @@ import type { messagingApi } from "@line/bot-sdk";
 import { classifyQuestion, EXAMPLE_QUESTIONS, type AskResponse } from "../ask";
 import type { Fund } from "../schema";
 import { answerCard, appUrl, fundCard, quickReplies, textMessage } from "./flex";
+import { MAX_COMPARE_FUNDS } from "../limits";
 
 type Message = messagingApi.Message;
 export type Answerer = (funds: Fund[], question: string) => Promise<AskResponse>;
@@ -65,7 +66,7 @@ export async function handleText(raw: string, funds: Fund[], ask: Answerer): Pro
     const example = funds[0] ? [{ label: "ลอง 100,000 บาท 10 ปี", text: `${funds[0].code} ลงทุน 100,000 บาท 10 ปี เสียค่าธรรมเนียมกี่บาท` }] : [];
     return [
       textMessage(
-        `อยากรู้ว่าเสียค่าธรรมเนียมกี่บาท พิมพ์แบบนี้ได้เลยค่ะ\n"<ชื่อกอง> ลงทุน 100,000 บาท 10 ปี เสียกี่บาท"${url ? `\n\nหรือคำนวณ 1–3 กองพร้อมกราฟที่นี่ค่ะ\n${url}` : ""}`,
+        `อยากรู้ว่าเสียค่าธรรมเนียมกี่บาท พิมพ์แบบนี้ได้เลยค่ะ\n"<ชื่อกอง> ลงทุน 100,000 บาท 10 ปี เสียกี่บาท"${url ? `\n\nหรือคำนวณหลายกองพร้อมกราฟที่นี่ค่ะ\n${url}` : ""}`,
         quickReplies(example),
       ),
     ];
@@ -79,7 +80,7 @@ export async function handleText(raw: string, funds: Fund[], ask: Answerer): Pro
     ];
   }
 
-  const matched = matchFunds(text, funds).slice(0, 3);
+  const matched = matchFunds(text, funds).slice(0, MAX_COMPARE_FUNDS);
   const rest = stripFundNames(text, matched);
 
   // just a fund name or code, or "เทียบ A กับ B" -> their summary card(s)

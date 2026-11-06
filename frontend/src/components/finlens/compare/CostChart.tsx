@@ -7,8 +7,8 @@ import { useTheme } from "@/lib/theme";
 
 /** Categorical slots, validated for CVD separation and contrast in both modes (dataviz validator). */
 export const SERIES_COLORS = {
-  light: ["#1A7637", "#2a78d6", "#c04f9a"],
-  dark: ["#3c9a4b", "#3987e5", "#d0589f"],
+  light: ["#1A7637", "#2a78d6", "#c04f9a", "#d9822b"],
+  dark: ["#3c9a4b", "#3987e5", "#d0589f", "#e8953a"],
 } as const;
 
 const CHROME = {
@@ -44,7 +44,7 @@ function ChartTooltip({ active, payload, label, series }: TooltipProps<number, s
   );
 }
 
-/** Money over the years for 2–3 funds, plus a dashed no-fee reference line. One y-axis (baht). */
+/** Money over the years for the selected funds, plus a dashed no-fee reference line. One y-axis (baht). */
 export function CostChart({ rows, series }: { rows: ChartRow[]; series: ChartSeries[] }) {
   const { resolved } = useTheme();
   const colors = SERIES_COLORS[resolved];

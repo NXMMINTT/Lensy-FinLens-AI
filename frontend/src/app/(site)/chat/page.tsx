@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/finlens/app/PageHeader";
 import { aiConfig } from "@/lib/ai";
 import { EXAMPLE_QUESTIONS } from "@/lib/ask";
 import { getVerifiedFunds } from "@/lib/funds";
+import { MAX_COMPARE_FUNDS } from "@/lib/limits";
 
 export const metadata: Metadata = {
   title: "ถามน้อง Lensy | FinLens AI",
@@ -19,7 +20,7 @@ export default async function ChatPage({ searchParams }: { searchParams: Promise
   const funds = getVerifiedFunds().map((f) => ({ code: f.code, nameTh: f.nameTh.value ?? f.code, isSample: f.meta.isSample }));
   // ?fund=A or ?fund=A,B (up to 3, e.g. the money question on the home page asks about both example funds)
   const asked = (fund ?? "").split(",").map((c) => c.trim().toUpperCase()).filter(Boolean);
-  const wanted = funds.filter((f) => asked.includes(f.code.toUpperCase())).slice(0, 3);
+  const wanted = funds.filter((f) => asked.includes(f.code.toUpperCase())).slice(0, MAX_COMPARE_FUNDS);
   // default: the two featured real funds (first in the list), so the example questions work as they read
   const initialCodes = wanted.length ? wanted.map((f) => f.code) : funds.slice(0, 2).map((f) => f.code);
   const questions = EXAMPLE_QUESTIONS.map((q) => q.question);

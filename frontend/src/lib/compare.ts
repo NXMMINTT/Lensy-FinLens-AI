@@ -8,6 +8,7 @@ import type { FeePhase } from "./feePhases";
 import { totalAnnualCostRate } from "./funds";
 import { pctToRate, type Fund, type Sourced } from "./schema";
 import { assetClassOf, type AssetClass } from "./trueCost";
+import { MAX_COMPARE_FUNDS } from "./limits";
 
 export type FeeLayerKey = "frontEnd" | "backEnd" | "switching" | "management" | "ter" | "masterFundExpense" | "otherExpenses" | "rebate";
 
@@ -105,7 +106,7 @@ export function pickInitialCodes(all: CompareFund[], param: string | undefined, 
     .split(",")
     .map((c) => known.get(c.trim().toUpperCase()))
     .filter((c): c is string => Boolean(c));
-  const unique = [...new Set(asked)].slice(0, 3);
+  const unique = [...new Set(asked)].slice(0, MAX_COMPARE_FUNDS);
   if (unique.length >= min) return unique;
   if (unique.length === 0) return all.slice(0, Math.min(Math.max(min, fallback), all.length)).map((f) => f.code);
   const rest = all.map((f) => f.code).filter((c) => !unique.includes(c));

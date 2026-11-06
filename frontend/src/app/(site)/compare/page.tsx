@@ -8,21 +8,22 @@ import { getVerifiedFunds } from "@/lib/funds";
 
 export const metadata: Metadata = {
   title: "เทียบกองทุน | FinLens AI",
-  description: "วางค่าธรรมเนียมทุกชั้นของกองทุน 2–3 กองเทียบกัน เห็นชั้นที่ Factsheet ของกองไทยไม่ได้แสดง ทุกตัวเลขบอกที่มา ข้อมูลเพื่อความเข้าใจ ไม่ใช่คำแนะนำการลงทุน",
+  description: "วางค่าธรรมเนียมทุกชั้นของกองทุนหลายกองเทียบกัน เห็นชั้นที่ Factsheet ของกองไทยไม่ได้แสดง ทุกตัวเลขบอกที่มา ข้อมูลเพื่อความเข้าใจ ไม่ใช่คำแนะนำการลงทุน",
 };
 
 export default async function ComparePage({ searchParams }: { searchParams: Promise<{ funds?: string }> }) {
   const { funds: fundsParam } = await searchParams;
   const funds = getVerifiedFunds().map(toCompareFund);
-  const initialCodes = pickInitialCodes(funds, fundsParam);
+  // no funds picked until the user chooses, unless the link names them (e.g. from LINE)
+  const initialCodes = fundsParam ? pickInitialCodes(funds, fundsParam) : [];
 
   return (
     <AppShell sampleNote={funds.some((f) => f.isSample)}>
       <PageHeader
         label="เทียบกองทุน"
-        title="เทียบ 2–3 กองเคียงกัน"
+        title="เทียบกองทุนเคียงกัน"
         mark="เห็นค่าธรรมเนียมแฝง"
-        text="ค่าธรรมเนียมทุกชั้นวางเทียบทีละบรรทัด ชั้นที่ Factsheet ของกองไทยไม่ได้แสดงมีป้ายเตือน ทุกตัวเลขบอกที่มา"
+        text="วางค่าธรรมเนียมทุกชั้นเทียบกันทีละบรรทัด ชั้นที่ Factsheet ไม่ได้แสดงจะมีป้ายเตือน และทุกตัวเลขบอกที่มา"
         pose="magnifier"
       />
       {funds.length < 2 ? (

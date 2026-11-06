@@ -14,7 +14,8 @@ export const metadata: Metadata = {
 export default async function CalculatorPage({ searchParams }: { searchParams: Promise<{ funds?: string }> }) {
   const { funds: fundsParam } = await searchParams;
   const funds = getVerifiedFunds().map(toCompareFund);
-  const initialCodes = pickInitialCodes(funds, fundsParam, 1);
+  // no funds picked until the user chooses, unless the link names them (e.g. from LINE)
+  const initialCodes = fundsParam ? pickInitialCodes(funds, fundsParam, 1) : [];
 
   return (
     <AppShell sampleNote={funds.some((f) => f.isSample)}>
