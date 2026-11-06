@@ -33,14 +33,7 @@ export function Hero() {
             วางค่าใช้จ่ายทุกชั้นเทียบกัน แล้วบอกว่าต่างกันกี่บาท พร้อมเลขหน้าที่มาทุกตัวเลข ดูทีละกองก็ได้ หรือถามศัพท์การเงินที่สงสัยก็ได้ค่ะ
           </p>
           <div className="flex flex-wrap items-center gap-3">
-            {/* one main button: try it now, no login */}
-            <Link
-              href="/compare"
-              className="inline-flex min-h-[52px] items-center gap-2 rounded-full bg-brand px-7 text-[17px] font-bold text-white no-underline shadow-[0_10px_24px_rgba(26,118,55,.25)] hover:bg-brand-dark"
-            >
-              ลองเทียบ 2 กอง
-              <span aria-hidden="true">→</span>
-            </Link>
+            <LineAddFriendButton label="เพิ่มเพื่อนน้อง Lensy" />
           </div>
           <Disclaimer />
         </div>
