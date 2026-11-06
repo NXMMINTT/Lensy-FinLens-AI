@@ -3,6 +3,7 @@
  * or incomplete (which key items the documents don't give), plus the document's "as of" date.
  * "Not found" never means "no fee": missing items are listed as not found, not as zero.
  */
+import { isSecSource } from "./importFunds";
 import type { DocSource, Fund, Sourced } from "./schema";
 
 /**
@@ -14,6 +15,8 @@ export type DataStatusKind = "verified" | "partial" | "sample" | "awaiting-pages
 export const SAMPLE_STATUS_LABEL = "ข้อมูลตัวอย่าง ไม่ได้ตรวจกับเอกสารจริง";
 export const VERIFIED_LABEL = "ตรวจกับเอกสารแล้ว";
 export const AWAITING_PAGES_LABEL = "ข้อมูลจาก ก.ล.ต. รอตรวจเลขหน้า";
+/** Read from the AMC factsheet itself, but some figures still have no page. */
+export const FACTSHEET_PARTIAL_PAGES_LABEL = "อ่านจาก Factsheet แล้ว รอตรวจเลขหน้าบางค่า";
 
 export type DataStatus = {
   kind: DataStatusKind;
@@ -59,7 +62,11 @@ export function fundDataStatus(f: Fund): DataStatus {
     f.asOfDate.value !== null && (f.asOfDate.page !== null || imported) ? { value: f.asOfDate.value, page: f.asOfDate.page, source: f.asOfDate.source } : null;
   const dataSource = f.meta.dataSource ?? null;
   // imported data: "checked" only when every figure has its page; otherwise it waits for pages
-  if (imported && !hasAllPages(f)) return { kind: "awaiting-pages", label: AWAITING_PAGES_LABEL, missing, asOf, isSample: false, dataSource };
+  // the label follows where the data came from: the SEC data, or the AMC factsheet read directly
+  if (imported && !hasAllPages(f)) {
+    const label = dataSource && isSecSource(dataSource) ? AWAITING_PAGES_LABEL : FACTSHEET_PARTIAL_PAGES_LABEL;
+    return { kind: "awaiting-pages", label, missing, asOf, isSample: false, dataSource };
+  }
   return {
     kind: missing.length === 0 ? "verified" : "partial",
     label: missing.length === 0 ? VERIFIED_LABEL : "ข้อมูลไม่ครบ",

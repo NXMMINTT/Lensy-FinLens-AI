@@ -4,7 +4,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { parseCsv } from "./csv";
-import { AWAITING_PAGES_LABEL, fundDataStatus, VERIFIED_LABEL } from "./dataStatus";
+import { AWAITING_PAGES_LABEL, FACTSHEET_PARTIAL_PAGES_LABEL, fundDataStatus, VERIFIED_LABEL } from "./dataStatus";
 import { getFund, getVerifiedFunds } from "./funds";
 import { fxHedgingOf, rowToFund } from "./importFunds";
 
@@ -70,7 +70,8 @@ describe("labels for imported funds", () => {
 
   it("shows ✓ checked only when every figure has its page", () => {
     expect(fundDataStatus(getFund("B-INNOTECH")!).label).toBe(VERIFIED_LABEL);
-    expect(fundDataStatus(getFund("K-US500X-A(A)")!).label).toBe(AWAITING_PAGES_LABEL); // master fund expense has no page
+    // read from the AMC factsheet, but the master fund expense has no page yet
+    expect(fundDataStatus(getFund("K-US500X-A(A)")!).label).toBe(FACTSHEET_PARTIAL_PAGES_LABEL);
     const sec = fundDataStatus(getFund("SCBMONEY(A)")!);
     expect(sec.kind).toBe("awaiting-pages");
     expect(sec.label).toBe(AWAITING_PAGES_LABEL);
