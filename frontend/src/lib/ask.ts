@@ -379,6 +379,56 @@ export function generalAnswerOk(answer: string, funds: Fund[]): boolean {
   return !tokens.some((s) => (s.split(".")[1]?.length ?? 0) >= 2 && fromFunds.has(Number(s)));
 }
 
+/* ── tax-linked funds: answered from the team's standard text only ── */
+
+/** Questions about RMF / SSF / Thai ESG or tax deductions go to the standard text (data/knowledge/tax-funds.md). */
+const TAX_QUESTION = /(RMF|SSF|Thai\s*ESG|ไทย\s*ESG|TESG|ภาษี|ลดหย่อน|สรรพากร)/i;
+
+export function isTaxQuestion(question: string): boolean {
+  return TAX_QUESTION.test(question);
+}
+
+export const TAX_KNOWLEDGE_NOTE = "สรุปจากคำอธิบายมาตรฐานเรื่องกองทุนลดหย่อนภาษีของ FinLens ไม่ได้มาจากเอกสารของกองใด";
+export const TAX_NOT_IN_TEXT = "เรื่องนี้ยังไม่มีในคำอธิบายมาตรฐานของน้อง Lensy ค่ะ กรุณาตรวจเงื่อนไขกับ ก.ล.ต. หรือกรมสรรพากรโดยตรงนะคะ";
+
+/** The standard text below the first "---" (the header is for the team), without unchecked TODO lines. */
+export function taxKnowledgeForModel(markdown: string): string {
+  const body = markdown.split(/^---\s*$/m).slice(1).join("\n") || markdown;
+  return body
+    .split(/\r?\n/)
+    .filter((line) => !/TODO/.test(line))
+    .join("\n")
+    .trim();
+}
+
+export const TAX_SYSTEM = [
+  "คุณคือ \"น้อง Lensy\" ผู้ช่วยการเงินของ FinLens AI ตอบสุภาพ ลงท้าย \"ค่ะ\" ภาษาง่าย 3–5 ประโยค",
+  "ตอบเรื่อง RMF, SSF, Thai ESG และการลดหย่อนภาษี โดยสรุปจาก \"คำอธิบายมาตรฐาน\" ที่ให้มาเท่านั้น ห้ามใช้ความรู้อื่น ห้ามเดาเงื่อนไข ตัวเลข ระยะเวลา หรือเพดานลดหย่อนที่ไม่มีในคำอธิบาย",
+  `ถ้าคำอธิบายไม่มีคำตอบของสิ่งที่ถาม ให้ตอบว่า "${TAX_NOT_IN_TEXT}"`,
+  "ห้ามแนะนำให้ซื้อกองใด ห้ามบอกว่าควรลดหย่อนเท่าไร ห้ามคาดการณ์",
+  "ไม่ต้องพูดเรื่องเงื่อนไขเปลี่ยนตามปีภาษี ระบบจะต่อท้ายให้เอง",
+  "ตอบเป็น JSON: {\"answer\": \"<คำตอบ>\"}",
+].join("\n");
+
+export function taxPrompt(knowledge: string, question: string): string {
+  return ["คำอธิบายมาตรฐาน:", knowledge, "", `คำถาม: ${question}`].join("\n");
+}
+
+/**
+ * The model's summary of the standard text: every number must be in that text, and the answer
+ * always ends with the tax-year line.
+ */
+export function checkTaxAnswer(raw: unknown, knowledge: string, question: string): AskResponse {
+  const parsed = z.object({ answer: z.string().min(1) }).safeParse(raw);
+  if (!parsed.success) return { kind: "error", answer: "ขอโทษค่ะ น้อง Lensy ตอบไม่สำเร็จ ลองถามใหม่อีกครั้งนะคะ", refs: [] };
+  const answer = parsed.data.answer.trim();
+  const ok = unbackedNumbers(answer, [knowledge], [], question, []).length === 0;
+  // the tax-year line is added once, by code: drop the model's own version of it
+  const own = /\s*(ทั้งนี้)?\s*เงื่อนไขอาจเปลี่ยน(แปลง)?ตามปีภาษี[^.]*?(นะคะ|ค่ะ)?\s*$/;
+  const text = ok ? answer.replace(own, "").trim() : TAX_NOT_IN_TEXT;
+  return { kind: "ai", answer: text.includes(TAX_NOTE) ? text : `${text} ${TAX_NOTE}`, refs: [], note: TAX_KNOWLEDGE_NOTE };
+}
+
 /**
  * Keep only refs whose quote is really in the verified data or the PDF text on that page, then
  * check every number in the answer against those refs. An answer with any unbacked number is

@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
   // them with the server functions on Vercel.
   outputFileTracingIncludes: {
     "/**": ["./data/verified/**/*", "./data/funds/real/funds.json"],
-    "/api/**": ["./docs/pdfs/**/*.pdf"],
+    "/api/**": ["./docs/pdfs/**/*.pdf", "./data/knowledge/**/*.md"],
   },
   // Let `next dev` serve its dev assets to a cloudflared tunnel host.
   allowedDevOrigins: ["*.trycloudflare.com"],

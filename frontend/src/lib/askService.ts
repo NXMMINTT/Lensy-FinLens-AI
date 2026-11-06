@@ -7,7 +7,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { AiBusyError, AiNotConfiguredError, AiTimeoutError, ANSWER_LIMITS, aiConfig, chatJson } from "./ai";
-import { ASK_SYSTEM, askPrompt, checkAiAnswer, classifyQuestion, moneyAnswer, refusal, type AskResponse } from "./ask";
+import { ASK_SYSTEM, askPrompt, checkAiAnswer, checkTaxAnswer, classifyQuestion, isTaxQuestion, moneyAnswer, refusal, TAX_SYSTEM, taxKnowledgeForModel, taxPrompt, type AskResponse } from "./ask";
 import { documentsText } from "./extraction";
 import { extractPages } from "./pdfText";
 import type { DocSource, Fund } from "./schema";
@@ -32,6 +32,16 @@ async function pdfDocs(code: string) {
   return docs;
 }
 
+/** The team's standard text on tax-linked funds (data/knowledge/tax-funds.md), without unchecked TODO lines. */
+let taxKnowledge: string | null = null;
+function loadTaxKnowledge(): string {
+  if (taxKnowledge === null) {
+    const file = path.join(process.cwd(), "data", "knowledge", "tax-funds.md");
+    taxKnowledge = fs.existsSync(file) ? taxKnowledgeForModel(fs.readFileSync(file, "utf8")) : "";
+  }
+  return taxKnowledge;
+}
+
 export const NOT_CONFIGURED_ANSWER = "ตอนนี้ระบบตอบคำถามด้วย AI ยังไม่ได้ตั้งค่า ระหว่างนี้ดูหน้ากองทุนหรือเทียบต้นทุนได้เลยค่ะ";
 const MEANWHILE = "ระหว่างนี้พิมพ์ชื่อกองเพื่อดูการ์ดสรุปที่บอกที่มาของทุกตัวเลข หรือถามเป็นบาท เช่น \"ลงทุน 100,000 บาท 10 ปี เสียกี่บาท\" ได้ทันทีค่ะ";
 export const TIMEOUT_ANSWER = `ขอโทษค่ะ ตอนนี้น้อง Lensy ตอบไม่ทัน ลองถามใหม่อีกครั้งนะคะ ${MEANWHILE}`;
@@ -45,6 +55,12 @@ export async function answerQuestion(funds: Fund[], question: string): Promise<A
   if (!aiConfig().apiKey) return { kind: "not_configured", answer: NOT_CONFIGURED_ANSWER, refs: [] };
 
   try {
+    // RMF / SSF / Thai ESG / tax: the model only summarizes the team's standard text
+    if (isTaxQuestion(question)) {
+      const knowledge = loadTaxKnowledge();
+      const { data } = await chatJson(TAX_SYSTEM, taxPrompt(knowledge, question), ANSWER_LIMITS);
+      return checkTaxAnswer(data, knowledge, question);
+    }
     const pdfPages: Record<string, { source: DocSource; pages: string[] }[]> = {};
     let pdfText = "";
     for (const f of funds) {
