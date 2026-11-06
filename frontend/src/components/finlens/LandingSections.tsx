@@ -205,6 +205,42 @@ function Check({ light = false }: { light?: boolean }) {
   );
 }
 
+/* ── For securities companies (B2B) ── */
+
+const FOR_BROKERS: { title: string; text: string }[] = [
+  { title: "ฝังน้อง Lensy ในช่องทางของบริษัท", text: "ใช้ใน LINE OA หรือแอปของบริษัทได้ ลูกค้าถามเรื่องกองทุนในที่ที่คุยกับบริษัทอยู่แล้ว" },
+  { title: "ลดคำถามซ้ำที่พนักงานต้องตอบ", text: "คำถามเรื่องค่าธรรมเนียม ความเสี่ยง และเงื่อนไขขายคืน น้องตอบให้ก่อน พนักงานมีเวลาให้เรื่องที่ต้องใช้คน" },
+  { title: "ข้อมูลทุกช่องทางตรงกัน", text: "เว็บ LINE และแอปอ่านข้อมูลกองชุดเดียวกันที่ตรวจแล้ว ทุกตัวเลขมีเลขหน้าในเอกสารอ้างอิง" },
+  { title: "ลูกค้าของบริษัทได้ Premium ฟรี", text: "ส่องพอร์ตและเช็กก่อนเชื่อ ใช้ได้โดยไม่ต้องจ่ายเอง" },
+];
+
+export function ForBrokers() {
+  return (
+    <section id="business" aria-labelledby="business-title" className="scroll-mt-20 bg-brand-tint px-5 py-14 md:px-6">
+      <div className="mx-auto flex max-w-[1000px] flex-col gap-6">
+        <div className="flex flex-col gap-2">
+          <span className="self-start rounded-md bg-brand-soft px-2.5 py-1 text-[14px] font-bold text-brand">สำหรับบริษัทหลักทรัพย์</span>
+          <h2 id="business-title" className="m-0 text-[26px] font-bold leading-snug md:text-[32px]">
+            ให้ลูกค้าเข้าใจกองทุน<span className="marker-green">ก่อนถามพนักงาน</span>
+          </h2>
+        </div>
+        <ul className="m-0 grid list-none gap-3 p-0 sm:grid-cols-2">
+          {FOR_BROKERS.map((b) => (
+            <li key={b.title} className="flex items-start gap-3 rounded-2xl border border-line bg-surface p-4">
+              <Check />
+              <span className="flex flex-col gap-0.5">
+                <b className="text-[16px]">{b.title}</b>
+                <span className="text-[14.5px] text-ink-body">{b.text}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+        <p className="m-0 text-[13.5px] text-ink-muted">น้อง Lensy ยังคงไม่แนะนำให้ซื้อหรือขาย และไม่จัดอันดับกองทุน ไม่ว่าจะใช้ผ่านช่องทางของใคร</p>
+      </div>
+    </section>
+  );
+}
+
 export function PricingTable() {
   return (
     <section id="pricing" aria-labelledby="pricing-title" className="scroll-mt-20 px-5 py-16 md:px-6">

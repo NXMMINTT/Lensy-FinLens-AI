@@ -3,6 +3,7 @@ import { FeeSlider } from "@/components/finlens/home/FeeSlider";
 import { LandingHeader } from "@/components/finlens/LandingHeader";
 import {
   FaqAccordion,
+  ForBrokers,
   Hero,
   HowItWorks,
   LandingFooter,
@@ -26,6 +27,7 @@ export default function HomePage() {
         <HowItWorks />
         <Promises />
         <PricingTable />
+        <ForBrokers />
         <FaqAccordion />
         <StartCta />
       </main>
