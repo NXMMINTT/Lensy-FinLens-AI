@@ -7,7 +7,8 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { AiBusyError, AiNotConfiguredError, AiTimeoutError, ANSWER_LIMITS, aiConfig, chatJson } from "./ai";
-import { ASK_SYSTEM, askPrompt, checkAiAnswer, checkTaxAnswer, classifyQuestion, isTaxQuestion, moneyAnswer, refusal, TAX_SYSTEM, taxKnowledgeForModel, taxPrompt, type AskResponse } from "./ask";
+import { ASK_SYSTEM, askPrompt, checkAiAnswer, checkTaxAnswer, classifyQuestion, isTaxQuestion, moneyAnswer, refusal, stockFacts, stocksInQuestion, TAX_SYSTEM, taxKnowledgeForModel, taxPrompt, type AskResponse } from "./ask";
+import { getStocks } from "./stocks";
 import { documentsText } from "./extraction";
 import { extractPages } from "./pdfText";
 import type { DocSource, Fund } from "./schema";
@@ -69,8 +70,10 @@ export async function answerQuestion(funds: Fund[], question: string): Promise<A
       if (docs.length) pdfText += `\n[กอง ${f.code}]\n${documentsText(docs, { onlyRelevant: true })}`;
     }
     if (pdfText.length > MAX_PDF_CHARS) pdfText = pdfText.slice(0, MAX_PDF_CHARS);
-    const { data } = await chatJson(ASK_SYSTEM, askPrompt(funds, question, pdfText), ANSWER_LIMITS);
-    return checkAiAnswer(data, funds, pdfPages, question);
+    // a stock named in the question: its real figures go along, to explain them (never to judge)
+    const facts = stocksInQuestion(question, getStocks()).slice(0, 3).map(stockFacts);
+    const { data } = await chatJson(ASK_SYSTEM, askPrompt(funds, question, pdfText, facts.map((f) => f.text).join("\n")), ANSWER_LIMITS);
+    return checkAiAnswer(data, funds, pdfPages, question, facts);
   } catch (err) {
     if (err instanceof AiNotConfiguredError) return { kind: "not_configured", answer: NOT_CONFIGURED_ANSWER, refs: [] };
     console.error("[askService]", err instanceof Error ? `${err.name}: ${err.message}` : err);

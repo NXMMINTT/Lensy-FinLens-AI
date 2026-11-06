@@ -196,6 +196,7 @@ export const ASK_SYSTEM = [
   "6. ใช้ข้อมูลกองทุกบรรทัดที่มีค่า แม้บรรทัดนั้นจะไม่มีเลขหน้า และบอกที่มาในวงเล็บหลังตัวเลขตามที่บรรทัดนั้นเขียนไว้ เช่น (Factsheet หน้า 2) หรือ (ข้อมูลจาก ก.ล.ต.) ตอบว่าไม่พบเฉพาะรายการที่เขียนว่า \"ไม่พบในเอกสาร\"",
   "7. ถ้าข้อมูลมีหมายเหตุว่า Factsheet ของกองไทยไม่ได้แสดงค่าใช้จ่ายกองหลัก ให้บอกผู้ใช้ด้วยเมื่อถามเรื่องค่าใช้จ่าย",
   `7.1 กองที่มีหมายเหตุว่าลงทุนโดยตรง (ไม่ใช่กองฟีดเดอร์) ให้บอกว่า "${NO_MASTER_NOTE}" เมื่อพูดเรื่องค่าใช้จ่าย ห้ามพูดว่าไม่พบค่าใช้จ่ายกองหลัก หรือ Factsheet ไม่ได้แสดงค่าใช้จ่ายกองหลัก`,
+  "9. ถ้าให้ \"ข้อมูลหุ้น\" มา ใช้ตัวเลขจริงของหุ้นนั้นอธิบายความหมายประกอบได้ (type เป็น general) บอกวันที่ข้อมูลและว่ามาจาก Settrade ห้ามบอกว่าหุ้นแพง ถูก น่าซื้อ ควรซื้อ ควรขาย หรือดีกว่าตัวอื่น และห้ามคาดการณ์ราคา ห้ามใช้คำว่า แพง ถูก น่าซื้อ น่าสนใจ แม้แต่ในการอธิบายทั่วไป ให้อธิบายแค่ว่าตัวเลขคำนวณจากอะไร และตัวเลขของหุ้นนี้แปลว่าอะไร เช่น P/E 8.94 แปลว่าราคาหุ้นเป็น 8.94 เท่าของกำไรต่อหุ้นในงวดล่าสุด",
   "8. ถ้าให้ข้อมูลมาหลายกอง ให้ตอบครบทุกกอง แยกทีละกอง ขึ้นต้นด้วยรหัสกอง (คำว่า \"กองนี้\" หมายถึงทุกกองที่ให้มา)",
   "ตอบเป็น JSON: {\"type\": \"fund\" | \"general\", \"answer\": \"<คำตอบไม่เกิน 6 ประโยคต่อกอง>\", \"refs\": [{\"code\": \"<รหัสกอง>\", \"key\": \"<key>\"} หรือ {\"code\": \"<รหัสกอง>\", \"page\": <เลขหน้า>, \"source\": \"factsheet\" | \"prospectus\", \"quote\": \"<ข้อความ>\"}]}",
 ].join("\n");
@@ -259,11 +260,13 @@ export function fundContext(f: Fund): string {
   return lines.join("\n");
 }
 
-export function askPrompt(funds: Fund[], question: string, pdfText: string): string {
+export function askPrompt(funds: Fund[], question: string, pdfText: string, stockText = ""): string {
+  const stocks = stockText ? ["", "ข้อมูลหุ้น (ตัวเลขจริงจากไฟล์ของทีม ใช้อธิบายความหมายเท่านั้น):", stockText] : [];
   if (funds.length === 0) {
-    return ["ไม่มีกองทุนที่ระบุ ตอบได้เฉพาะความรู้การเงินทั่วไปตามกติกาข้อ 1.1 และ 1.2 (type เป็น general, refs เป็น [])", "", `คำถาม: ${question}`].join("\n");
+    return ["ไม่มีกองทุนที่ระบุ ตอบได้เฉพาะความรู้การเงินทั่วไปตามกติกาข้อ 1.1 และ 1.2 (type เป็น general, refs เป็น [])", ...stocks, "", `คำถาม: ${question}`].join("\n");
   }
   return [
+    ...stocks,
     "ข้อมูลกองทุน (ใช้เป็นหลัก ทุกบรรทัดบอกที่มา):",
     ...funds.map(fundContext),
     ...(pdfText ? ["", "ข้อความจากเอกสารต้นฉบับ (มีป้ายเลขหน้า):", pdfText] : []),
@@ -377,13 +380,54 @@ function mentionsFund(answer: string, funds: Fund[]): boolean {
  * "เช่น"), must not talk about a selected fund, and must not reuse a precise figure (2+ decimals,
  * e.g. 1.07) from the selected funds' documents. Round example numbers like 1.5% stay allowed.
  */
-export function generalAnswerOk(answer: string, funds: Fund[]): boolean {
+export function generalAnswerOk(answer: string, funds: Fund[], facts: string[] = []): boolean {
   if (mentionsFund(answer, funds)) return false;
-  const tokens = [...toArabic(answer).matchAll(NUMBER)].map((m) => m[0].replace(/,/g, ""));
+  const fromFacts = new Set(facts.flatMap(numbersIn));
+  const tokens = [...toArabic(answer).matchAll(NUMBER)].map((m) => m[0].replace(/,/g, "")).filter((s) => !fromFacts.has(Number(s)));
   if (tokens.length === 0) return true;
   if (!EXAMPLE_WORD.test(answer)) return false;
   const fromFunds = fundNumbers(funds);
   return !tokens.some((s) => (s.split(".")[1]?.length ?? 0) >= 2 && fromFunds.has(Number(s)));
+}
+
+/* ── stocks named in a question (data/stocks/stocks.csv) ── */
+
+/** Words that would judge a stock; an answer with them is replaced (no "expensive / cheap / buy / sell"). */
+const STOCK_JUDGEMENT = /(แพง|ราคาถูก|ถูกเกินไป|ถูกกว่า|ราคาไม่แพง|ควรซื้อ|ควรขาย|น่าซื้อ|น่าขาย|น่าลงทุน|น่าสนใจ|ราคาเป้าหมาย|undervalue|overvalue|ซื้อได้|ขายได้เลย)/i;
+export const STOCK_NO_JUDGEMENT =
+  "ขอโทษค่ะ น้อง Lensy อธิบายได้แค่ว่าตัวเลขของหุ้นแต่ละตัวหมายถึงอะไร ไม่บอกว่าหุ้นแพง ถูก หรือควรซื้อขาย ลองถามว่า \"P/E หมายถึงอะไร\" หรือดูตัวเลขทั้งหมดที่หน้าข้อมูลหุ้นได้นะคะ";
+
+/** Stocks whose code appears as a whole word in the question ("PTT", not the "SCB" inside "SCBMONEY(A)"). */
+export function stocksInQuestion<T extends { symbol: string }>(question: string, stocks: T[]): T[] {
+  return stocks.filter((s) => new RegExp(`(^|[^A-Za-z0-9])${s.symbol.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![A-Za-z0-9])`, "i").test(question));
+}
+
+const STOCK_LABEL: [key: string, label: string][] = [
+  ["closePrice", "ราคาปิด (บาท)"],
+  ["marketCap", "มูลค่าตลาด (ล้านบาท)"],
+  ["pe", "P/E (เท่า)"],
+  ["pbv", "P/BV (เท่า)"],
+  ["dividendYield", "Dividend Yield (%)"],
+  ["beta", "Beta"],
+  ["ytdChange", "เปลี่ยนแปลงตั้งแต่ต้นปี (%)"],
+  ["freeFloat", "Free Float (%)"],
+  ["lastDividend", "ปันผลล่าสุด (บาท/หุ้น)"],
+];
+
+/** One stock's figures as written in the file, with its date and source, for the model and the number check. */
+export function stockFacts(s: { symbol: string; companyName: string; industry: string; sector: string; asOfDate: string; lastXD: string | null; figures: Record<string, { raw: string } | null> }): { text: string; note: string } {
+  const date = thaiDateText(s.asOfDate);
+  const lines = [`## หุ้น ${s.symbol}: ${s.companyName} (${s.industry} / ${s.sector}) ข้อมูล ณ ${date} จาก Settrade`];
+  for (const [key, label] of STOCK_LABEL) lines.push(`- ${label} = ${s.figures[key]?.raw ?? "ไม่พบในเอกสาร"}`);
+  if (s.lastXD) lines.push(`- วัน XD ล่าสุด = ${s.lastXD}`);
+  return { text: lines.join("\n"), note: `ตัวเลขหุ้น ${s.symbol} จาก Settrade ข้อมูล ณ ${date} ใช้อธิบายความหมาย ไม่ใช่คำแนะนำ` };
+}
+
+/** "2026-11-05" -> "5 พ.ย. 2569" */
+function thaiDateText(iso: string): string {
+  const M = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+  const [y, m, d] = iso.split("-").map(Number);
+  return `${d} ${M[m - 1]} ${y + 543}`;
 }
 
 /* ── tax-linked funds: answered from the team's standard text only ── */
@@ -454,7 +498,11 @@ export function checkTaxAnswer(raw: unknown, knowledge: string, question: string
  * check every number in the answer against those refs. An answer with any unbacked number is
  * replaced: no number without a page.
  */
-export function checkAiAnswer(raw: unknown, funds: Fund[], pdfPages: Record<string, { source: DocSource; pages: string[] }[]>, question = ""): AskResponse {
+/**
+ * @param facts stock figures given to the model (lib/stocks.ts): their numbers count as backed,
+ * and an answer that judges the stock (expensive, cheap, buy, sell) is replaced.
+ */
+export function checkAiAnswer(raw: unknown, funds: Fund[], pdfPages: Record<string, { source: DocSource; pages: string[] }[]>, question = "", facts: { text: string; note: string }[] = []): AskResponse {
   const parsed = AiAnswer.safeParse(raw);
   if (!parsed.success) return { kind: "error", answer: "ขอโทษค่ะ น้อง Lensy ตอบไม่สำเร็จ ลองถามใหม่อีกครั้งนะคะ", refs: [] };
   const byCode = new Map(funds.map((f) => [f.code.toUpperCase(), f]));
@@ -489,17 +537,21 @@ export function checkAiAnswer(raw: unknown, funds: Fund[], pdfPages: Record<stri
     }
   }
   const answer = parsed.data.answer.trim();
+  const factTexts = facts.map((f) => f.text);
+  // stock figures explain, never judge
+  if (facts.length && STOCK_JUDGEMENT.test(answer)) return { kind: "ai", answer: STOCK_NO_JUDGEMENT, refs: [], note: facts.map((f) => f.note).join(" · ") };
+  const note = facts.length ? facts.map((f) => f.note).join(" · ") : GENERAL_NOTE;
   // general finance knowledge: a short made-up example is allowed, fund figures are not
-  if (parsed.data.type === "general" && refs.length === 0 && generalAnswerOk(answer, funds)) {
-    return { kind: "ai", answer: withTaxNote(answer, question), refs: [], note: GENERAL_NOTE };
+  if (parsed.data.type === "general" && refs.length === 0 && generalAnswerOk(answer, funds, factTexts)) {
+    return { kind: "ai", answer: withTaxNote(answer, question), refs: [], note };
   }
   const pages = refs.map((r) => r.page).filter((p): p is number => p !== null);
-  const unbacked = unbackedNumbers(answer, acceptedQuotes, [...pages, ...extraAllowed], question, funds);
+  const unbacked = unbackedNumbers(answer, [...acceptedQuotes, ...factTexts], [...pages, ...extraAllowed], question, funds);
   if (unbacked.length) {
     if (funds.length === 0) return { kind: "ai", answer: NEED_FUND_FOR_NUMBERS, refs: [] };
     return { kind: "ai", answer: `${NOT_FOUND}ที่ยืนยันเลขหน้าได้ค่ะ ลองถามให้เจาะจงขึ้น หรือดูหน้ากองทุนซึ่งบอกที่มาของทุกตัวเลขนะคะ`, refs: [] };
   }
   // no page to cite and no numbers: a general-knowledge explanation, labelled as such
-  if (refs.length === 0) return { kind: "ai", answer: withTaxNote(answer, question), refs, note: GENERAL_NOTE };
+  if (refs.length === 0) return { kind: "ai", answer: withTaxNote(answer, question), refs, note };
   return { kind: "ai", answer, refs };
 }
