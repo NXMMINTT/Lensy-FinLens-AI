@@ -361,6 +361,9 @@ export function LandingFooter() {
           <Link href="/roadmap" className="font-semibold text-brand no-underline hover:underline">
             แผนในอนาคต
           </Link>
+          <Link href="/privacy" className="font-semibold text-brand no-underline hover:underline">
+            ความเป็นส่วนตัว
+          </Link>
           <span>Trinity Hackathon 2026</span>
         </div>
       </div>

@@ -71,9 +71,14 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
             <FinLensLogo height={30} />
           </Link>
           <LoginPanel next={next} demoAllowed={demoLoginAllowed()} />
-          <Link href="/" className="mt-auto self-start text-[14.5px] text-ink-muted no-underline hover:text-brand">
-            ← กลับหน้าแรก
-          </Link>
+          <div className="mt-auto flex flex-wrap items-center justify-between gap-3 text-[14.5px]">
+            <Link href="/" className="text-ink-muted no-underline hover:text-brand">
+              ← กลับหน้าแรก
+            </Link>
+            <Link href="/privacy" className="font-semibold text-brand no-underline hover:underline">
+              ความเป็นส่วนตัว: เก็บอะไรบ้าง
+            </Link>
+          </div>
         </section>
       </div>
     </div>
