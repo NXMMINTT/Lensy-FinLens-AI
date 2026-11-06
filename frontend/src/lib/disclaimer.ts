@@ -13,6 +13,8 @@ export const NOT_IN_DOCS = "ไม่พบในเอกสาร";
 /** Where a feeder fund's master fund cost really is (shown when it came from the master fund's own document). */
 /** The rebate a Thai feeder fund gets back from its master fund, shown as a minus line. */
 export const REBATE_LABEL = "ได้รับคืนจากกองหลัก";
+/** A fund that invests directly (not a feeder): there is no master fund cost to look for. */
+export const NO_MASTER_NOTE = "กองนี้ลงทุนโดยตรง ไม่มีค่าใช้จ่ายกองหลักซ้อน";
 export const MASTER_COST_NOTE = "Factsheet ของกองไทยไม่ได้แสดงค่าใช้จ่ายกองหลัก ต้องไปหาจากเอกสารของกองหลักต่างประเทศ";
 
 /** Rule 7: label for sample (non-real) fund data. */

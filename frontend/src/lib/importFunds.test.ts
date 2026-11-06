@@ -112,3 +112,23 @@ describe("rebate from the master fund", () => {
     expect(row.label).toBe("ได้รับคืนจากกองหลัก");
   });
 });
+
+describe("funds that invest directly (not feeders)", () => {
+  it("say there is no master fund cost, instead of \"not found\"", async () => {
+    const { toCompareFund } = await import("./compare");
+    const { fundContext } = await import("./ask");
+    const { NO_MASTER_NOTE, MASTER_COST_NOTE } = await import("./disclaimer");
+    for (const code of ["KF-SET50-A", "KFSDIV", "KFAFIX-A"]) {
+      const f = getFund(code)!;
+      expect(f.isFeeder.value, code).toBe(false);
+      const rows = toCompareFund(f).layers.filter((l) => l.key === "masterFundExpense" || l.key === "rebate");
+      for (const r of rows) expect(r.emptyText, `${code} ${r.key}`).toBe(NO_MASTER_NOTE);
+      const ctx = fundContext(f);
+      expect(ctx).toContain(NO_MASTER_NOTE);
+      expect(ctx).not.toMatch(/\[fees\.masterFundExpense\]/);
+      expect(ctx).not.toContain(`หมายเหตุ: ${MASTER_COST_NOTE}`);
+    }
+    // a feeder without a figure still says "not found"
+    expect(toCompareFund(getFund("SCBGHC")!).layers.find((l) => l.key === "masterFundExpense")!.emptyText).toBeUndefined();
+  });
+});

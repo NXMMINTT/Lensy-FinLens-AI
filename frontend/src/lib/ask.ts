@@ -6,7 +6,7 @@
  */
 import { z } from "zod";
 
-import { MASTER_COST_NOTE, NOT_FOUND } from "./disclaimer";
+import { MASTER_COST_NOTE, NO_MASTER_NOTE, NOT_FOUND } from "./disclaimer";
 import { FEATURED_FUND_CODES, totalAnnualCostRate } from "./funds";
 import { baht, pct } from "./money";
 import { findQuotePage, skeleton } from "./pdfText";
@@ -195,6 +195,7 @@ export const ASK_SYSTEM = [
   "5. ทุกตัวเลขของกองต้องใส่ใน refs: ข้อมูลกองให้อ้างด้วย {\"code\": \"<รหัสกอง>\", \"key\": \"<key ในวงเล็บเหลี่ยมของบรรทัดนั้น>\"} ส่วนข้อความจากเอกสาร PDF ให้อ้างด้วย {\"code\", \"page\", \"source\", \"quote\"} ที่คัดลอกตรงจากข้อความ",
   "6. ใช้ข้อมูลกองทุกบรรทัดที่มีค่า แม้บรรทัดนั้นจะไม่มีเลขหน้า และบอกที่มาในวงเล็บหลังตัวเลขตามที่บรรทัดนั้นเขียนไว้ เช่น (Factsheet หน้า 2) หรือ (ข้อมูลจาก ก.ล.ต.) ตอบว่าไม่พบเฉพาะรายการที่เขียนว่า \"ไม่พบในเอกสาร\"",
   "7. ถ้าข้อมูลมีหมายเหตุว่า Factsheet ของกองไทยไม่ได้แสดงค่าใช้จ่ายกองหลัก ให้บอกผู้ใช้ด้วยเมื่อถามเรื่องค่าใช้จ่าย",
+  `7.1 กองที่มีหมายเหตุว่าลงทุนโดยตรง (ไม่ใช่กองฟีดเดอร์) ให้บอกว่า "${NO_MASTER_NOTE}" เมื่อพูดเรื่องค่าใช้จ่าย ห้ามพูดว่าไม่พบค่าใช้จ่ายกองหลัก หรือ Factsheet ไม่ได้แสดงค่าใช้จ่ายกองหลัก`,
   "8. ถ้าให้ข้อมูลมาหลายกอง ให้ตอบครบทุกกอง แยกทีละกอง ขึ้นต้นด้วยรหัสกอง (คำว่า \"กองนี้\" หมายถึงทุกกองที่ให้มา)",
   "ตอบเป็น JSON: {\"type\": \"fund\" | \"general\", \"answer\": \"<คำตอบไม่เกิน 6 ประโยคต่อกอง>\", \"refs\": [{\"code\": \"<รหัสกอง>\", \"key\": \"<key>\"} หรือ {\"code\": \"<รหัสกอง>\", \"page\": <เลขหน้า>, \"source\": \"factsheet\" | \"prospectus\", \"quote\": \"<ข้อความ>\"}]}",
 ].join("\n");
@@ -241,13 +242,17 @@ function sourceText(s: Sourced<unknown>): string {
 export function fundContext(f: Fund): string {
   const lines: string[] = [`## กอง ${f.code}: ${f.nameTh.value ?? ""}${f.meta.isSample ? " (ข้อมูลตัวอย่าง)" : ""}`];
   if (f.meta.dataSource) lines.push(`ที่มาของข้อมูลกองนี้: ${f.meta.dataSource}`);
+  const direct = f.isFeeder.value === false;
   for (const [key, s] of sourcedEntries(f)) {
     if (key.startsWith("pastReturns")) continue;
+    // a direct fund has no master fund: nothing to report as "not found"
+    if (direct && s.value === null && (key === "fees.masterFundExpense" || key === "fees.rebate" || key === "masterFundName" || key === "fees.terIncludesMasterFund")) continue;
     const label = KEY_LABEL[key] ? `${KEY_LABEL[key]} ` : "";
     if (s.value !== null) lines.push(`- [${key}] ${label}= ${JSON.stringify(s.value)} | ที่มา: ${sourceText(s)}${s.quote ? ` | "${s.quote}"` : ""}`);
     else if (FEE_KEYS.includes(key)) lines.push(`- [${key}] ${label}= ไม่พบในเอกสาร`);
   }
   const master = f.fees.masterFundExpense;
+  if (direct) lines.push(`หมายเหตุ: ${NO_MASTER_NOTE} (ไม่ใช่กองฟีดเดอร์) ห้ามพูดว่าไม่พบค่าใช้จ่ายกองหลัก และห้ามพูดว่า Factsheet ไม่ได้แสดงค่าใช้จ่ายกองหลัก`);
   if (master.value !== null && master.source !== "factsheet") lines.push(`หมายเหตุ: ${MASTER_COST_NOTE} (ค่าใช้จ่ายกองหลักมาจาก${SOURCE_LABEL[master.source]})`);
   if (master.value !== null && f.fees.terIncludesMasterFund.value === null) lines.push("หมายเหตุ: เอกสารไม่ระบุว่า TER รวมค่าใช้จ่ายกองทุนหลักแล้วหรือไม่");
   if (f.fees.rebate.value !== null) lines.push("หมายเหตุ: กองนี้ได้เงินคืนจากกองหลัก (rebate) ต้นทุนรวม = TER + ค่าใช้จ่ายกองหลัก − เงินที่ได้คืน เมื่อถามเรื่องค่าใช้จ่ายให้บอกเรื่องนี้ด้วย");

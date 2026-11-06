@@ -3,7 +3,7 @@
  * No calculation of money here: the client calls lib/trueCost.ts with these rates.
  */
 import { fundDataStatus, type DataStatus } from "./dataStatus";
-import { REBATE_LABEL } from "./disclaimer";
+import { NO_MASTER_NOTE, REBATE_LABEL } from "./disclaimer";
 import type { FeePhase } from "./feePhases";
 import { totalAnnualCostRate } from "./funds";
 import { pctToRate, type Fund, type Sourced } from "./schema";
@@ -20,6 +20,8 @@ export type FeeLayer = {
   note?: string;
   /** -1: money back (the rebate), shown with a minus sign and subtracted from the total */
   sign?: -1;
+  /** shown instead of "ไม่พบในเอกสาร" when the value is empty for a known reason (a direct fund has no master fund) */
+  emptyText?: string;
   /** % as written in the document */
   item: Sourced<number>;
   /**
@@ -81,6 +83,7 @@ export function toCompareFund(f: Fund): CompareFund {
     asOfDate: f.asOfDate,
     layers: LAYERS.map((l) => {
       const item = f.fees[l.key];
+      if ((l.key === "masterFundExpense" || l.key === "rebate") && f.isFeeder.value === false && item.value === null) return { ...l, item, emptyText: NO_MASTER_NOTE };
       const remainder = l.key === "otherExpenses" && item.value === null ? terRemainder(f) : undefined;
       return remainder ? { ...l, item, remainder } : { ...l, item };
     }),

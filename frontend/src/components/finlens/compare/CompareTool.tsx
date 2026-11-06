@@ -344,7 +344,7 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
                             )}
                           </span>
                         ) : item.value === null ? (
-                          <span className="text-[13px] text-ink-muted">{NOT_IN_DOCS}</span>
+                          <span className="text-[13px] text-ink-muted">{own.emptyText ?? NOT_IN_DOCS}</span>
                         ) : (
                           <span className="flex flex-col">
                             <b className="text-ink">

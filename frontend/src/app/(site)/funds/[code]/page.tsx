@@ -47,8 +47,8 @@ function Chip<T>({ s }: { s: Sourced<T> }) {
   return <span className="inline-flex rounded-md bg-sun-soft px-1.5 py-0.5 text-[12px] text-sun-ink">{sourceRef(null, s.source)} · ยังไม่มีเลขหน้า</span>;
 }
 
-function Value<T>({ s, render }: { s: Sourced<T>; render: (v: T) => React.ReactNode }) {
-  if (s.value === null) return <span className="text-[14px] text-ink-muted">{NOT_IN_DOCS}</span>;
+function Value<T>({ s, render, empty = NOT_IN_DOCS }: { s: Sourced<T>; render: (v: T) => React.ReactNode; empty?: string }) {
+  if (s.value === null) return <span className="text-[14px] text-ink-muted">{empty}</span>;
   return (
     <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
       <b className="text-ink">{render(s.value)}</b>
@@ -195,7 +195,7 @@ export default async function FundPage({ params }: Props) {
                 <span className="text-[14.5px] text-ink-body">
                   {l.label} <span className="text-[12px] text-ink-faint">({l.unit})</span>
                 </span>
-                <Value s={l.item} render={(v) => `${l.sign === -1 ? "-" : ""}${docPct(v)}`} />
+                <Value s={l.item} render={(v) => `${l.sign === -1 ? "-" : ""}${docPct(v)}`} empty={l.emptyText} />
               </li>
             ))}
           </ul>
