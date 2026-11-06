@@ -24,6 +24,23 @@ describe("toCompareFund", () => {
     expect(c.status.kind).toBe("sample"); // sample data is never shown as checked
   });
 
+  it("shows the rest of the TER (TER − management) when the documents give no other-expenses figure", () => {
+    const c = toCompareFund(g);
+    const other = c.layers.find((l) => l.key === "otherExpenses")!;
+    expect(other.item.value).toBeNull();
+    expect(other.remainder?.value).toBe(0.2675); // 1.07 − 0.8025, from the fund file
+    expect(other.remainder?.ter.page).toBe(2);
+    expect(other.remainder?.management.page).toBe(2);
+    expect(c.annualCostRate).toBeCloseTo(0.0187, 10); // inside the TER: not added to the total
+  });
+
+  it("keeps \"not found\" when it cannot be worked out, and never replaces a figure the documents give", () => {
+    const noMgmt = { ...g, fees: { ...g.fees, management: { value: null, page: null, quote: null, source: "factsheet" as const } } };
+    expect(toCompareFund(noMgmt).layers.find((l) => l.key === "otherExpenses")!.remainder).toBeUndefined();
+    const given = { ...g, fees: { ...g.fees, otherExpenses: { value: 0.1, page: 2, quote: "ค่าใช้จ่ายอื่น 0.10%", source: "factsheet" as const } } };
+    expect(toCompareFund(given).layers.find((l) => l.key === "otherExpenses")!.remainder).toBeUndefined();
+  });
+
   it("flags when the documents don't say whether the TER includes the master fund", () => {
     const unknown = { ...g, fees: { ...g.fees, terIncludesMasterFund: { value: null, page: null, quote: null, source: "prospectus" as const } } };
     const c = toCompareFund(unknown);

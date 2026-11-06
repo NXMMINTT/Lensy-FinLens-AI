@@ -18,7 +18,23 @@ export type FeeLayer = {
   note?: string;
   /** % as written in the document */
   item: Sourced<number>;
+  /**
+   * Only on "otherExpenses" when the documents give no figure for it: the rest of the TER after the
+   * management fee (TER − management), computed here and cited with both pages. It is inside the
+   * TER, so it is never added to the total.
+   */
+  remainder?: TerRemainder;
 };
+
+export type TerRemainder = { value: number; ter: Sourced<number>; management: Sourced<number> };
+
+/** TER − management fee, in % (4 decimals), when both are in the documents and the TER is the larger. */
+export function terRemainder(f: Fund): TerRemainder | undefined {
+  const { ter, management } = f.fees;
+  if (ter.value === null || management.value === null || ter.page === null || management.page === null) return undefined;
+  const value = Math.round((ter.value - management.value) * 10_000) / 10_000;
+  return value > 0 ? { value, ter, management } : undefined;
+}
 
 export type CompareFund = {
   code: string;
@@ -55,7 +71,11 @@ export function toCompareFund(f: Fund): CompareFund {
     nameTh: f.nameTh.value ?? f.code,
     isSample: f.meta.isSample,
     asOfDate: f.asOfDate,
-    layers: LAYERS.map((l) => ({ ...l, item: f.fees[l.key] })),
+    layers: LAYERS.map((l) => {
+      const item = f.fees[l.key];
+      const remainder = l.key === "otherExpenses" && item.value === null ? terRemainder(f) : undefined;
+      return remainder ? { ...l, item, remainder } : { ...l, item };
+    }),
     annualCostRate: totalAnnualCostRate(f),
     masterInclusionUnknown: f.fees.masterFundExpense.value !== null && f.fees.terIncludesMasterFund.value === null,
     frontEndRate: rate(f.fees.frontEnd),

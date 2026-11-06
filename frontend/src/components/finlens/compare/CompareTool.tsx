@@ -302,11 +302,25 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
                     {layer.note && <span className="block text-[12px] text-ink-muted">{layer.note}</span>}
                   </td>
                   {chosen.map((s) => {
-                    const item = s.fund.layers.find((l) => l.key === layer.key)!.item;
+                    const own = s.fund.layers.find((l) => l.key === layer.key)!;
+                    const item = own.item;
+                    const rest = own.remainder;
                     const hidden = layer.key === "masterFundExpense" && item.value !== null && item.source === "prospectus";
                     return (
                       <td key={s.code} className={`p-3 align-top ${hidden ? "bg-sun-soft" : ""}`}>
-                        {item.value === null ? (
+                        {item.value === null && rest ? (
+                          // no separate figure in the documents: show the rest of the TER, not "not found"
+                          <span className="flex flex-col">
+                            <b className="text-ink">{rest.value.toFixed(2)}%</b>
+                            <span className="text-[12px] text-ink-muted">
+                              ส่วนที่เหลือ รวมอยู่ใน TER แล้ว (TER {rest.ter.value!.toFixed(2)}% − ค่าจัดการ {rest.management.value!.toFixed(2)}%)
+                            </span>
+                            <PageTag page={rest.ter.page} source={rest.ter.source} />
+                            {(rest.management.page !== rest.ter.page || rest.management.source !== rest.ter.source) && (
+                              <PageTag page={rest.management.page} source={rest.management.source} />
+                            )}
+                          </span>
+                        ) : item.value === null ? (
                           <span className="text-[13px] text-ink-muted">{NOT_FOUND}</span>
                         ) : (
                           <span className="flex flex-col">
