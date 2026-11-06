@@ -76,6 +76,8 @@ export const FundSchema = z.object({
     otherExpenses: sourced(Pct),
     /** Whether the TER already includes the master fund's expenses (decides if they are added). */
     terIncludesMasterFund: sourced(z.boolean()),
+    /** Money the Thai fund gets back from its master fund (rebate fee, % per year); subtracted from the total. */
+    rebate: sourced(Pct).default({ value: null, page: null, quote: null, source: "factsheet" }),
   }),
 
   // risk

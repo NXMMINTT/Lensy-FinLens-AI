@@ -347,7 +347,10 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
                           <span className="text-[13px] text-ink-muted">{NOT_IN_DOCS}</span>
                         ) : (
                           <span className="flex flex-col">
-                            <b className="text-ink">{docPct(item.value)}</b>
+                            <b className="text-ink">
+                              {own.sign === -1 ? "-" : ""}
+                              {docPct(item.value)}
+                            </b>
                             <PageTag page={item.page} source={item.source} />
                             {hidden && <span className="text-[12px] font-semibold text-sun-ink"><Icon name="warn" className="mr-1" />{MASTER_COST_NOTE}</span>}
                           </span>

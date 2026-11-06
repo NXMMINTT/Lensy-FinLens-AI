@@ -11,7 +11,7 @@ const COLUMNS = [
   "fundCode", "fundName", "amc", "fundType", "riskLevel",
   "frontEndFee", "frontEndFee_page", "backEndFee", "backEndFee_page", "switchingFee", "switchingFee_page",
   "managementFee", "managementFee_page", "ter", "ter_page",
-  "isFeeder", "masterFundName", "masterFundTer", "masterFundTer_page", "masterFundTer_doc",
+  "isFeeder", "masterFundName", "masterFundTer", "masterFundTer_page", "masterFundTer_doc", "rebateFee",
   "fxHedging", "fxHedging_page", "asOfDate", "factsheetUrl", "notes", "dataSource",
 ] as const;
 
@@ -77,6 +77,7 @@ export function rowToFund(row: FundRow): Fund {
       masterFundExpense: s(num(row, "masterFundTer"), "master", page(row, "masterFundTer_page")),
       otherExpenses: s<number>(null, src),
       terIncludesMasterFund: s<boolean>(null, src),
+      rebate: s(num(row, "rebateFee"), src),
     },
     risk: {
       fxHedging: s(fx, src, page(row, "fxHedging_page")),

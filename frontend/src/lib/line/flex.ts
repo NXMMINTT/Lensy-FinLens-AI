@@ -5,7 +5,7 @@
 import type { messagingApi } from "@line/bot-sdk";
 
 import type { AskResponse } from "../ask";
-import { DISCLAIMER, MASTER_COST_NOTE, SAMPLE_DATA_LABEL } from "../disclaimer";
+import { DISCLAIMER, MASTER_COST_NOTE, REBATE_LABEL, SAMPLE_DATA_LABEL } from "../disclaimer";
 import { totalAnnualCostRate } from "../funds";
 import { docPct, pct } from "../money";
 import { riskAlerts, RISK_LEVEL_LABEL, type RiskLevel } from "../riskRules";
@@ -110,6 +110,7 @@ export function fundCard(f: Fund): messagingApi.FlexMessage {
               text(pct(total), { size: "xxl", weight: "bold", color: C.brand }),
               // a Flex text may not be empty
               ...(refsLine([f.fees.ter, master]) ? [text(`ที่มา: ${refsLine([f.fees.ter, master])}`, { size: "xxs", color: C.muted })] : []),
+              ...(f.fees.rebate.value !== null ? [text(`${REBATE_LABEL} -${docPct(f.fees.rebate.value)} (${pageRef(f.fees.rebate)}) หักออกจากต้นทุนรวมแล้ว`, { size: "xxs", color: C.body })] : []),
             ],
     },
   ];

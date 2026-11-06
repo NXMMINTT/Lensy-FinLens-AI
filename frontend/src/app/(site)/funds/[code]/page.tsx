@@ -11,7 +11,7 @@ import { Lensy } from "@/components/finlens/Lensy";
 import { SampleBadge } from "@/components/finlens/SampleBadge";
 import { toCompareFund } from "@/lib/compare";
 import { fundDataStatus } from "@/lib/dataStatus";
-import { MASTER_COST_NOTE, NOT_FOUND, NOT_IN_DOCS } from "@/lib/disclaimer";
+import { MASTER_COST_NOTE, NOT_FOUND, NOT_IN_DOCS, REBATE_LABEL } from "@/lib/disclaimer";
 import { SOURCE_LABEL, sourceRef } from "@/lib/sources";
 import { getFund, getVerifiedFunds } from "@/lib/funds";
 import { baht, docPct, pct } from "@/lib/money";
@@ -73,6 +73,9 @@ export default async function FundPage({ params }: Props) {
     { label: "ค่าใช้จ่ายรวมของกองนี้ (TER)", s: f.fees.ter, include: true },
     { label: "ค่าใช้จ่ายของกองทุนหลัก", s: master, include: addMaster },
   ].filter((x) => x.s.value !== null && x.include);
+  // the bar splits the layers before the rebate; the rebate is shown as its own minus line
+  const gross = yearly.reduce((sum, y) => sum + pctToRate(y.s.value!), 0);
+  const rebate = f.fees.rebate;
   const otherCode = getVerifiedFunds().find((x) => x.code !== f.code)?.code;
 
   return (
@@ -146,7 +149,7 @@ export default async function FundPage({ params }: Props) {
                 <div className="font-heading text-[44px] font-bold leading-none text-brand">{pct(total)}</div>
                 <div className="mt-3 flex h-4 gap-[2px] overflow-hidden rounded-full" role="img" aria-label={yearly.map((y) => `${y.label} ${y.s.value}%`).join(", ")}>
                   {yearly.map((y, i) => (
-                    <span key={y.label} className={`${SEGMENT_COLORS[i]} first:rounded-l-full last:rounded-r-full`} style={{ width: `${(pctToRate(y.s.value!) / total) * 100}%` }} />
+                    <span key={y.label} className={`${SEGMENT_COLORS[i]} first:rounded-l-full last:rounded-r-full`} style={{ width: `${(pctToRate(y.s.value!) / gross) * 100}%` }} />
                   ))}
                 </div>
                 <ul className="m-0 mt-2 flex list-none flex-col gap-1.5 p-0 text-[14.5px]">
@@ -156,6 +159,12 @@ export default async function FundPage({ params }: Props) {
                       {y.label} <b>{docPct(y.s.value!)}</b> <Chip s={y.s} />
                     </li>
                   ))}
+                  {rebate.value !== null && (
+                    <li className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                      <i className="inline-block h-2.5 w-2.5 rounded-full border-2 border-brand" aria-hidden="true" />
+                      {REBATE_LABEL} <b>-{docPct(rebate.value)}</b> <Chip s={rebate} />
+                    </li>
+                  )}
                 </ul>
                 <p className="m-0 mt-3 text-[14px] text-ink-body">
                   ทุก ๆ 100,000 บาท เสียค่าใช้จ่ายรายปีราว <b className="text-ink">{baht(100_000 * total)}</b> ต่อปี
@@ -186,7 +195,7 @@ export default async function FundPage({ params }: Props) {
                 <span className="text-[14.5px] text-ink-body">
                   {l.label} <span className="text-[12px] text-ink-faint">({l.unit})</span>
                 </span>
-                <Value s={l.item} render={(v) => docPct(v)} />
+                <Value s={l.item} render={(v) => `${l.sign === -1 ? "-" : ""}${docPct(v)}`} />
               </li>
             ))}
           </ul>

@@ -3,12 +3,13 @@
  * No calculation of money here: the client calls lib/trueCost.ts with these rates.
  */
 import { fundDataStatus, type DataStatus } from "./dataStatus";
+import { REBATE_LABEL } from "./disclaimer";
 import type { FeePhase } from "./feePhases";
 import { totalAnnualCostRate } from "./funds";
 import { pctToRate, type Fund, type Sourced } from "./schema";
 import { assetClassOf, type AssetClass } from "./trueCost";
 
-export type FeeLayerKey = "frontEnd" | "backEnd" | "switching" | "management" | "ter" | "masterFundExpense" | "otherExpenses";
+export type FeeLayerKey = "frontEnd" | "backEnd" | "switching" | "management" | "ter" | "masterFundExpense" | "otherExpenses" | "rebate";
 
 export type FeeLayer = {
   key: FeeLayerKey;
@@ -17,6 +18,8 @@ export type FeeLayer = {
   phase: FeePhase;
   /** shown under the label, e.g. that it is already inside the TER (so it is not added twice) */
   note?: string;
+  /** -1: money back (the rebate), shown with a minus sign and subtracted from the total */
+  sign?: -1;
   /** % as written in the document */
   item: Sourced<number>;
   /**
@@ -57,12 +60,13 @@ export type CompareFund = {
 
 /* Order = how the table reads: buy, hold, sell, switch. Management fee and other expenses are part
  * of the TER, so they are shown but not added again (the total is TER + master fund expense). */
-const LAYERS: { key: FeeLayerKey; label: string; unit: FeeLayer["unit"]; phase: FeePhase; note?: string }[] = [
+const LAYERS: { key: FeeLayerKey; label: string; unit: FeeLayer["unit"]; phase: FeePhase; note?: string; sign?: -1 }[] = [
   { key: "frontEnd", label: "ค่าธรรมเนียมการขาย", unit: "ต่อครั้ง", phase: "buy" },
   { key: "ter", label: "ค่าใช้จ่ายรวมของกองนี้ (TER)", unit: "ต่อปี", phase: "hold" },
   { key: "management", label: "ค่าธรรมเนียมการจัดการ", unit: "ต่อปี", phase: "hold", note: "รวมอยู่ใน TER แล้ว ไม่นับซ้ำ" },
   { key: "otherExpenses", label: "ค่าใช้จ่ายอื่นของกอง", unit: "ต่อปี", phase: "hold", note: "รวมอยู่ใน TER แล้ว ไม่นับซ้ำ" },
   { key: "masterFundExpense", label: "ค่าใช้จ่ายของกองทุนหลัก", unit: "ต่อปี", phase: "hold", note: "หักในกองทุนหลักอีกชั้น นับเพิ่มจาก TER" },
+  { key: "rebate", label: REBATE_LABEL, unit: "ต่อปี", phase: "hold", note: "กองไทยได้เงินคืนจากกองหลัก หักออกจากต้นทุนรวม", sign: -1 },
   { key: "backEnd", label: "ค่าธรรมเนียมการรับซื้อคืน", unit: "ต่อครั้ง", phase: "sell" },
   { key: "switching", label: "ค่าธรรมเนียมการสับเปลี่ยน", unit: "ต่อครั้ง", phase: "switch" },
 ];

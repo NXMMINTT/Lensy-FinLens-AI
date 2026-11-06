@@ -8,7 +8,7 @@ const g = getFund("SAMPLE-GLOBAL")!;
 describe("toCompareFund", () => {
   it("lists every fee layer with its page and turns fees into rates", () => {
     const c = toCompareFund(g);
-    expect(c.layers.map((l) => l.key)).toEqual(["frontEnd", "ter", "management", "otherExpenses", "masterFundExpense", "backEnd", "switching"]);
+    expect(c.layers.map((l) => l.key)).toEqual(["frontEnd", "ter", "management", "otherExpenses", "masterFundExpense", "rebate", "backEnd", "switching"]);
     expect(c.layers.find((l) => l.key === "masterFundExpense")!.item).toMatchObject({ value: 0.8, page: 14, source: "prospectus" });
     expect(c.annualCostRate).toBeCloseTo(0.0187, 10);
     expect(c.frontEndRate).toBeCloseTo(0.015, 10);

@@ -69,6 +69,7 @@ export function getFund(code: string, dir = VERIFIED_DIR): Fund | undefined {
  * Total yearly cost (Hidden Fee Detector): TER, plus the master fund's expense when the document
  * says the TER does not include it. When the document does not say (null), the expense is added and
  * the UI must say the total assumes it is not included. Returns null when the TER itself is missing.
+ * A rebate the Thai fund gets back from its master fund is subtracted: TER + master − rebate.
  * The result is a rate (0.0187 = 1.87%).
  */
 export function totalAnnualCostRate(f: Fund): number | null {
@@ -76,5 +77,6 @@ export function totalAnnualCostRate(f: Fund): number | null {
   if (ter === null) return null;
   const master = f.fees.masterFundExpense.value;
   const addMaster = master !== null && f.fees.terIncludesMasterFund.value !== true;
-  return pctToRate(ter + (addMaster ? master : 0));
+  const rebate = f.fees.rebate.value ?? 0;
+  return pctToRate(ter + (addMaster ? master : 0) - rebate);
 }

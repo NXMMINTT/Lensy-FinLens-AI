@@ -200,14 +200,14 @@ describe("checkAiAnswer", () => {
   });
 
   it("accepts figures cited by their data key, also without a page (SEC data), naming the source", () => {
-    const k = getFund("K-INDIA-A(A)")!;
+    const k = getFund("SCBSEMI(A)")!;
     const r = checkAiAnswer(
-      { type: "fund", answer: "K-INDIA-A(A) TER 1.84% ต่อปี (ข้อมูลจาก ก.ล.ต.) ค่าใช้จ่ายกองหลัก 0.96% (เอกสารกองทุนหลัก)", refs: [{ code: "K-INDIA-A(A)", key: "fees.ter" }, { code: "K-INDIA-A(A)", key: "fees.masterFundExpense" }] },
+      { type: "fund", answer: "SCBSEMI(A) TER 1.16% ต่อปี (ข้อมูลจาก ก.ล.ต.) ค่าใช้จ่ายกองหลัก 0.35% (เอกสารกองทุนหลัก)", refs: [{ code: "SCBSEMI(A)", key: "fees.ter" }, { code: "SCBSEMI(A)", key: "fees.masterFundExpense" }] },
       [k],
       {},
     );
     expect(r.refs.map((x) => [x.page, x.source])).toEqual([[null, "sec"], [null, "master"]]);
-    expect(r.answer).toContain("1.84%");
+    expect(r.answer).toContain("1.16%");
   });
 
   it("rejects a key with no value, or a number the cited figures don't hold", () => {
@@ -219,12 +219,18 @@ describe("checkAiAnswer", () => {
   });
 
   it("gives the model every figure with its source, the real gaps, and the master fund note", () => {
-    const ctx = fundContext(getFund("K-INDIA-A(A)")!);
+    const ctx = fundContext(getFund("SCBSEMI(A)")!);
     expect(ctx).toContain("[fees.ter]");
     expect(ctx).toContain("ข้อมูลจาก ก.ล.ต. (ไม่มีเลขหน้า)");
     expect(ctx).toMatch(/\[fees\.switching\].*ไม่พบในเอกสาร/);
     expect(ctx).toContain("Factsheet ของกองไทยไม่ได้แสดงค่าใช้จ่ายกองหลัก");
     expect(fundContext(getFund("B-INNOTECH")!)).toContain("Factsheet หน้า 2");
+  });
+
+  it("tells the model about the rebate and how the total is built", () => {
+    const ctx = fundContext(getFund("KT-PRECIOUS-A")!);
+    expect(ctx).toMatch(/\[fees\.rebate\].*0\.75/);
+    expect(ctx).toContain("ต้นทุนรวม = TER + ค่าใช้จ่ายกองหลัก − เงินที่ได้คืน");
   });
 
   it("accepts a quote found in the PDF text on that page", () => {

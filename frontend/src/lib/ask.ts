@@ -216,6 +216,7 @@ const KEY_LABEL: Record<string, string> = {
   "fees.masterFundExpense": "ค่าใช้จ่ายของกองทุนหลัก (% ต่อปี)",
   "fees.otherExpenses": "ค่าใช้จ่ายอื่นของกอง (% ต่อปี)",
   "fees.terIncludesMasterFund": "TER รวมค่าใช้จ่ายกองทุนหลักแล้ว",
+  "fees.rebate": "ได้รับคืนจากกองหลัก (rebate, % ต่อปี หักออกจากต้นทุนรวม)",
   "risk.fxHedging": "นโยบายป้องกันความเสี่ยงค่าเงิน",
   "risk.top5Pct": "สัดส่วน 5 หลักทรัพย์แรก (%)",
   "risk.top10Pct": "สัดส่วน 10 หลักทรัพย์แรก (%)",
@@ -249,6 +250,7 @@ export function fundContext(f: Fund): string {
   const master = f.fees.masterFundExpense;
   if (master.value !== null && master.source !== "factsheet") lines.push(`หมายเหตุ: ${MASTER_COST_NOTE} (ค่าใช้จ่ายกองหลักมาจาก${SOURCE_LABEL[master.source]})`);
   if (master.value !== null && f.fees.terIncludesMasterFund.value === null) lines.push("หมายเหตุ: เอกสารไม่ระบุว่า TER รวมค่าใช้จ่ายกองทุนหลักแล้วหรือไม่");
+  if (f.fees.rebate.value !== null) lines.push("หมายเหตุ: กองนี้ได้เงินคืนจากกองหลัก (rebate) ต้นทุนรวม = TER + ค่าใช้จ่ายกองหลัก − เงินที่ได้คืน เมื่อถามเรื่องค่าใช้จ่ายให้บอกเรื่องนี้ด้วย");
   return lines.join("\n");
 }
 
@@ -391,14 +393,27 @@ export function isTaxQuestion(question: string): boolean {
 export const TAX_KNOWLEDGE_NOTE = "สรุปจากคำอธิบายมาตรฐานเรื่องกองทุนลดหย่อนภาษีของ FinLens ไม่ได้มาจากเอกสารของกองใด";
 export const TAX_NOT_IN_TEXT = "เรื่องนี้ยังไม่มีในคำอธิบายมาตรฐานของน้อง Lensy ค่ะ กรุณาตรวจเงื่อนไขกับ ก.ล.ต. หรือกรมสรรพากรโดยตรงนะคะ";
 
-/** The standard text below the first "---" (the header is for the team), without unchecked TODO lines. */
+/**
+ * The standard text below the first "---" (the header is for the team), without anything still to
+ * check: every line with TODO, and whole sections whose heading has TODO (e.g. the team's checklist).
+ * None of it ever reaches the model, so users never see it.
+ */
 export function taxKnowledgeForModel(markdown: string): string {
-  const body = markdown.split(/^---\s*$/m).slice(1).join("\n") || markdown;
-  return body
-    .split(/\r?\n/)
-    .filter((line) => !/TODO/.test(line))
-    .join("\n")
-    .trim();
+  const body = markdown.split(/^---\s*$/m).slice(1).join("\n---\n") || markdown;
+  const out: string[] = [];
+  let skipLevel = 0; // inside a TODO section: its heading level
+  for (const line of body.split(/\r?\n/)) {
+    const heading = /^(#+)\s/.exec(line);
+    if (heading && skipLevel && heading[1].length <= skipLevel) skipLevel = 0;
+    if (/^---\s*$/.test(line)) skipLevel = 0;
+    if (heading && /TODO/.test(line)) {
+      skipLevel = heading[1].length;
+      continue;
+    }
+    if (skipLevel || /TODO/.test(line)) continue;
+    out.push(line);
+  }
+  return out.join("\n").trim();
 }
 
 export const TAX_SYSTEM = [

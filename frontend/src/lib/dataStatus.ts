@@ -62,10 +62,15 @@ export function fundDataStatus(f: Fund): DataStatus {
     f.asOfDate.value !== null && (f.asOfDate.page !== null || imported) ? { value: f.asOfDate.value, page: f.asOfDate.page, source: f.asOfDate.source } : null;
   const dataSource = f.meta.dataSource ?? null;
   // imported data: "checked" only when every figure has its page; otherwise it waits for pages
-  // the label follows where the data came from: the SEC data, or the AMC factsheet read directly
-  if (imported && !hasAllPages(f)) {
-    const label = dataSource && isSecSource(dataSource) ? AWAITING_PAGES_LABEL : FACTSHEET_PARTIAL_PAGES_LABEL;
-    return { kind: "awaiting-pages", label, missing, asOf, isSample: false, dataSource };
+  // imported data: the label follows what dataSource says about how it was checked
+  if (imported) {
+    const src = dataSource ?? "";
+    if (/^\s*settrade/i.test(src)) return { kind: "awaiting-pages", label: AWAITING_PAGES_LABEL, missing, asOf, isSample: false, dataSource };
+    const checked = /ตรวจเลขหน้า|อ่านจาก Factsheet ของ บลจ\. โดยตรง/.test(src);
+    if (!checked) {
+      const label = isSecSource(src) ? AWAITING_PAGES_LABEL : FACTSHEET_PARTIAL_PAGES_LABEL;
+      if (!hasAllPages(f)) return { kind: "awaiting-pages", label, missing, asOf, isSample: false, dataSource };
+    }
   }
   return {
     kind: missing.length === 0 ? "verified" : "partial",
