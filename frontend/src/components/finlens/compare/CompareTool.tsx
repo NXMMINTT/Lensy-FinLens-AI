@@ -5,17 +5,19 @@ import { Fragment, useEffect, useMemo, useState } from "react";
 
 import type { CompareFund } from "@/lib/compare";
 import { FEE_PHASES } from "@/lib/feePhases";
-import { NOT_FOUND } from "@/lib/disclaimer";
-import { baht, pct } from "@/lib/money";
+import { NOT_FOUND, NOT_IN_DOCS } from "@/lib/disclaimer";
+import { baht, docPct, pct } from "@/lib/money";
 import { useTheme } from "@/lib/theme";
 import { DEFAULT_ANNUAL_RETURN, MAX_YEARS, MIN_YEARS, trueCost, type TrueCostResult } from "@/lib/trueCost";
+import type { DocSource } from "@/lib/schema";
+import { sourceRef } from "@/lib/sources";
 
 import { DataStatusBadge } from "../app/DataStatusBadge";
 import { SampleBadge } from "../SampleBadge";
 import { Icon } from "../Icon";
 import { CostChart, SERIES_COLORS, type ChartRow, type ChartSeries } from "./CostChart";
 
-const SOURCE_LABEL = { factsheet: "Factsheet", prospectus: "หนังสือชี้ชวน" } as const;
+
 const MAX_FUNDS = 3;
 
 /**
@@ -32,13 +34,9 @@ function Swatch({ slot }: { slot: number }) {
   return <i className="inline-block h-3 w-3 shrink-0 rounded-full" style={{ background: SERIES_COLORS[resolved][slot] }} aria-hidden="true" />;
 }
 
-function PageTag({ page, source }: { page: number | null; source: keyof typeof SOURCE_LABEL }) {
-  if (page === null) return null;
-  return (
-    <span className="whitespace-nowrap text-[12px] text-ink-muted">
-      หน้า {page} · {SOURCE_LABEL[source]}
-    </span>
-  );
+/** Where a figure came from: "หน้า 2 · Factsheet", or just the source when it has no page (SEC data). */
+function PageTag({ page, source }: { page: number | null; source: DocSource }) {
+  return <span className="whitespace-nowrap text-[12px] text-ink-muted">{sourceRef(page, source)}</span>;
 }
 
 export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[]; initialCodes: string[]; mode: CompareMode }) {
@@ -311,9 +309,9 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
                         {item.value === null && rest ? (
                           // no separate figure in the documents: show the rest of the TER, not "not found"
                           <span className="flex flex-col">
-                            <b className="text-ink">{rest.value.toFixed(2)}%</b>
+                            <b className="text-ink">{docPct(rest.value)}</b>
                             <span className="text-[12px] text-ink-muted">
-                              ส่วนที่เหลือ รวมอยู่ใน TER แล้ว (TER {rest.ter.value!.toFixed(2)}% − ค่าจัดการ {rest.management.value!.toFixed(2)}%)
+                              ส่วนที่เหลือ รวมอยู่ใน TER แล้ว (TER {docPct(rest.ter.value!)} − ค่าจัดการ {docPct(rest.management.value!)})
                             </span>
                             <PageTag page={rest.ter.page} source={rest.ter.source} />
                             {(rest.management.page !== rest.ter.page || rest.management.source !== rest.ter.source) && (
@@ -321,10 +319,10 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
                             )}
                           </span>
                         ) : item.value === null ? (
-                          <span className="text-[13px] text-ink-muted">{NOT_FOUND}</span>
+                          <span className="text-[13px] text-ink-muted">{NOT_IN_DOCS}</span>
                         ) : (
                           <span className="flex flex-col">
-                            <b className="text-ink">{item.value.toFixed(2)}%</b>
+                            <b className="text-ink">{docPct(item.value)}</b>
                             <PageTag page={item.page} source={item.source} />
                             {hidden && <span className="text-[12px] font-semibold text-sun-ink"><Icon name="warn" className="mr-1" />อยู่ในหนังสือชี้ชวน ไม่อยู่ใน Factsheet</span>}
                           </span>

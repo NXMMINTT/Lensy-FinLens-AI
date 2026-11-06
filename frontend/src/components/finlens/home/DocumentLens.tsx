@@ -1,4 +1,4 @@
-import { pct, SAMPLE_ACTIVE as F, SAMPLE_INDEX as B, sampleAnnualCost, SOURCE_LABEL } from "@/lib/sampleFunds";
+import { pct, SAMPLE_ACTIVE as F, SAMPLE_INDEX as B, sampleAnnualCost, SOURCE_LABEL, type DocSource } from "@/lib/sampleFunds";
 
 import { Lensy } from "../Lensy";
 import { Icon } from "../Icon";
@@ -15,7 +15,7 @@ function Lines({ widths }: { widths: number[] }) {
   );
 }
 
-function PageFooter({ page, source }: { page: number; source: "factsheet" | "prospectus" }) {
+function PageFooter({ page, source }: { page: number; source: DocSource }) {
   return (
     <div className="mt-auto flex justify-between border-t border-[#E3E9E5] pt-1.5 text-[10px] text-[#7A8C81]">
       <span>{SOURCE_LABEL[source]}</span>

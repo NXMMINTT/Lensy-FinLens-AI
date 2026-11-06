@@ -1,6 +1,6 @@
 import { thaiDate, type DataStatus } from "@/lib/dataStatus";
 
-const SOURCE = { factsheet: "Factsheet", prospectus: "หนังสือชี้ชวน" } as const;
+import { SOURCE_LABEL as SOURCE } from "@/lib/sources";
 
 /**
  * Data status for one fund: "checked against the documents" or "incomplete" (with what is missing),
@@ -25,14 +25,16 @@ export function DataStatusBadge({ status, compact = false }: { status: DataStatu
       >
         {ok ? "✓" : "!"} {status.label}
       </span>
-      {!ok && !compact && <span className="text-[12px] text-ink-muted">ไม่พบในเอกสาร: {status.missing.join(", ")}</span>}
+      {!ok && !compact && status.missing.length > 0 && <span className="text-[12px] text-ink-muted">ไม่พบในเอกสาร: {status.missing.join(", ")}</span>}
       {status.asOf ? (
         <span className="text-[12px] text-ink-muted">
-          ข้อมูล ณ {thaiDate(status.asOf.value)} · หน้า {status.asOf.page} {SOURCE[status.asOf.source]}
+          ข้อมูล ณ {thaiDate(status.asOf.value)}
+          {status.asOf.page !== null ? ` · หน้า ${status.asOf.page} ${SOURCE[status.asOf.source]}` : ""}
         </span>
       ) : (
         <span className="text-[12px] text-ink-muted">ไม่พบวันที่ของข้อมูลในเอกสาร</span>
       )}
+      {status.dataSource && <span className="text-[12px] text-ink-muted">ที่มาของข้อมูล: {status.dataSource}</span>}
     </span>
   );
 }

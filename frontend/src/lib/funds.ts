@@ -1,6 +1,8 @@
 /**
- * Fund data for the web and LINE. Reads ONLY data/verified/ (project brief, Responsible AI rule 4)
- * and only files whose meta.status is "verified". Server-side only (uses the file system).
+ * Fund data for the web and LINE: data/verified/ (status "verified", checked page by page) plus the
+ * team's imported spreadsheet data/funds/real/funds.json (status "imported", npm run import-funds),
+ * which is labelled by its source and page coverage (lib/dataStatus.ts). Never data/extracted/.
+ * Server-side only (uses the file system).
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -8,6 +10,19 @@ import path from "node:path";
 import { FundSchema, pctToRate, type Fund } from "./schema";
 
 export const VERIFIED_DIR = path.join(process.cwd(), "data", "verified");
+export const IMPORTED_FILE = path.join(process.cwd(), "data", "funds", "real", "funds.json");
+
+/** Imported funds; a file that fails validation stops the build instead of showing bad data. */
+function importedFunds(file = IMPORTED_FILE): Fund[] {
+  if (!fs.existsSync(file)) return [];
+  const raw = JSON.parse(fs.readFileSync(file, "utf8")) as unknown[];
+  return raw.map((r, i) => {
+    const parsed = FundSchema.safeParse(r);
+    if (!parsed.success) throw new Error(`data/funds/real/funds.json แถว ${i + 1} ไม่ผ่านสคีมา: ${parsed.error.message}`);
+    if (parsed.data.meta.status !== "imported") throw new Error(`data/funds/real/funds.json: ${parsed.data.code} ต้องมีสถานะ imported`);
+    return parsed.data;
+  });
+}
 
 let cache: Fund[] | null = null;
 
@@ -26,8 +41,11 @@ export function getVerifiedFunds(dir = VERIFIED_DIR): Fund[] {
         })
         .filter((f) => f.meta.status === "verified")
     : [];
-  if (dir === VERIFIED_DIR) cache = funds;
-  return funds;
+  if (dir !== VERIFIED_DIR) return funds;
+  // the verified files come first; an imported fund with the same code is skipped
+  const seen = new Set(funds.map((f) => f.code.toUpperCase()));
+  cache = [...funds, ...importedFunds().filter((f) => !seen.has(f.code.toUpperCase()))];
+  return cache;
 }
 
 export function getFund(code: string, dir = VERIFIED_DIR): Fund | undefined {

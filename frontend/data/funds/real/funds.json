@@ -1,0 +1,3368 @@
+[
+  {
+    "code": "B-INNOTECH",
+    "nameTh": {
+      "value": "กองทุนเปิดบัวหลวงโกลบอลอินโนเวชั่นและเทคโนโลยี",
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "amc": {
+      "value": "บลจ.บัวหลวง",
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "type": {
+      "value": "Feeder Fund หุ้นเทคโนโลยีโลก (Active)",
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "isFeeder": {
+      "value": true,
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "masterFundName": {
+      "value": "Fidelity Funds - Global Technology Fund, Class Y-ACC-USD",
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "riskLevel": {
+      "value": 7,
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "asOfDate": {
+      "value": "2026-09-30",
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "fees": {
+      "frontEnd": {
+        "value": 1,
+        "page": 2,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "backEnd": {
+        "value": 0,
+        "page": 2,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "switching": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "management": {
+        "value": 1.07,
+        "page": 2,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "ter": {
+        "value": 1.232,
+        "page": 2,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "masterFundExpense": {
+        "value": 1.04,
+        "page": 1,
+        "quote": null,
+        "source": "master"
+      },
+      "otherExpenses": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "terIncludesMasterFund": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      }
+    },
+    "risk": {
+      "fxHedging": {
+        "value": "discretionary",
+        "page": 1,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "top5Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "top10Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "topCountry": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "topSector": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      }
+    },
+    "redemption": {
+      "settlementDays": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "frequency": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "lockUp": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      }
+    },
+    "pastReturns": [],
+    "meta": {
+      "status": "imported",
+      "dataSource": "อ่านจาก Factsheet ของ บลจ. โดยตรง",
+      "isSample": false,
+      "extractedAt": null,
+      "model": null,
+      "sourceFiles": [
+        {
+          "file": "https://www.bangkokbank.com/-/media/files/personal/save-and-invest/mutual-funds/fact-sheet/binnotech_factsheet_th.pdf",
+          "source": "factsheet"
+        },
+        {
+          "file": "Fidelity Monthly Factsheet 31.03.25 (OCF ณ 30.04.24) https://www.tiscoasset.com/wp-content/uploads/fidelity_global_fundY_acc_usd.pdf",
+          "source": "master"
+        }
+      ],
+      "verifiedBy": null,
+      "notes": [
+        "ค่ารับซื้อคืน = ไม่มี",
+        "สับเปลี่ยนไม่มีค่าธรรมเนียมแยก (ใช้ราคาขาย/รับซื้อคืน)",
+        "Factsheet ไม่แสดงค่าใช้จ่ายกองหลัก",
+        "TER กองหลักควรอัปเดตเป็น Factsheet Fidelity ฉบับล่าสุด"
+      ]
+    }
+  },
+  {
+    "code": "K-US500X-A(A)",
+    "nameTh": {
+      "value": "กองทุนเปิดเค หุ้นยูเอส พาสซีฟ-A ชนิดสะสมมูลค่า",
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "amc": {
+      "value": "บลจ.กสิกรไทย",
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "type": {
+      "value": "Feeder Fund หุ้นสหรัฐ S&P 500 (Passive)",
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "isFeeder": {
+      "value": true,
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "masterFundName": {
+      "value": "iShares Core S&P 500 ETF (IVV)",
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "riskLevel": {
+      "value": 6,
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "asOfDate": {
+      "value": "2026-09-30",
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "fees": {
+      "frontEnd": {
+        "value": 0,
+        "page": 2,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "backEnd": {
+        "value": 0.15,
+        "page": 2,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "switching": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "management": {
+        "value": 0.535,
+        "page": 2,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "ter": {
+        "value": 0.6375,
+        "page": 2,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "masterFundExpense": {
+        "value": 0.03,
+        "page": null,
+        "quote": null,
+        "source": "master"
+      },
+      "otherExpenses": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "terIncludesMasterFund": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      }
+    },
+    "risk": {
+      "fxHedging": {
+        "value": "discretionary",
+        "page": 1,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "top5Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "top10Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "topCountry": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "topSector": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      }
+    },
+    "redemption": {
+      "settlementDays": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "frequency": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "lockUp": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      }
+    },
+    "pastReturns": [],
+    "meta": {
+      "status": "imported",
+      "dataSource": "อ่านจาก Factsheet ของ บลจ. โดยตรง",
+      "isSample": false,
+      "extractedAt": null,
+      "model": null,
+      "sourceFiles": [
+        {
+          "file": "https://www.kasikornasset.com/FundDocument/Fund_Fact_Sheet/K-US500X-A(A).pdf",
+          "source": "factsheet"
+        },
+        {
+          "file": "iShares fund page (Expense Ratio ตาม prospectus) https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf-ivv",
+          "source": "master"
+        }
+      ],
+      "verifiedBy": null,
+      "notes": [
+        "ค่าขาย = ยกเว้น",
+        "สับเปลี่ยน = ดูหมายเหตุในเอกสาร (ยังไม่ได้กรอก)",
+        "Factsheet ไม่แสดงค่าใช้จ่ายกองหลัก"
+      ]
+    }
+  },
+  {
+    "code": "KF-SET50-A",
+    "nameTh": {
+      "value": "กองทุนเปิดกรุงศรี SET50-สะสมมูลค่า",
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "amc": {
+      "value": "บลจ.กรุงศรี",
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "type": {
+      "value": "กองทุนดัชนีหุ้นไทย SET50 (Passive)",
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "isFeeder": {
+      "value": false,
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "masterFundName": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "riskLevel": {
+      "value": 6,
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "asOfDate": {
+      "value": "2026-09-30",
+      "page": null,
+      "quote": null,
+      "source": "factsheet"
+    },
+    "fees": {
+      "frontEnd": {
+        "value": 0.5,
+        "page": 2,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "backEnd": {
+        "value": 0,
+        "page": 2,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "switching": {
+        "value": 0.5,
+        "page": 2,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "management": {
+        "value": 0.535,
+        "page": 2,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "ter": {
+        "value": 0.7273,
+        "page": 2,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "masterFundExpense": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "master"
+      },
+      "otherExpenses": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "terIncludesMasterFund": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      }
+    },
+    "risk": {
+      "fxHedging": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "top5Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "top10Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "topCountry": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "topSector": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      }
+    },
+    "redemption": {
+      "settlementDays": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "frequency": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      },
+      "lockUp": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "factsheet"
+      }
+    },
+    "pastReturns": [],
+    "meta": {
+      "status": "imported",
+      "dataSource": "อ่านจาก Factsheet ของ บลจ. โดยตรง",
+      "isSample": false,
+      "extractedAt": null,
+      "model": null,
+      "sourceFiles": [
+        {
+          "file": "https://www.krungsriasset.com/DataWeb/AYFWeb/th/pdf/FFS_KF-SET50-A_TH.pdf",
+          "source": "factsheet"
+        }
+      ],
+      "verifiedBy": null,
+      "notes": [
+        "ค่ารับซื้อคืน = ไม่เรียกเก็บ",
+        "สับเปลี่ยนเข้า 0.50 / ออก ไม่เรียกเก็บ",
+        "ระดับความเสี่ยง 6 ต้องเปิด PDF ยืนยัน",
+        "นโยบายป้องกันค่าเงินตามเอกสาร: ไม่มี (ลงทุนในไทย)"
+      ]
+    }
+  },
+  {
+    "code": "K-USXNDQ-A(A)",
+    "nameTh": {
+      "value": "กองทุนเปิดเค หุ้นยูเอส ดัชนีเอ็นดีคิว 100 (ชนิดสะสมมูลค่า)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "amc": {
+      "value": "บลจ.กสิกรไทย",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "type": {
+      "value": "Feeder หุ้นสหรัฐ Nasdaq-100 (Passive)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "isFeeder": {
+      "value": true,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "masterFundName": {
+      "value": "Invesco NASDAQ 100 ETF (QQQM)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "riskLevel": {
+      "value": 6,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "asOfDate": {
+      "value": "2026-11-05",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "fees": {
+      "frontEnd": {
+        "value": 0,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "backEnd": {
+        "value": 0.15,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "switching": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "management": {
+        "value": 0.54,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "ter": {
+        "value": 0.71,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "masterFundExpense": {
+        "value": 0.15,
+        "page": null,
+        "quote": null,
+        "source": "master"
+      },
+      "otherExpenses": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "terIncludesMasterFund": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "risk": {
+      "fxHedging": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top5Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top10Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topCountry": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topSector": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "redemption": {
+      "settlementDays": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "frequency": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "lockUp": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "pastReturns": [],
+    "meta": {
+      "status": "imported",
+      "dataSource": "Settrade (ข้อมูลจาก ก.ล.ต.) https://www.settrade.com/th/mutualfund/quote/K-USXNDQ-A(A)/fee",
+      "isSample": false,
+      "extractedAt": null,
+      "model": null,
+      "sourceFiles": [
+        {
+          "file": "https://secdocumentstorage.blob.core.windows.net/fundfactsheet/M0369_2555.pdf",
+          "source": "factsheet"
+        },
+        {
+          "file": "https://etfdb.com/etf/QQQM/",
+          "source": "master"
+        }
+      ],
+      "verifiedBy": null,
+      "notes": [
+        "ค่าธรรมเนียมจาก Settrade (ปัดทศนิยม 2 ตำแหน่ง) ต้องเทียบ Factsheet และใส่เลขหน้า",
+        "ไม่มีข้อมูลค่าสับเปลี่ยน/นโยบายค่าเงิน"
+      ]
+    }
+  },
+  {
+    "code": "SCBS&P500A",
+    "nameTh": {
+      "value": "กองทุนเปิดไทยพาณิชย์หุ้นยูเอส (ชนิดสะสมมูลค่า)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "amc": {
+      "value": "บลจ.ไทยพาณิชย์",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "type": {
+      "value": "Feeder หุ้นสหรัฐ S&P 500 (Passive)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "isFeeder": {
+      "value": true,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "masterFundName": {
+      "value": "iShares Core S&P 500 ETF (IVV)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "riskLevel": {
+      "value": 6,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "asOfDate": {
+      "value": "2026-11-05",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "fees": {
+      "frontEnd": {
+        "value": 0.5,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "backEnd": {
+        "value": 0,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "switching": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "management": {
+        "value": 1,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "ter": {
+        "value": 1.1,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "masterFundExpense": {
+        "value": 0.03,
+        "page": null,
+        "quote": null,
+        "source": "master"
+      },
+      "otherExpenses": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "terIncludesMasterFund": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "risk": {
+      "fxHedging": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top5Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top10Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topCountry": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topSector": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "redemption": {
+      "settlementDays": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "frequency": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "lockUp": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "pastReturns": [],
+    "meta": {
+      "status": "imported",
+      "dataSource": "Settrade (ข้อมูลจาก ก.ล.ต.) https://www.settrade.com/th/mutualfund/quote/SCBS&P500A/fee",
+      "isSample": false,
+      "extractedAt": null,
+      "model": null,
+      "sourceFiles": [
+        {
+          "file": "https://secdocumentstorage.blob.core.windows.net/fundfactsheet/M0643_2555.pdf",
+          "source": "factsheet"
+        },
+        {
+          "file": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf-ivv",
+          "source": "master"
+        }
+      ],
+      "verifiedBy": null,
+      "notes": [
+        "ค่าธรรมเนียมจาก Settrade (ปัดทศนิยม 2 ตำแหน่ง) ต้องเทียบ Factsheet และใส่เลขหน้า",
+        "ไม่มีข้อมูลค่าสับเปลี่ยน/นโยบายค่าเงิน"
+      ]
+    }
+  },
+  {
+    "code": "K-US500XRMF",
+    "nameTh": {
+      "value": "กองทุนเปิดเค หุ้นยูเอส พาสซีฟ เพื่อการเลี้ยงชีพ",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "amc": {
+      "value": "บลจ.กสิกรไทย",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "type": {
+      "value": "RMF Feeder หุ้นสหรัฐ S&P 500 (Passive)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "isFeeder": {
+      "value": true,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "masterFundName": {
+      "value": "iShares Core S&P 500 ETF (IVV)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "riskLevel": {
+      "value": 6,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "asOfDate": {
+      "value": "2026-11-05",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "fees": {
+      "frontEnd": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "backEnd": {
+        "value": 0,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "switching": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "management": {
+        "value": 0.54,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "ter": {
+        "value": 0.63,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "masterFundExpense": {
+        "value": 0.03,
+        "page": null,
+        "quote": null,
+        "source": "master"
+      },
+      "otherExpenses": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "terIncludesMasterFund": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "risk": {
+      "fxHedging": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top5Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top10Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topCountry": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topSector": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "redemption": {
+      "settlementDays": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "frequency": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "lockUp": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "pastReturns": [],
+    "meta": {
+      "status": "imported",
+      "dataSource": "Settrade (ข้อมูลจาก ก.ล.ต.) https://www.settrade.com/th/mutualfund/quote/K-US500XRMF/fee",
+      "isSample": false,
+      "extractedAt": null,
+      "model": null,
+      "sourceFiles": [
+        {
+          "file": "https://secdocumentstorage.blob.core.windows.net/fundfactsheet/M0408_2567.pdf",
+          "source": "factsheet"
+        },
+        {
+          "file": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf-ivv",
+          "source": "master"
+        }
+      ],
+      "verifiedBy": null,
+      "notes": [
+        "ค่าธรรมเนียมจาก Settrade (ปัดทศนิยม 2 ตำแหน่ง) ต้องเทียบ Factsheet และใส่เลขหน้า",
+        "ไม่มีข้อมูลค่าสับเปลี่ยน/นโยบายค่าเงิน"
+      ]
+    }
+  },
+  {
+    "code": "ES-GQG",
+    "nameTh": {
+      "value": "กองทุนเปิดอีสท์สปริง Global Quality Growth",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "amc": {
+      "value": "บลจ.อีสท์สปริง (ประเทศไทย)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "type": {
+      "value": "Feeder หุ้นโลก (Active)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "isFeeder": {
+      "value": true,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "masterFundName": {
+      "value": "กองทุนหลักบริหารโดย Wellington Management (รหัส WELGDGA)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "riskLevel": {
+      "value": 6,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "asOfDate": {
+      "value": "2026-11-05",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "fees": {
+      "frontEnd": {
+        "value": 1.5,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "backEnd": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "switching": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "management": {
+        "value": 1.6,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "ter": {
+        "value": 1.78,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "masterFundExpense": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "master"
+      },
+      "otherExpenses": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "terIncludesMasterFund": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "risk": {
+      "fxHedging": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top5Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top10Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topCountry": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topSector": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "redemption": {
+      "settlementDays": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "frequency": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "lockUp": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "pastReturns": [],
+    "meta": {
+      "status": "imported",
+      "dataSource": "Settrade (ข้อมูลจาก ก.ล.ต.) https://www.settrade.com/th/mutualfund/quote/ES-GQG/fee",
+      "isSample": false,
+      "extractedAt": null,
+      "model": null,
+      "sourceFiles": [
+        {
+          "file": "https://secdocumentstorage.blob.core.windows.net/fundfactsheet/M0052_2558.pdf",
+          "source": "factsheet"
+        }
+      ],
+      "verifiedBy": null,
+      "notes": [
+        "ยังไม่มี TER กองหลัก ต้องหาเพิ่ม",
+        "ค่าธรรมเนียมจาก Settrade (ปัดทศนิยม 2 ตำแหน่ง) ต้องเทียบ Factsheet และใส่เลขหน้า",
+        "ไม่มีข้อมูลค่าสับเปลี่ยน/นโยบายค่าเงิน"
+      ]
+    }
+  },
+  {
+    "code": "SCBSEMI(A)",
+    "nameTh": {
+      "value": "กองทุนเปิดไทยพาณิชย์ Semiconductor (ชนิดสะสมมูลค่า)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "amc": {
+      "value": "บลจ.ไทยพาณิชย์",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "type": {
+      "value": "Feeder หุ้นเซมิคอนดักเตอร์ (ETF)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "isFeeder": {
+      "value": true,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "masterFundName": {
+      "value": "VanEck Semiconductor UCITS ETF (SMH LN)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "riskLevel": {
+      "value": 7,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "asOfDate": {
+      "value": "2026-11-05",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "fees": {
+      "frontEnd": {
+        "value": 1.07,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "backEnd": {
+        "value": 0,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "switching": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "management": {
+        "value": 1.07,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "ter": {
+        "value": 1.16,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "masterFundExpense": {
+        "value": 0.35,
+        "page": null,
+        "quote": null,
+        "source": "master"
+      },
+      "otherExpenses": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "terIncludesMasterFund": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "risk": {
+      "fxHedging": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top5Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top10Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topCountry": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topSector": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "redemption": {
+      "settlementDays": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "frequency": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "lockUp": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "pastReturns": [],
+    "meta": {
+      "status": "imported",
+      "dataSource": "Settrade (ข้อมูลจาก ก.ล.ต.) https://www.settrade.com/th/mutualfund/quote/SCBSEMI(A)/fee",
+      "isSample": false,
+      "extractedAt": null,
+      "model": null,
+      "sourceFiles": [
+        {
+          "file": "https://secdocumentstorage.blob.core.windows.net/fundfactsheet/M0232_2564.pdf",
+          "source": "factsheet"
+        },
+        {
+          "file": "https://www.vaneck.com/uk/en/smh/fact-sheet/",
+          "source": "master"
+        }
+      ],
+      "verifiedBy": null,
+      "notes": [
+        "ค่าธรรมเนียมจาก Settrade (ปัดทศนิยม 2 ตำแหน่ง) ต้องเทียบ Factsheet และใส่เลขหน้า",
+        "ไม่มีข้อมูลค่าสับเปลี่ยน/นโยบายค่าเงิน"
+      ]
+    }
+  },
+  {
+    "code": "SCBGHC",
+    "nameTh": {
+      "value": "กองทุนเปิดไทยพาณิชย์หุ้นโกลบอลเฮลธ์แคร์",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "amc": {
+      "value": "บลจ.ไทยพาณิชย์",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "type": {
+      "value": "Feeder หุ้นสุขภาพโลก (Active)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "isFeeder": {
+      "value": true,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "masterFundName": {
+      "value": "กองทุนหลักบริหารโดย Janus Henderson (รหัส JANGLIIID)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "riskLevel": {
+      "value": 7,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "asOfDate": {
+      "value": "2026-11-05",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "fees": {
+      "frontEnd": {
+        "value": 1.61,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "backEnd": {
+        "value": 0,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "switching": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "management": {
+        "value": 1.61,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "ter": {
+        "value": 1.71,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "masterFundExpense": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "master"
+      },
+      "otherExpenses": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "terIncludesMasterFund": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "risk": {
+      "fxHedging": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top5Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top10Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topCountry": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topSector": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "redemption": {
+      "settlementDays": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "frequency": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "lockUp": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "pastReturns": [],
+    "meta": {
+      "status": "imported",
+      "dataSource": "Settrade (ข้อมูลจาก ก.ล.ต.) https://www.settrade.com/th/mutualfund/quote/SCBGHC/fee",
+      "isSample": false,
+      "extractedAt": null,
+      "model": null,
+      "sourceFiles": [
+        {
+          "file": "https://secdocumentstorage.blob.core.windows.net/fundfactsheet/M0449_2558.pdf",
+          "source": "factsheet"
+        }
+      ],
+      "verifiedBy": null,
+      "notes": [
+        "ยังไม่มี TER กองหลัก ต้องหาเพิ่ม",
+        "ค่าธรรมเนียมจาก Settrade (ปัดทศนิยม 2 ตำแหน่ง) ต้องเทียบ Factsheet และใส่เลขหน้า",
+        "ไม่มีข้อมูลค่าสับเปลี่ยน/นโยบายค่าเงิน"
+      ]
+    }
+  },
+  {
+    "code": "K-CHINA-A(A)",
+    "nameTh": {
+      "value": "กองทุนเปิดเค ไชน่า หุ้นทุน (ชนิดสะสมมูลค่า)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "amc": {
+      "value": "บลจ.กสิกรไทย",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "type": {
+      "value": "Feeder หุ้นจีน (Active)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "isFeeder": {
+      "value": true,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "masterFundName": {
+      "value": "กองทุนหลักของ JPMorgan (ISIN LU0248042839)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "riskLevel": {
+      "value": 6,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "asOfDate": {
+      "value": "2026-11-05",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "fees": {
+      "frontEnd": {
+        "value": 1.5,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "backEnd": {
+        "value": 0,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "switching": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "management": {
+        "value": 1.34,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "ter": {
+        "value": 1.43,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "masterFundExpense": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "master"
+      },
+      "otherExpenses": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "terIncludesMasterFund": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "risk": {
+      "fxHedging": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top5Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top10Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topCountry": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topSector": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "redemption": {
+      "settlementDays": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "frequency": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "lockUp": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "pastReturns": [],
+    "meta": {
+      "status": "imported",
+      "dataSource": "Settrade (ข้อมูลจาก ก.ล.ต.) https://www.settrade.com/th/mutualfund/quote/K-CHINA-A(A)/fee",
+      "isSample": false,
+      "extractedAt": null,
+      "model": null,
+      "sourceFiles": [
+        {
+          "file": "https://secdocumentstorage.blob.core.windows.net/fundfactsheet/M0579_2552.pdf",
+          "source": "factsheet"
+        }
+      ],
+      "verifiedBy": null,
+      "notes": [
+        "ยังไม่มี TER กองหลัก ต้องหาเพิ่ม",
+        "ค่าธรรมเนียมจาก Settrade (ปัดทศนิยม 2 ตำแหน่ง) ต้องเทียบ Factsheet และใส่เลขหน้า",
+        "ไม่มีข้อมูลค่าสับเปลี่ยน/นโยบายค่าเงิน"
+      ]
+    }
+  },
+  {
+    "code": "K-INDIA-A(A)",
+    "nameTh": {
+      "value": "กองทุนเปิดเค อินเดีย หุ้นทุน (ชนิดสะสมมูลค่า)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "amc": {
+      "value": "บลจ.กสิกรไทย",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "type": {
+      "value": "Feeder หุ้นอินเดีย (Active)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "isFeeder": {
+      "value": true,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "masterFundName": {
+      "value": "Goldman Sachs India Equity Portfolio I Acc USD (LU0333811072)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "riskLevel": {
+      "value": 6,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "asOfDate": {
+      "value": "2026-11-05",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "fees": {
+      "frontEnd": {
+        "value": 1.5,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "backEnd": {
+        "value": 0,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "switching": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "management": {
+        "value": 1.6,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "ter": {
+        "value": 1.84,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "masterFundExpense": {
+        "value": 0.96,
+        "page": null,
+        "quote": null,
+        "source": "master"
+      },
+      "otherExpenses": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "terIncludesMasterFund": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "risk": {
+      "fxHedging": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top5Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top10Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topCountry": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topSector": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "redemption": {
+      "settlementDays": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "frequency": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "lockUp": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "pastReturns": [],
+    "meta": {
+      "status": "imported",
+      "dataSource": "Settrade (ข้อมูลจาก ก.ล.ต.) https://www.settrade.com/th/mutualfund/quote/K-INDIA-A(A)/fee",
+      "isSample": false,
+      "extractedAt": null,
+      "model": null,
+      "sourceFiles": [
+        {
+          "file": "https://secdocumentstorage.blob.core.windows.net/fundfactsheet/M0059_2554.pdf",
+          "source": "factsheet"
+        },
+        {
+          "file": "https://www.finect.com/fondos-inversion/LU0333811072-Gs_india_equity_i_acc_usd",
+          "source": "master"
+        }
+      ],
+      "verifiedBy": null,
+      "notes": [
+        "ค่าธรรมเนียมจาก Settrade (ปัดทศนิยม 2 ตำแหน่ง) ต้องเทียบ Factsheet และใส่เลขหน้า",
+        "ไม่มีข้อมูลค่าสับเปลี่ยน/นโยบายค่าเงิน"
+      ]
+    }
+  },
+  {
+    "code": "KFJPINDX-A",
+    "nameTh": {
+      "value": "กองทุนเปิดกรุงศรีเจแปนอิควิตี้อินเด็กซ์เฮดจ์เอฟเอ็กซ์",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "amc": {
+      "value": "บลจ.กรุงศรี",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "type": {
+      "value": "Feeder หุ้นญี่ปุ่น (ดัชนี, ป้องกันค่าเงิน)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "isFeeder": {
+      "value": true,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "masterFundName": {
+      "value": "ETF ญี่ปุ่นของ Nomura (ISIN JP3027650005)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "riskLevel": {
+      "value": 6,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "asOfDate": {
+      "value": "2026-11-05",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "fees": {
+      "frontEnd": {
+        "value": 0.5,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "backEnd": {
+        "value": 0,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "switching": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "management": {
+        "value": 0.8,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "ter": {
+        "value": 1.01,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "masterFundExpense": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "master"
+      },
+      "otherExpenses": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "terIncludesMasterFund": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "risk": {
+      "fxHedging": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top5Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top10Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topCountry": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topSector": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "redemption": {
+      "settlementDays": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "frequency": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "lockUp": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "pastReturns": [],
+    "meta": {
+      "status": "imported",
+      "dataSource": "Settrade (ข้อมูลจาก ก.ล.ต.) https://www.settrade.com/th/mutualfund/quote/KFJPINDX-A/fee",
+      "isSample": false,
+      "extractedAt": null,
+      "model": null,
+      "sourceFiles": [
+        {
+          "file": "https://secdocumentstorage.blob.core.windows.net/fundfactsheet/M0096_2560.pdf",
+          "source": "factsheet"
+        }
+      ],
+      "verifiedBy": null,
+      "notes": [
+        "ยังไม่มี TER กองหลัก ต้องหาเพิ่ม",
+        "ค่าธรรมเนียมจาก Settrade (ปัดทศนิยม 2 ตำแหน่ง) ต้องเทียบ Factsheet และใส่เลขหน้า",
+        "ไม่มีข้อมูลค่าสับเปลี่ยน/นโยบายค่าเงิน"
+      ]
+    }
+  },
+  {
+    "code": "PRINCIPAL VNEQ-A",
+    "nameTh": {
+      "value": "กองทุนเปิดพรินซิเพิล เวียดนาม อิควิตี้",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "amc": {
+      "value": "บลจ.พรินซิเพิล",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "type": {
+      "value": "หุ้นเวียดนาม (ลงทุนตรง, Active)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "isFeeder": {
+      "value": false,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "masterFundName": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "riskLevel": {
+      "value": 6,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "asOfDate": {
+      "value": "2026-11-05",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "fees": {
+      "frontEnd": {
+        "value": 1.5,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "backEnd": {
+        "value": 0,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "switching": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "management": {
+        "value": 1.604,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "ter": {
+        "value": 2.307,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "masterFundExpense": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "master"
+      },
+      "otherExpenses": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "terIncludesMasterFund": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "risk": {
+      "fxHedging": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top5Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top10Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topCountry": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topSector": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "redemption": {
+      "settlementDays": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "frequency": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "lockUp": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "pastReturns": [],
+    "meta": {
+      "status": "imported",
+      "dataSource": "Settrade (ข้อมูลจาก ก.ล.ต.) https://www.settrade.com/th/mutualfund/quote/PRINCIPAL VNEQ-A/fee",
+      "isSample": false,
+      "extractedAt": null,
+      "model": null,
+      "sourceFiles": [
+        {
+          "file": "https://secdocumentstorage.blob.core.windows.net/fundfactsheet/M0423_2560.pdf",
+          "source": "factsheet"
+        }
+      ],
+      "verifiedBy": null,
+      "notes": [
+        "ค่าธรรมเนียมจาก Settrade (ปัดทศนิยม 2 ตำแหน่ง) ต้องเทียบ Factsheet และใส่เลขหน้า",
+        "ไม่มีข้อมูลค่าสับเปลี่ยน/นโยบายค่าเงิน"
+      ]
+    }
+  },
+  {
+    "code": "KF-INCOME",
+    "nameTh": {
+      "value": "กองทุนเปิดกรุงศรีโกลบอลอินคัม",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "amc": {
+      "value": "บลจ.กรุงศรี",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "type": {
+      "value": "Feeder ผสมทั่วโลกเน้นรายได้",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "isFeeder": {
+      "value": true,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "masterFundName": {
+      "value": "JPMorgan Investment Funds - Global Income Fund I (mth) USD hedged (LU2293733585)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "riskLevel": {
+      "value": 5,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "asOfDate": {
+      "value": "2026-11-05",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "fees": {
+      "frontEnd": {
+        "value": 1.5,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "backEnd": {
+        "value": 0,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "switching": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "management": {
+        "value": 1.07,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "ter": {
+        "value": 1.27,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "masterFundExpense": {
+        "value": 0.71,
+        "page": null,
+        "quote": null,
+        "source": "master"
+      },
+      "otherExpenses": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "terIncludesMasterFund": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "risk": {
+      "fxHedging": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top5Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top10Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topCountry": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topSector": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "redemption": {
+      "settlementDays": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "frequency": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "lockUp": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "pastReturns": [],
+    "meta": {
+      "status": "imported",
+      "dataSource": "Settrade (ข้อมูลจาก ก.ล.ต.) https://www.settrade.com/th/mutualfund/quote/KF-INCOME/fee",
+      "isSample": false,
+      "extractedAt": null,
+      "model": null,
+      "sourceFiles": [
+        {
+          "file": "https://secdocumentstorage.blob.core.windows.net/fundfactsheet/M1078_2557.pdf",
+          "source": "factsheet"
+        },
+        {
+          "file": "https://cbonds.es/etf/111070/",
+          "source": "master"
+        }
+      ],
+      "verifiedBy": null,
+      "notes": [
+        "ค่าธรรมเนียมจาก Settrade (ปัดทศนิยม 2 ตำแหน่ง) ต้องเทียบ Factsheet และใส่เลขหน้า",
+        "ไม่มีข้อมูลค่าสับเปลี่ยน/นโยบายค่าเงิน"
+      ]
+    }
+  },
+  {
+    "code": "SCBGOLDH",
+    "nameTh": {
+      "value": "กองทุนเปิดไทยพาณิชย์โกลด์ THB เฮดจ์",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "amc": {
+      "value": "บลจ.ไทยพาณิชย์",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "type": {
+      "value": "Feeder ทองคำ (ป้องกันค่าเงิน)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "isFeeder": {
+      "value": true,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "masterFundName": {
+      "value": "SPDR Gold Shares (GLD)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "riskLevel": {
+      "value": 8,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "asOfDate": {
+      "value": "2026-11-05",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "fees": {
+      "frontEnd": {
+        "value": 0.54,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "backEnd": {
+        "value": 0,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "switching": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "management": {
+        "value": 0.44,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "ter": {
+        "value": 0.54,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "masterFundExpense": {
+        "value": 0.4,
+        "page": null,
+        "quote": null,
+        "source": "master"
+      },
+      "otherExpenses": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "terIncludesMasterFund": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "risk": {
+      "fxHedging": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top5Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top10Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topCountry": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topSector": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "redemption": {
+      "settlementDays": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "frequency": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "lockUp": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "pastReturns": [],
+    "meta": {
+      "status": "imported",
+      "dataSource": "Settrade (ข้อมูลจาก ก.ล.ต.) https://www.settrade.com/th/mutualfund/quote/SCBGOLDH/fee",
+      "isSample": false,
+      "extractedAt": null,
+      "model": null,
+      "sourceFiles": [
+        {
+          "file": "https://secdocumentstorage.blob.core.windows.net/fundfactsheet/M0856_2553.pdf",
+          "source": "factsheet"
+        },
+        {
+          "file": "https://www.ssga.com/us/en/etfs/spdr-gold-shares-gld",
+          "source": "master"
+        }
+      ],
+      "verifiedBy": null,
+      "notes": [
+        "ค่าธรรมเนียมจาก Settrade (ปัดทศนิยม 2 ตำแหน่ง) ต้องเทียบ Factsheet และใส่เลขหน้า",
+        "ไม่มีข้อมูลค่าสับเปลี่ยน/นโยบายค่าเงิน"
+      ]
+    }
+  },
+  {
+    "code": "KT-PRECIOUS-A",
+    "nameTh": {
+      "value": "กองทุนเปิดเคแทม เวิลด์ โกลด์ แอนด์ เพรเชียส เอคควิตี้",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "amc": {
+      "value": "บลจ.กรุงไทย",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "type": {
+      "value": "Feeder หุ้นเหมืองทองและโลหะมีค่า",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "isFeeder": {
+      "value": true,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "masterFundName": {
+      "value": "Franklin Gold and Precious Metals Fund (FGPM)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "riskLevel": {
+      "value": 7,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "asOfDate": {
+      "value": "2026-11-05",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "fees": {
+      "frontEnd": {
+        "value": 1.5,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "backEnd": {
+        "value": 0,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "switching": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "management": {
+        "value": 1.34,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "ter": {
+        "value": 1.34,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "masterFundExpense": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "master"
+      },
+      "otherExpenses": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "terIncludesMasterFund": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "risk": {
+      "fxHedging": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top5Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top10Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topCountry": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topSector": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "redemption": {
+      "settlementDays": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "frequency": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "lockUp": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "pastReturns": [],
+    "meta": {
+      "status": "imported",
+      "dataSource": "Settrade (ข้อมูลจาก ก.ล.ต.) https://www.settrade.com/th/mutualfund/quote/KT-PRECIOUS-A/fee",
+      "isSample": false,
+      "extractedAt": null,
+      "model": null,
+      "sourceFiles": [
+        {
+          "file": "https://secdocumentstorage.blob.core.windows.net/fundfactsheet/M0753_2553.pdf",
+          "source": "factsheet"
+        }
+      ],
+      "verifiedBy": null,
+      "notes": [
+        "ยังไม่มี TER กองหลัก ต้องหาเพิ่ม",
+        "ค่าธรรมเนียมจาก Settrade (ปัดทศนิยม 2 ตำแหน่ง) ต้องเทียบ Factsheet และใส่เลขหน้า",
+        "ไม่มีข้อมูลค่าสับเปลี่ยน/นโยบายค่าเงิน"
+      ]
+    }
+  },
+  {
+    "code": "KFSDIV",
+    "nameTh": {
+      "value": "กองทุนเปิดกรุงศรีหุ้นปันผล",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "amc": {
+      "value": "บลจ.กรุงศรี",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "type": {
+      "value": "หุ้นไทยปันผล (Active)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "isFeeder": {
+      "value": false,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "masterFundName": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "riskLevel": {
+      "value": 6,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "asOfDate": {
+      "value": "2026-11-05",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "fees": {
+      "frontEnd": {
+        "value": 0,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "backEnd": {
+        "value": 0,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "switching": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "management": {
+        "value": 2.14,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "ter": {
+        "value": 2.33,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "masterFundExpense": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "master"
+      },
+      "otherExpenses": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "terIncludesMasterFund": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "risk": {
+      "fxHedging": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top5Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top10Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topCountry": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topSector": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "redemption": {
+      "settlementDays": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "frequency": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "lockUp": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "pastReturns": [],
+    "meta": {
+      "status": "imported",
+      "dataSource": "Settrade (ข้อมูลจาก ก.ล.ต.) https://www.settrade.com/th/mutualfund/quote/KFSDIV/fee",
+      "isSample": false,
+      "extractedAt": null,
+      "model": null,
+      "sourceFiles": [
+        {
+          "file": "https://secdocumentstorage.blob.core.windows.net/fundfactsheet/M0081_2550.pdf",
+          "source": "factsheet"
+        }
+      ],
+      "verifiedBy": null,
+      "notes": [
+        "ค่าธรรมเนียมจาก Settrade (ปัดทศนิยม 2 ตำแหน่ง) ต้องเทียบ Factsheet และใส่เลขหน้า",
+        "ไม่มีข้อมูลค่าสับเปลี่ยน/นโยบายค่าเงิน"
+      ]
+    }
+  },
+  {
+    "code": "B-TOP-THAIESG",
+    "nameTh": {
+      "value": "กองทุนรวมบัวหลวงทศพลไทยเพื่อความยั่งยืน",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "amc": {
+      "value": "บลจ.บัวหลวง",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "type": {
+      "value": "Thai ESG หุ้นไทย (Active)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "isFeeder": {
+      "value": false,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "masterFundName": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "riskLevel": {
+      "value": 6,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "asOfDate": {
+      "value": "2026-11-05",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "fees": {
+      "frontEnd": {
+        "value": 0,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "backEnd": {
+        "value": 0,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "switching": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "management": {
+        "value": 1.61,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "ter": {
+        "value": 1.74,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "masterFundExpense": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "master"
+      },
+      "otherExpenses": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "terIncludesMasterFund": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "risk": {
+      "fxHedging": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top5Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top10Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topCountry": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topSector": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "redemption": {
+      "settlementDays": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "frequency": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "lockUp": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "pastReturns": [],
+    "meta": {
+      "status": "imported",
+      "dataSource": "Settrade (ข้อมูลจาก ก.ล.ต.) https://www.settrade.com/th/mutualfund/quote/B-TOP-THAIESG/fee",
+      "isSample": false,
+      "extractedAt": null,
+      "model": null,
+      "sourceFiles": [
+        {
+          "file": "https://secdocumentstorage.blob.core.windows.net/fundfactsheet/M0770_2566.pdf",
+          "source": "factsheet"
+        }
+      ],
+      "verifiedBy": null,
+      "notes": [
+        "ค่าธรรมเนียมจาก Settrade (ปัดทศนิยม 2 ตำแหน่ง) ต้องเทียบ Factsheet และใส่เลขหน้า",
+        "ไม่มีข้อมูลค่าสับเปลี่ยน/นโยบายค่าเงิน"
+      ]
+    }
+  },
+  {
+    "code": "KFAFIX-A",
+    "nameTh": {
+      "value": "กองทุนเปิดกรุงศรีแอคทีฟตราสารหนี้",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "amc": {
+      "value": "บลจ.กรุงศรี",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "type": {
+      "value": "ตราสารหนี้ไทย",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "isFeeder": {
+      "value": false,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "masterFundName": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "riskLevel": {
+      "value": 4,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "asOfDate": {
+      "value": "2026-11-05",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "fees": {
+      "frontEnd": {
+        "value": 0,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "backEnd": {
+        "value": 0,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "switching": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "management": {
+        "value": 0.32,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "ter": {
+        "value": 0.41,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "masterFundExpense": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "master"
+      },
+      "otherExpenses": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "terIncludesMasterFund": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "risk": {
+      "fxHedging": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top5Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top10Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topCountry": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topSector": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "redemption": {
+      "settlementDays": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "frequency": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "lockUp": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "pastReturns": [],
+    "meta": {
+      "status": "imported",
+      "dataSource": "Settrade (ข้อมูลจาก ก.ล.ต.) https://www.settrade.com/th/mutualfund/quote/KFAFIX-A/fee",
+      "isSample": false,
+      "extractedAt": null,
+      "model": null,
+      "sourceFiles": [
+        {
+          "file": "https://secdocumentstorage.blob.core.windows.net/fundfactsheet/M0458_2559.pdf",
+          "source": "factsheet"
+        }
+      ],
+      "verifiedBy": null,
+      "notes": [
+        "ค่าธรรมเนียมจาก Settrade (ปัดทศนิยม 2 ตำแหน่ง) ต้องเทียบ Factsheet และใส่เลขหน้า",
+        "ไม่มีข้อมูลค่าสับเปลี่ยน/นโยบายค่าเงิน"
+      ]
+    }
+  },
+  {
+    "code": "SCBMONEY(A)",
+    "nameTh": {
+      "value": "กองทุนเปิดไทยพาณิชย์ ตราสารตลาดเงิน (ชนิดสะสมมูลค่า)",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "amc": {
+      "value": "บลจ.ไทยพาณิชย์",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "type": {
+      "value": "กองทุนตลาดเงิน",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "isFeeder": {
+      "value": false,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "masterFundName": {
+      "value": null,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "riskLevel": {
+      "value": 1,
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "asOfDate": {
+      "value": "2026-11-05",
+      "page": null,
+      "quote": null,
+      "source": "sec"
+    },
+    "fees": {
+      "frontEnd": {
+        "value": 0,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "backEnd": {
+        "value": 0,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "switching": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "management": {
+        "value": 0.21,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "ter": {
+        "value": 0.3,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "masterFundExpense": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "master"
+      },
+      "otherExpenses": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "terIncludesMasterFund": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "risk": {
+      "fxHedging": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top5Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "top10Pct": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topCountry": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "topSector": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "redemption": {
+      "settlementDays": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "frequency": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      },
+      "lockUp": {
+        "value": null,
+        "page": null,
+        "quote": null,
+        "source": "sec"
+      }
+    },
+    "pastReturns": [],
+    "meta": {
+      "status": "imported",
+      "dataSource": "Settrade (ข้อมูลจาก ก.ล.ต.) https://www.settrade.com/th/mutualfund/quote/SCBMONEY(A)/fee",
+      "isSample": false,
+      "extractedAt": null,
+      "model": null,
+      "sourceFiles": [
+        {
+          "file": "https://secdocumentstorage.blob.core.windows.net/fundfactsheet/M0910_2566.pdf",
+          "source": "factsheet"
+        }
+      ],
+      "verifiedBy": null,
+      "notes": [
+        "ค่าธรรมเนียมจาก Settrade (ปัดทศนิยม 2 ตำแหน่ง) ต้องเทียบ Factsheet และใส่เลขหน้า",
+        "ไม่มีข้อมูลค่าสับเปลี่ยน/นโยบายค่าเงิน"
+      ]
+    }
+  }
+]

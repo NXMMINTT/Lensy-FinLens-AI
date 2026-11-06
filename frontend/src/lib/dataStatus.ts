@@ -5,20 +5,38 @@
  */
 import type { DocSource, Fund, Sourced } from "./schema";
 
-/** `sample`: made-up demo data (meta.isSample); never shown as checked, and has no document date. */
-export type DataStatusKind = "verified" | "partial" | "sample";
+/**
+ * `sample`: made-up demo data (meta.isSample); never shown as checked, and has no document date.
+ * `awaiting-pages`: imported data where some figure has no page yet (e.g. SEC data via Settrade).
+ */
+export type DataStatusKind = "verified" | "partial" | "sample" | "awaiting-pages";
 
 export const SAMPLE_STATUS_LABEL = "ข้อมูลตัวอย่าง ไม่ได้ตรวจกับเอกสารจริง";
+export const VERIFIED_LABEL = "ตรวจกับเอกสารแล้ว";
+export const AWAITING_PAGES_LABEL = "ข้อมูลจาก ก.ล.ต. รอตรวจเลขหน้า";
 
 export type DataStatus = {
   kind: DataStatusKind;
   label: string;
   /** Thai names of key items the documents don't give */
   missing: string[];
-  /** YYYY-MM-DD as written in the document, with its page */
-  asOf: { value: string; page: number; source: DocSource } | null;
+  /** YYYY-MM-DD as written in the document, with its page (imported data may have none) */
+  asOf: { value: string; page: number | null; source: DocSource } | null;
   isSample: boolean;
+  /** Where an imported fund's data came from ("ที่มาของข้อมูล") */
+  dataSource: string | null;
 };
+
+/** The figures an imported fund must have pages for before it can be shown as checked. */
+function pagedFigures(f: Fund): Sourced<unknown>[] {
+  const { frontEnd, backEnd, switching, management, ter, masterFundExpense } = f.fees;
+  return [frontEnd, backEnd, switching, management, ter, masterFundExpense, f.risk.fxHedging];
+}
+
+/** Every figure the fund gives has its page. */
+export function hasAllPages(f: Fund): boolean {
+  return pagedFigures(f).every((s) => s.value === null || s.page !== null);
+}
 
 /** Items a reader needs to judge cost and risk. The master fund expense only counts for feeder funds. */
 function keyItems(f: Fund): [string, Sourced<unknown>][] {
@@ -32,17 +50,23 @@ function keyItems(f: Fund): [string, Sourced<unknown>][] {
 }
 
 export function fundDataStatus(f: Fund): DataStatus {
-  if (f.meta.isSample) return { kind: "sample", label: SAMPLE_STATUS_LABEL, missing: [], asOf: null, isSample: true };
+  if (f.meta.isSample) return { kind: "sample", label: SAMPLE_STATUS_LABEL, missing: [], asOf: null, isSample: true, dataSource: null };
   const missing = keyItems(f)
     .filter(([, s]) => s.value === null)
     .map(([name]) => name);
-  const asOf = f.asOfDate.value !== null && f.asOfDate.page !== null ? { value: f.asOfDate.value, page: f.asOfDate.page, source: f.asOfDate.source } : null;
+  const imported = f.meta.status === "imported";
+  const asOf =
+    f.asOfDate.value !== null && (f.asOfDate.page !== null || imported) ? { value: f.asOfDate.value, page: f.asOfDate.page, source: f.asOfDate.source } : null;
+  const dataSource = f.meta.dataSource ?? null;
+  // imported data: "checked" only when every figure has its page; otherwise it waits for pages
+  if (imported && !hasAllPages(f)) return { kind: "awaiting-pages", label: AWAITING_PAGES_LABEL, missing, asOf, isSample: false, dataSource };
   return {
     kind: missing.length === 0 ? "verified" : "partial",
-    label: missing.length === 0 ? "ตรวจกับเอกสารแล้ว" : "ข้อมูลไม่ครบ",
+    label: missing.length === 0 ? VERIFIED_LABEL : "ข้อมูลไม่ครบ",
     missing,
     asOf,
     isSample: f.meta.isSample,
+    dataSource,
   };
 }
 

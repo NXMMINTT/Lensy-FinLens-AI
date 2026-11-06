@@ -3,29 +3,44 @@
  *
  * Every value taken from a fund document is a Sourced<T>: { value, page, quote, source }.
  * - value null  = the document does not say (never guess).
- * - value set   = page and quote must be set too (rule: no number without its page).
+ * - value set   = page and quote must be set too (rule: no number without its page), for funds
+ *   extracted from PDFs ("pending" / "verified").
+ * - Imported funds ("imported", npm run import-funds) come from a team spreadsheet: values keep the
+ *   page the sheet gives (often none) and have no quote. They are labelled by where they came from
+ *   (meta.dataSource), and only count as checked when every value has its page (lib/dataStatus.ts).
  * Fees are stored as the percentage written in the document (1.07 means 1.07%), so reviewers can
  * compare them with the PDF directly. Convert with pctToRate() before calculating.
  */
 import { z } from "zod";
 
-export const DocSourceSchema = z.enum(["factsheet", "prospectus"]);
+/** factsheet / prospectus of the Thai fund; "master" = the master fund's own document;
+ * "sec" = the SEC's published data (via Settrade), which has no page numbers. */
+export const DocSourceSchema = z.enum(["factsheet", "prospectus", "master", "sec"]);
 export type DocSource = z.infer<typeof DocSourceSchema>;
 
 export function sourced<T extends z.ZodType>(value: T) {
-  return z
-    .object({
-      value: value.nullable(),
-      page: z.number().int().positive().nullable(),
-      quote: z.string().min(1).nullable(),
-      source: DocSourceSchema,
-    })
-    .superRefine((raw, ctx) => {
-      const s = raw as unknown as { value: unknown; page: number | null; quote: string | null };
-      if (s.value !== null && (s.page === null || s.quote === null)) {
-        ctx.addIssue({ code: "custom", message: "a value needs both page and quote" });
-      }
-    });
+  return z.object({
+    value: value.nullable(),
+    page: z.number().int().positive().nullable(),
+    quote: z.string().min(1).nullable(),
+    source: DocSourceSchema,
+  });
+}
+
+/** Every Sourced value in a fund, with its path (e.g. "fees.ter"). */
+export function sourcedEntries(fund: unknown): [string, Sourced<unknown>][] {
+  const out: [string, Sourced<unknown>][] = [];
+  const walk = (prefix: string, o: unknown) => {
+    if (!o || typeof o !== "object") return;
+    const r = o as Record<string, unknown>;
+    if ("value" in r && "page" in r && "source" in r) {
+      out.push([prefix, r as unknown as Sourced<unknown>]);
+      return;
+    }
+    for (const [k, v] of Object.entries(r)) if (k !== "meta") walk(prefix ? `${prefix}.${k}` : k, v);
+  };
+  walk("", fund);
+  return out;
 }
 
 export type Sourced<T> = { value: T | null; page: number | null; quote: string | null; source: DocSource };
@@ -89,7 +104,10 @@ export const FundSchema = z.object({
   ),
 
   meta: z.object({
-    status: z.enum(["pending", "verified"]),
+    /** pending = extracted, waiting for review; verified = checked page by page; imported = from the team's spreadsheet */
+    status: z.enum(["pending", "verified", "imported"]),
+    /** Where an imported fund's data came from, shown under the fund as "ที่มาของข้อมูล". */
+    dataSource: z.string().min(1).optional(),
     /** Made-up demo data: must be labelled "ข้อมูลตัวอย่าง" wherever it is shown. */
     isSample: z.boolean(),
     extractedAt: z.string().nullable(),
@@ -98,6 +116,12 @@ export const FundSchema = z.object({
     verifiedBy: z.string().nullable(),
     notes: z.array(z.string()),
   }),
+}).superRefine((f, ctx) => {
+  // funds extracted from PDFs: no value without both its page and the quote it was read from
+  if (f.meta.status === "imported") return;
+  for (const [path, s] of sourcedEntries(f)) {
+    if (s.value !== null && (s.page === null || s.quote === null)) ctx.addIssue({ code: "custom", path: path.split("."), message: "a value needs both page and quote" });
+  }
 });
 
 export type Fund = z.infer<typeof FundSchema>;

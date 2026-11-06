@@ -7,6 +7,15 @@ import type { FundSummary } from "@/lib/fundSummary";
 import { pct } from "@/lib/money";
 
 import { SampleBadge } from "../SampleBadge";
+import { DataStatusBadge } from "./DataStatusBadge";
+import { NOT_IN_DOCS } from "@/lib/disclaimer";
+import type { DocSource } from "@/lib/schema";
+import { sourceRef } from "@/lib/sources";
+
+/** A figure without a page yet: say where it came from. */
+function NoPageTag({ source }: { source: DocSource }) {
+  return <span className="inline-flex self-start rounded-md bg-sun-soft px-1.5 py-0.5 text-[12px] text-sun-ink">{sourceRef(null, source)} · ยังไม่มีเลขหน้า</span>;
+}
 import { Icon } from "../Icon";
 import { RiskBadge, RiskMeter, SourceChip } from "./ui";
 
@@ -55,6 +64,9 @@ export function FundBrowser({ funds }: { funds: FundSummary[] }) {
                     </Link>
                   </h2>
                   <p className="m-0 text-[14px] text-ink-muted">{[f.amc, f.type].filter(Boolean).join(" · ")}</p>
+                  <div className="mt-2">
+                    <DataStatusBadge status={f.status} compact />
+                  </div>
                 </div>
               </div>
 
@@ -62,13 +74,16 @@ export function FundBrowser({ funds }: { funds: FundSummary[] }) {
                 <div className="flex flex-col gap-1">
                   <span className="text-[12.5px] text-ink-muted">ต้นทุนต่อปีรวม</span>
                   {f.annualCostRate === null ? (
-                    <span className="text-[13px] text-ink-muted">ไม่พบข้อมูลนี้ในเอกสาร</span>
+                    <span className="text-[13px] text-ink-muted">{NOT_IN_DOCS}</span>
                   ) : (
                     <>
                       <b className="font-heading text-[26px] leading-none text-brand">{pct(f.annualCostRate)}</b>
                       <span className="flex flex-wrap gap-1">
                         {f.costRefs.map((r) => (
                           <SourceChip key={`${r.source}${r.page}`} {...r} />
+                        ))}
+                        {f.costSourcesWithoutPage.map((s) => (
+                          <NoPageTag key={s} source={s} />
                         ))}
                       </span>
                     </>
@@ -79,10 +94,10 @@ export function FundBrowser({ funds }: { funds: FundSummary[] }) {
                   {f.riskLevel ? (
                     <>
                       <RiskMeter level={f.riskLevel.value} />
-                      <SourceChip {...f.riskLevel.ref} className="self-start" />
+                      {f.riskLevel.ref ? <SourceChip {...f.riskLevel.ref} className="self-start" /> : <NoPageTag source={f.riskLevel.source} />}
                     </>
                   ) : (
-                    <span className="text-[13px] text-ink-muted">ไม่พบข้อมูลนี้ในเอกสาร</span>
+                    <span className="text-[13px] text-ink-muted">{NOT_IN_DOCS}</span>
                   )}
                 </div>
               </div>

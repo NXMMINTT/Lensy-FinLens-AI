@@ -67,10 +67,7 @@ export function sampleTrueCost(f: SampleFund) {
   });
 }
 
-export const SOURCE_LABEL: Record<DocSource, string> = {
-  factsheet: "Factsheet",
-  prospectus: "หนังสือชี้ชวน",
-};
+export { SOURCE_LABEL } from "@/lib/sources";
 
 export { baht, pct } from "@/lib/money";
 

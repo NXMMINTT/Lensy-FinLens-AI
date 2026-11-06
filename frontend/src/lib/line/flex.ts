@@ -7,9 +7,10 @@ import type { messagingApi } from "@line/bot-sdk";
 import type { AskResponse } from "../ask";
 import { DISCLAIMER, SAMPLE_DATA_LABEL } from "../disclaimer";
 import { totalAnnualCostRate } from "../funds";
-import { pct } from "../money";
+import { docPct, pct } from "../money";
 import { riskAlerts, RISK_LEVEL_LABEL, type RiskLevel } from "../riskRules";
 import type { DocSource, Fund, Sourced } from "../schema";
+import { SOURCE_LABEL } from "../sources";
 
 type Message = messagingApi.Message;
 type FlexComponent = messagingApi.FlexComponent;
@@ -29,7 +30,7 @@ const C = {
   skySoft: "#EEF7F4",
 } as const;
 
-const SOURCE: Record<DocSource, string> = { factsheet: "Factsheet", prospectus: "หนังสือชี้ชวน" };
+const SOURCE: Record<DocSource, string> = SOURCE_LABEL;
 const LEVEL_STYLE: Record<RiskLevel, { bg: string; fg: string }> = {
   high: { bg: C.dangerSoft, fg: C.dangerInk },
   medium: { bg: C.sunSoft, fg: C.sunInk },
@@ -120,7 +121,7 @@ export function fundCard(f: Fund): messagingApi.FlexMessage {
       cornerRadius: "md",
       paddingAll: "8px",
       margin: "sm",
-      contents: [text(`ค่าใช้จ่ายกองหลัก ${master.value.toFixed(2)}% อยู่ในหนังสือชี้ชวน ไม่อยู่ใน Factsheet (${pageRef(master)})`, { size: "xs", color: C.sunInk, weight: "bold" })],
+      contents: [text(`ค่าใช้จ่ายกองหลัก ${docPct(master.value)} อยู่ในหนังสือชี้ชวน ไม่อยู่ใน Factsheet (${pageRef(master)})`, { size: "xs", color: C.sunInk, weight: "bold" })],
     });
   }
 
@@ -175,7 +176,7 @@ export function answerCard(res: AskResponse, fundCodes: string[]): messagingApi.
   if (res.refs.length) {
     body.push(text("อ้างอิงในเอกสาร", { size: "xs", color: C.muted, weight: "bold", margin: "lg" }));
     for (const r of res.refs.slice(0, 5)) {
-      body.push(text(`${fundCodes.length > 1 ? `${r.code} ` : ""}${pageRef(r)}: “${r.quote.slice(0, 90)}${r.quote.length > 90 ? "…" : ""}”`, { size: "xxs", color: C.muted }));
+      body.push(text(`${fundCodes.length > 1 ? `${r.code} ` : ""}${pageRef(r)}${r.quote ? `: “${r.quote.slice(0, 90)}${r.quote.length > 90 ? "…" : ""}”` : ""}`, { size: "xxs", color: C.muted }));
     }
   }
   if (res.note) body.push(text(res.note, { size: "xxs", color: C.muted, margin: "lg" }));

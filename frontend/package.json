@@ -12,7 +12,8 @@
     "extract": "tsx scripts/extract.ts",
     "line:validate": "tsx scripts/line-validate.ts",
     "line:richmenu": "tsx scripts/line-richmenu.ts",
-    "review": "tsx scripts/review-sheet.ts"
+    "review": "tsx scripts/review-sheet.ts",
+    "import-funds": "tsx scripts/import-funds.ts"
   },
   "dependencies": {
     "@google/genai": "^2.32.0",

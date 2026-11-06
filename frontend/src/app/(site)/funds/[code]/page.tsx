@@ -11,9 +11,10 @@ import { Lensy } from "@/components/finlens/Lensy";
 import { SampleBadge } from "@/components/finlens/SampleBadge";
 import { toCompareFund } from "@/lib/compare";
 import { fundDataStatus } from "@/lib/dataStatus";
-import { NOT_FOUND } from "@/lib/disclaimer";
+import { NOT_FOUND, NOT_IN_DOCS } from "@/lib/disclaimer";
+import { SOURCE_LABEL, sourceRef } from "@/lib/sources";
 import { getFund, getVerifiedFunds } from "@/lib/funds";
-import { baht, pct } from "@/lib/money";
+import { baht, docPct, pct } from "@/lib/money";
 import { riskAlerts, RISK_TOPIC_LABEL } from "@/lib/riskRules";
 import { pctToRate, type ReturnPeriod, type Sourced } from "@/lib/schema";
 
@@ -39,12 +40,15 @@ const PERIOD_LABEL: Record<ReturnPeriod, string> = {
   sinceInception: "ตั้งแต่จัดตั้ง",
 };
 
+/** The page tag, or just where it came from when there is no page yet (e.g. SEC data). */
 function Chip<T>({ s }: { s: Sourced<T> }) {
-  return s.page !== null ? <SourceChip page={s.page} source={s.source} quote={s.quote} /> : null;
+  if (s.page !== null) return <SourceChip page={s.page} source={s.source} quote={s.quote} />;
+  if (s.value === null) return null;
+  return <span className="inline-flex rounded-md bg-sun-soft px-1.5 py-0.5 text-[12px] text-sun-ink">{sourceRef(null, s.source)} · ยังไม่มีเลขหน้า</span>;
 }
 
 function Value<T>({ s, render }: { s: Sourced<T>; render: (v: T) => React.ReactNode }) {
-  if (s.value === null) return <span className="text-[14px] text-ink-muted">{NOT_FOUND}</span>;
+  if (s.value === null) return <span className="text-[14px] text-ink-muted">{NOT_IN_DOCS}</span>;
   return (
     <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
       <b className="text-ink">{render(s.value)}</b>
@@ -149,7 +153,7 @@ export default async function FundPage({ params }: Props) {
                   {yearly.map((y, i) => (
                     <li key={y.label} className="flex flex-wrap items-center gap-x-2 gap-y-1">
                       <i className={`inline-block h-2.5 w-2.5 rounded-full ${SEGMENT_COLORS[i]}`} aria-hidden="true" />
-                      {y.label} <b>{y.s.value!.toFixed(2)}%</b> <Chip s={y.s} />
+                      {y.label} <b>{docPct(y.s.value!)}</b> <Chip s={y.s} />
                     </li>
                   ))}
                 </ul>
@@ -177,7 +181,7 @@ export default async function FundPage({ params }: Props) {
                 <span className="text-[14.5px] text-ink-body">
                   {l.label} <span className="text-[12px] text-ink-faint">({l.unit})</span>
                 </span>
-                <Value s={l.item} render={(v) => `${v.toFixed(2)}%`} />
+                <Value s={l.item} render={(v) => docPct(v)} />
               </li>
             ))}
           </ul>
@@ -260,10 +264,10 @@ export default async function FundPage({ params }: Props) {
                   <tr key={r.period} className="border-b border-line-subtle last:border-0">
                     <td className="p-2.5 text-ink-body">{PERIOD_LABEL[r.period]}</td>
                     <td className="p-2.5">
-                      <Value s={r.fund} render={(v) => `${v.toFixed(2)}%`} />
+                      <Value s={r.fund} render={(v) => docPct(v)} />
                     </td>
                     <td className="p-2.5">
-                      <Value s={r.benchmark} render={(v) => `${v.toFixed(2)}%`} />
+                      <Value s={r.benchmark} render={(v) => docPct(v)} />
                     </td>
                   </tr>
                 ))}
@@ -278,9 +282,10 @@ export default async function FundPage({ params }: Props) {
         <h2 className="m-0 text-[17px] font-bold">ที่มาของข้อมูล</h2>
         <ul className="m-0 mt-2 flex flex-col gap-1 pl-5 text-[14.5px] text-ink-body">
           {f.meta.isSample && <li>กองนี้เป็นข้อมูลตัวอย่าง สร้างขึ้นเพื่อสาธิตระบบ ไม่ใช่กองทุนจริง</li>}
+          {f.meta.dataSource && <li>ที่มาของข้อมูล: {f.meta.dataSource}</li>}
           {f.meta.sourceFiles.map((s) => (
-            <li key={s.file}>
-              {s.source === "factsheet" ? "Fund Fact Sheet" : "หนังสือชี้ชวน"}: {s.file.split("/").pop()}
+            <li key={s.file} className="break-all">
+              {SOURCE_LABEL[s.source]}: {s.file}
             </li>
           ))}
           {f.meta.verifiedBy && <li>ตรวจข้อมูลโดย: {f.meta.verifiedBy}</li>}

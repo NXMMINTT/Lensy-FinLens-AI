@@ -2,8 +2,9 @@
 import type { RiskLevel } from "@/lib/riskRules";
 import { RISK_LEVEL_LABEL } from "@/lib/riskRules";
 import type { DocSource } from "@/lib/schema";
+import { SOURCE_LABEL } from "@/lib/sources";
 
-export const SOURCE_LABEL: Record<DocSource, string> = { factsheet: "Factsheet", prospectus: "หนังสือชี้ชวน" };
+export { SOURCE_LABEL } from "@/lib/sources";
 
 /** Page tag that opens to show the quoted text from the document (works without JS). */
 export function SourceChip({ page, source, quote, className = "" }: { page: number; source: DocSource; quote?: string | null; className?: string }) {

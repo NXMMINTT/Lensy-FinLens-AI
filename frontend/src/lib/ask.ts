@@ -115,7 +115,7 @@ export function parseMoneyQuestion(q: string): { principal: number; years: numbe
 }
 
 function refOf(f: Fund, s: Sourced<unknown>): AskRef[] {
-  return s.value !== null && s.page !== null && s.quote !== null ? [{ code: f.code, nameTh: f.nameTh.value ?? f.code, page: s.page, source: s.source, quote: s.quote }] : [];
+  return s.value !== null && s.page !== null ? [{ code: f.code, nameTh: f.nameTh.value ?? f.code, page: s.page, source: s.source, quote: s.quote ?? "" }] : [];
 }
 
 export function moneyAnswer(funds: Fund[], q: string): AskResponse {
@@ -155,7 +155,7 @@ export function mergeRefs(refs: AskRef[]): AskRef[] {
     const k = `${r.code}|${r.page}|${r.source}`;
     const prev = out.get(k);
     if (!prev) out.set(k, { ...r });
-    else if (!prev.quote.includes(r.quote)) prev.quote = `${prev.quote} / ${r.quote}`;
+    else if (r.quote && !prev.quote.includes(r.quote)) prev.quote = prev.quote ? `${prev.quote} / ${r.quote}` : r.quote;
   }
   return [...out.values()];
 }
@@ -184,7 +184,7 @@ export function fundContext(f: Fund): string {
     if (!obj || typeof obj !== "object") return;
     const o = obj as Record<string, unknown>;
     if ("value" in o && "page" in o && "source" in o) {
-      if (o.value !== null && o.page !== null) lines.push(`- ${prefix}: ${JSON.stringify(o.value)} | ${o.source} หน้า ${o.page} | "${o.quote}"`);
+      if (o.value !== null && o.page !== null) lines.push(`- ${prefix}: ${JSON.stringify(o.value)} | ${o.source} หน้า ${o.page}${o.quote ? ` | "${o.quote}"` : ""}`);
       return;
     }
     for (const [k, v] of Object.entries(o)) if (k !== "meta" && k !== "code") walk(prefix ? `${prefix}.${k}` : k, v);

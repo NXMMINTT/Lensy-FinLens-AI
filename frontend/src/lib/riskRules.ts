@@ -8,7 +8,7 @@ import type { DocSource, Fund, Sourced } from "./schema";
 export type RiskLevel = "high" | "medium" | "info";
 export type RiskTopic = "currency" | "foreign" | "concentration" | "redemption" | "riskLevel";
 
-export type RiskRef = { label: string; page: number; source: DocSource; quote: string };
+export type RiskRef = { label: string; page: number; source: DocSource; quote: string | null };
 
 export type RiskAlert = {
   id: string;
@@ -41,7 +41,7 @@ export const RISK_THRESHOLDS = {
 } as const;
 
 function ref<T>(label: string, s: Sourced<T>): RiskRef[] {
-  return s.value !== null && s.page !== null && s.quote !== null ? [{ label, page: s.page, source: s.source, quote: s.quote }] : [];
+  return s.value !== null && s.page !== null ? [{ label, page: s.page, source: s.source, quote: s.quote }] : [];
 }
 
 const ORDER: Record<RiskLevel, number> = { high: 0, medium: 1, info: 2 };

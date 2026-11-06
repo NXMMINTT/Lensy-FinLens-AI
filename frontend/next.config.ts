@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   // Fund data and PDFs are read from disk at request time (lib/funds.ts, lib/askService.ts), so ship
   // them with the server functions on Vercel.
   outputFileTracingIncludes: {
-    "/**": ["./data/verified/**/*"],
+    "/**": ["./data/verified/**/*", "./data/funds/real/funds.json"],
     "/api/**": ["./docs/pdfs/**/*.pdf"],
   },
   // Let `next dev` serve its dev assets to a cloudflared tunnel host.
