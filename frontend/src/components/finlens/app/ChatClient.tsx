@@ -7,6 +7,8 @@ import { DISCLAIMER, NOT_FOUND } from "@/lib/disclaimer";
 
 import { LensyFace } from "../Lensy";
 import { SampleBadge } from "../SampleBadge";
+import { sourceRef } from "@/lib/sources";
+
 import { SourceChip } from "./ui";
 
 type FundOption = { code: string; nameTh: string; isSample: boolean };
@@ -124,7 +126,11 @@ export function ChatClient({
                     {m.refs.map((r, i) => (
                       <span key={i} className="inline-flex items-center gap-1">
                         {multi && <span className="text-[11px] font-semibold text-ink-muted">{r.code}</span>}
-                        <SourceChip page={r.page} source={r.source} quote={r.quote} />
+                        {r.page !== null ? (
+                          <SourceChip page={r.page} source={r.source} quote={r.quote} />
+                        ) : (
+                          <span className="inline-flex rounded-md bg-sun-soft px-1.5 py-0.5 text-[12px] text-sun-ink">{sourceRef(null, r.source)}</span>
+                        )}
                       </span>
                     ))}
                   </span>

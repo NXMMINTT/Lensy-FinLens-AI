@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { checkAiAnswer, classifyQuestion, GENERAL_NOTE, moneyAnswer, NEED_FUND_FOR_NUMBERS, parseMoneyQuestion, SAMPLE_QUESTIONS, TAX_NOTE, unbackedNumbers } from "./ask";
+import { checkAiAnswer, classifyQuestion, fundContext, GENERAL_NOTE, moneyAnswer, NEED_FUND_FOR_NUMBERS, parseMoneyQuestion, SAMPLE_QUESTIONS, TAX_NOTE, unbackedNumbers } from "./ask";
 import { getFund } from "./funds";
 import { trueCost } from "./trueCost";
 
@@ -197,6 +197,34 @@ describe("checkAiAnswer", () => {
     const r = checkAiAnswer({ type: "general", answer: "TER คือค่าใช้จ่ายรวมต่อปีค่ะ สมมติ TER 1.5% เงิน 100 บาทจะเสียราว 1.5 บาทต่อปี", refs: [] }, [g], {}, "TER คืออะไร");
     expect(r.note).toBe(GENERAL_NOTE);
     expect(r.answer).toContain("1.5%");
+  });
+
+  it("accepts figures cited by their data key, also without a page (SEC data), naming the source", () => {
+    const k = getFund("K-INDIA-A(A)")!;
+    const r = checkAiAnswer(
+      { type: "fund", answer: "K-INDIA-A(A) TER 1.84% ต่อปี (ข้อมูลจาก ก.ล.ต.) ค่าใช้จ่ายกองหลัก 0.96% (เอกสารกองทุนหลัก)", refs: [{ code: "K-INDIA-A(A)", key: "fees.ter" }, { code: "K-INDIA-A(A)", key: "fees.masterFundExpense" }] },
+      [k],
+      {},
+    );
+    expect(r.refs.map((x) => [x.page, x.source])).toEqual([[null, "sec"], [null, "master"]]);
+    expect(r.answer).toContain("1.84%");
+  });
+
+  it("rejects a key with no value, or a number the cited figures don't hold", () => {
+    const k = getFund("K-INDIA-A(A)")!;
+    const empty = checkAiAnswer({ type: "fund", answer: "ค่าสับเปลี่ยน 1% ค่ะ", refs: [{ code: "K-INDIA-A(A)", key: "fees.switching" }] }, [k], {});
+    expect(empty.answer).toContain("ไม่พบข้อมูลนี้ในเอกสาร");
+    const wrong = checkAiAnswer({ type: "fund", answer: "TER 2.5% ค่ะ", refs: [{ code: "K-INDIA-A(A)", key: "fees.ter" }] }, [k], {});
+    expect(wrong.answer).toContain("ไม่พบข้อมูลนี้ในเอกสาร");
+  });
+
+  it("gives the model every figure with its source, the real gaps, and the master fund note", () => {
+    const ctx = fundContext(getFund("K-INDIA-A(A)")!);
+    expect(ctx).toContain("[fees.ter]");
+    expect(ctx).toContain("ข้อมูลจาก ก.ล.ต. (ไม่มีเลขหน้า)");
+    expect(ctx).toMatch(/\[fees\.switching\].*ไม่พบในเอกสาร/);
+    expect(ctx).toContain("Factsheet ของกองไทยไม่ได้แสดงค่าใช้จ่ายกองหลัก");
+    expect(fundContext(getFund("B-INNOTECH")!)).toContain("Factsheet หน้า 2");
   });
 
   it("accepts a quote found in the PDF text on that page", () => {

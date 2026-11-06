@@ -6,14 +6,16 @@
  */
 import { z } from "zod";
 
-import { NOT_FOUND } from "./disclaimer";
+import { MASTER_COST_NOTE, NOT_FOUND } from "./disclaimer";
 import { FEATURED_FUND_CODES, totalAnnualCostRate } from "./funds";
 import { baht, pct } from "./money";
 import { findQuotePage, skeleton } from "./pdfText";
-import { pctToRate, type DocSource, type Fund, type Sourced } from "./schema";
+import { pctToRate, sourcedEntries, type DocSource, type Fund, type Sourced } from "./schema";
+import { SOURCE_LABEL } from "./sources";
 import { DEFAULT_ANNUAL_RETURN, MAX_YEARS, MIN_YEARS, trueCost } from "./trueCost";
 
-export type AskRef = { code: string; nameTh: string; page: number; source: DocSource; quote: string };
+/** page is null when the figure's source gives none (e.g. SEC data): the source is named instead. */
+export type AskRef = { code: string; nameTh: string; page: number | null; source: DocSource; quote: string };
 /** `busy`: the AI timed out or hit its rate limit; the answer is a polite "try again" message. */
 export type AskKind = "refusal" | "money" | "ai" | "not_configured" | "busy" | "error";
 /** `note` marks an answer that explains general finance knowledge instead of citing a fund document. */
@@ -132,7 +134,7 @@ export function parseMoneyQuestion(q: string): { principal: number; years: numbe
 }
 
 function refOf(f: Fund, s: Sourced<unknown>): AskRef[] {
-  return s.value !== null && s.page !== null ? [{ code: f.code, nameTh: f.nameTh.value ?? f.code, page: s.page, source: s.source, quote: s.quote ?? "" }] : [];
+  return s.value !== null ? [{ code: f.code, nameTh: f.nameTh.value ?? f.code, page: s.page, source: s.source, quote: s.quote ?? "" }] : [];
 }
 
 export function moneyAnswer(funds: Fund[], q: string): AskResponse {
@@ -190,23 +192,63 @@ export const ASK_SYSTEM = [
   `2. ถ้าไม่มีข้อมูล ให้ตอบว่า "${NOT_FOUND}" ห้ามเดา`,
   "3. ห้ามแนะนำให้ซื้อหรือขาย ห้ามจัดอันดับว่ากองไหนดีกว่า ห้ามคาดการณ์ผลตอบแทนในอนาคต ห้ามพูดเชียร์",
   "4. ห้ามคำนวณตัวเลขเงินเอง ถ้าผู้ใช้อยากรู้เป็นบาท ให้บอกว่าลองใช้หน้าเทียบต้นทุน",
-  "5. ทุกตัวเลขที่พูดถึงต้องใส่ใน refs พร้อมรหัสกอง เลขหน้า แหล่ง และ quote ที่คัดลอกตรงจากข้อมูลที่ให้มา",
-  "ตอบเป็น JSON: {\"type\": \"fund\" | \"general\", \"answer\": \"<คำตอบไม่เกิน 6 ประโยค>\", \"refs\": [{\"code\": \"<รหัสกอง>\", \"page\": <เลขหน้า>, \"source\": \"factsheet\" | \"prospectus\", \"quote\": \"<ข้อความ>\"}]}",
+  "5. ทุกตัวเลขของกองต้องใส่ใน refs: ข้อมูลกองให้อ้างด้วย {\"code\": \"<รหัสกอง>\", \"key\": \"<key ในวงเล็บเหลี่ยมของบรรทัดนั้น>\"} ส่วนข้อความจากเอกสาร PDF ให้อ้างด้วย {\"code\", \"page\", \"source\", \"quote\"} ที่คัดลอกตรงจากข้อความ",
+  "6. ใช้ข้อมูลกองทุกบรรทัดที่มีค่า แม้บรรทัดนั้นจะไม่มีเลขหน้า และบอกที่มาในวงเล็บหลังตัวเลขตามที่บรรทัดนั้นเขียนไว้ เช่น (Factsheet หน้า 2) หรือ (ข้อมูลจาก ก.ล.ต.) ตอบว่าไม่พบเฉพาะรายการที่เขียนว่า \"ไม่พบในเอกสาร\"",
+  "7. ถ้าข้อมูลมีหมายเหตุว่า Factsheet ของกองไทยไม่ได้แสดงค่าใช้จ่ายกองหลัก ให้บอกผู้ใช้ด้วยเมื่อถามเรื่องค่าใช้จ่าย",
+  "8. ถ้าให้ข้อมูลมาหลายกอง ให้ตอบครบทุกกอง แยกทีละกอง ขึ้นต้นด้วยรหัสกอง (คำว่า \"กองนี้\" หมายถึงทุกกองที่ให้มา)",
+  "ตอบเป็น JSON: {\"type\": \"fund\" | \"general\", \"answer\": \"<คำตอบไม่เกิน 6 ประโยคต่อกอง>\", \"refs\": [{\"code\": \"<รหัสกอง>\", \"key\": \"<key>\"} หรือ {\"code\": \"<รหัสกอง>\", \"page\": <เลขหน้า>, \"source\": \"factsheet\" | \"prospectus\", \"quote\": \"<ข้อความ>\"}]}",
 ].join("\n");
 
-/** Verified values with their pages, as compact lines the model can quote from. */
+/** Thai names for the fund data keys the model sees (unlisted keys show the key only). */
+const KEY_LABEL: Record<string, string> = {
+  nameTh: "ชื่อกอง",
+  amc: "บลจ.",
+  type: "ประเภทกอง",
+  isFeeder: "เป็นกองฟีดเดอร์ (ลงทุนผ่านกองทุนหลัก)",
+  masterFundName: "ชื่อกองทุนหลัก",
+  riskLevel: "ระดับความเสี่ยง (1–8)",
+  asOfDate: "ข้อมูล ณ วันที่",
+  "fees.frontEnd": "ค่าธรรมเนียมการขาย / ค่าซื้อ (% ต่อครั้ง)",
+  "fees.backEnd": "ค่าธรรมเนียมการรับซื้อคืน / ค่าขายคืน (% ต่อครั้ง)",
+  "fees.switching": "ค่าธรรมเนียมการสับเปลี่ยน (% ต่อครั้ง)",
+  "fees.management": "ค่าธรรมเนียมการจัดการ (% ต่อปี รวมอยู่ใน TER)",
+  "fees.ter": "ค่าใช้จ่ายรวมของกองไทย TER (% ต่อปี)",
+  "fees.masterFundExpense": "ค่าใช้จ่ายของกองทุนหลัก (% ต่อปี)",
+  "fees.otherExpenses": "ค่าใช้จ่ายอื่นของกอง (% ต่อปี)",
+  "fees.terIncludesMasterFund": "TER รวมค่าใช้จ่ายกองทุนหลักแล้ว",
+  "risk.fxHedging": "นโยบายป้องกันความเสี่ยงค่าเงิน",
+  "risk.top5Pct": "สัดส่วน 5 หลักทรัพย์แรก (%)",
+  "risk.top10Pct": "สัดส่วน 10 หลักทรัพย์แรก (%)",
+  "risk.topCountry": "ประเทศที่ลงทุนมากสุด",
+  "risk.topSector": "กลุ่มธุรกิจที่ลงทุนมากสุด",
+  "redemption.settlementDays": "ได้เงินค่าขายคืนภายใน (วันทำการ)",
+  "redemption.frequency": "ขายคืนได้บ่อยแค่ไหน",
+  "redemption.lockUp": "เงื่อนไข / ระยะห้ามขาย",
+};
+/** Fees always listed, so a gap reads "ไม่พบในเอกสาร" instead of being left out. */
+const FEE_KEYS = ["fees.frontEnd", "fees.backEnd", "fees.switching", "fees.ter", "fees.masterFundExpense"];
+
+/** Where a figure came from, as the model should say it: "Factsheet หน้า 2" or "ข้อมูลจาก ก.ล.ต. (ไม่มีเลขหน้า)". */
+function sourceText(s: Sourced<unknown>): string {
+  return s.page === null ? `${SOURCE_LABEL[s.source]} (ไม่มีเลขหน้า)` : `${SOURCE_LABEL[s.source]} หน้า ${s.page}`;
+}
+
+/**
+ * Every figure the fund has, each with its key, Thai name and source (page when there is one),
+ * the fees the documents leave empty, and what the Thai factsheet does not show.
+ */
 export function fundContext(f: Fund): string {
   const lines: string[] = [`## กอง ${f.code}: ${f.nameTh.value ?? ""}${f.meta.isSample ? " (ข้อมูลตัวอย่าง)" : ""}`];
-  const walk = (prefix: string, obj: unknown) => {
-    if (!obj || typeof obj !== "object") return;
-    const o = obj as Record<string, unknown>;
-    if ("value" in o && "page" in o && "source" in o) {
-      if (o.value !== null && o.page !== null) lines.push(`- ${prefix}: ${JSON.stringify(o.value)} | ${o.source} หน้า ${o.page}${o.quote ? ` | "${o.quote}"` : ""}`);
-      return;
-    }
-    for (const [k, v] of Object.entries(o)) if (k !== "meta" && k !== "code") walk(prefix ? `${prefix}.${k}` : k, v);
-  };
-  walk("", f);
+  if (f.meta.dataSource) lines.push(`ที่มาของข้อมูลกองนี้: ${f.meta.dataSource}`);
+  for (const [key, s] of sourcedEntries(f)) {
+    if (key.startsWith("pastReturns")) continue;
+    const label = KEY_LABEL[key] ? `${KEY_LABEL[key]} ` : "";
+    if (s.value !== null) lines.push(`- [${key}] ${label}= ${JSON.stringify(s.value)} | ที่มา: ${sourceText(s)}${s.quote ? ` | "${s.quote}"` : ""}`);
+    else if (FEE_KEYS.includes(key)) lines.push(`- [${key}] ${label}= ไม่พบในเอกสาร`);
+  }
+  const master = f.fees.masterFundExpense;
+  if (master.value !== null && master.source !== "factsheet") lines.push(`หมายเหตุ: ${MASTER_COST_NOTE} (ค่าใช้จ่ายกองหลักมาจาก${SOURCE_LABEL[master.source]})`);
+  if (master.value !== null && f.fees.terIncludesMasterFund.value === null) lines.push("หมายเหตุ: เอกสารไม่ระบุว่า TER รวมค่าใช้จ่ายกองทุนหลักแล้วหรือไม่");
   return lines.join("\n");
 }
 
@@ -215,7 +257,7 @@ export function askPrompt(funds: Fund[], question: string, pdfText: string): str
     return ["ไม่มีกองทุนที่ระบุ ตอบได้เฉพาะความรู้การเงินทั่วไปตามกติกาข้อ 1.1 และ 1.2 (type เป็น general, refs เป็น [])", "", `คำถาม: ${question}`].join("\n");
   }
   return [
-    "ข้อมูลกองทุนที่ตรวจแล้ว (ใช้เป็นหลัก):",
+    "ข้อมูลกองทุน (ใช้เป็นหลัก ทุกบรรทัดบอกที่มา):",
     ...funds.map(fundContext),
     ...(pdfText ? ["", "ข้อความจากเอกสารต้นฉบับ (มีป้ายเลขหน้า):", pdfText] : []),
     "",
@@ -228,7 +270,17 @@ const AiAnswer = z.object({
   type: z.enum(["fund", "general"]).catch("fund"),
   answer: z.string().min(1),
   refs: z
-    .array(z.object({ code: z.string(), page: z.number().int().positive(), source: z.enum(["factsheet", "prospectus"]), quote: z.string().min(1) }))
+    .array(
+      z.object({
+        code: z.string(),
+        /** a fund data key from the context, e.g. "fees.ter" */
+        key: z.string().optional(),
+        page: z.number().int().positive().nullable().optional(),
+        source: z.enum(["factsheet", "prospectus", "master", "sec"]).optional(),
+        quote: z.string().optional(),
+      }),
+    )
+    .catch([])
     .default([]),
 });
 
@@ -338,16 +390,32 @@ export function checkAiAnswer(raw: unknown, funds: Fund[], pdfPages: Record<stri
   const byCode = new Map(funds.map((f) => [f.code.toUpperCase(), f]));
   const refs: AskRef[] = [];
   const acceptedQuotes: string[] = [];
+  const extraAllowed: number[] = [];
   for (const r of parsed.data.refs) {
     const f = byCode.get(r.code.toUpperCase());
     if (!f) continue;
-    const q = skeleton(r.quote);
-    const inData = verifiedQuotes(f).some((v) => v.page === r.page && v.source === r.source && (skeleton(v.quote).includes(q) || q.includes(skeleton(v.quote))));
+    // a figure from the fund's data, cited by its key: it must exist and have a value
+    if (r.key) {
+      const s = sourcedEntries(f).find(([k]) => k === r.key)?.[1];
+      if (!s || s.value === null) continue;
+      const raw = JSON.stringify(s.value);
+      if (!refs.some((x) => x.code === f.code && x.quote === raw && x.source === s.source)) {
+        refs.push({ code: f.code, nameTh: f.nameTh.value ?? f.code, page: s.page, source: s.source, quote: s.quote ?? "" });
+        acceptedQuotes.push(raw, s.quote ?? "");
+        if (r.key === "riskLevel") extraAllowed.push(8); // "7 จาก 8"
+      }
+      continue;
+    }
+    // a quote from the PDF text: it must really be on that page
+    const { quote, page, source } = r;
+    if (!quote || !page || (source !== "factsheet" && source !== "prospectus")) continue;
+    const q = skeleton(quote);
+    const inData = verifiedQuotes(f).some((v) => v.page === page && v.source === source && (skeleton(v.quote).includes(q) || q.includes(skeleton(v.quote))));
     const docs = pdfPages[f.code] ?? [];
-    const inPdf = docs.some((d) => d.source === r.source && findQuotePage(d.pages, r.quote, r.page) === r.page);
-    if ((inData || inPdf) && !refs.some((x) => x.code === f.code && x.page === r.page && x.quote === r.quote)) {
-      refs.push({ code: f.code, nameTh: f.nameTh.value ?? f.code, page: r.page, source: r.source, quote: r.quote.slice(0, 300) });
-      acceptedQuotes.push(r.quote);
+    const inPdf = docs.some((d) => d.source === source && findQuotePage(d.pages, quote, page) === page);
+    if ((inData || inPdf) && !refs.some((x) => x.code === f.code && x.page === page && x.quote === quote)) {
+      refs.push({ code: f.code, nameTh: f.nameTh.value ?? f.code, page, source, quote: quote.slice(0, 300) });
+      acceptedQuotes.push(quote);
     }
   }
   const answer = parsed.data.answer.trim();
@@ -355,7 +423,8 @@ export function checkAiAnswer(raw: unknown, funds: Fund[], pdfPages: Record<stri
   if (parsed.data.type === "general" && refs.length === 0 && generalAnswerOk(answer, funds)) {
     return { kind: "ai", answer: withTaxNote(answer, question), refs: [], note: GENERAL_NOTE };
   }
-  const unbacked = unbackedNumbers(answer, acceptedQuotes, refs.map((r) => r.page), question, funds);
+  const pages = refs.map((r) => r.page).filter((p): p is number => p !== null);
+  const unbacked = unbackedNumbers(answer, acceptedQuotes, [...pages, ...extraAllowed], question, funds);
   if (unbacked.length) {
     if (funds.length === 0) return { kind: "ai", answer: NEED_FUND_FOR_NUMBERS, refs: [] };
     return { kind: "ai", answer: `${NOT_FOUND}ที่ยืนยันเลขหน้าได้ค่ะ ลองถามให้เจาะจงขึ้น หรือดูหน้ากองทุนซึ่งบอกที่มาของทุกตัวเลขนะคะ`, refs: [] };
