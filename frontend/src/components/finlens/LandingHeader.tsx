@@ -17,7 +17,7 @@ const NAV_LANDING = [
   { href: "/#faq", label: "ถามบ่อย" },
 ];
 
-/** App pages (open to everyone; only Premium needs a login). */
+/** Dashboard (signed in): the app pages. */
 const NAV_APP = [
   { href: "/funds", label: "เมนู" },
   { href: "/compare", label: "เทียบกองทุน" },
@@ -59,8 +59,7 @@ function LogoutButton() {
   );
 }
 
-/** `app`: show the app menu instead of the home-page sections. `signedIn`: show the logout button. */
-export function LandingHeader({ app = false, signedIn = false }: { app?: boolean; signedIn?: boolean } = {}) {
+export function LandingHeader({ signedIn = false }: { signedIn?: boolean } = {}) {
   const path = usePathname();
   return (
     <header className="sticky top-0 z-20 bg-surface/95 shadow-[0_1px_0_rgb(var(--line))] backdrop-blur">
@@ -69,11 +68,11 @@ export function LandingHeader({ app = false, signedIn = false }: { app?: boolean
           <FinLensLogo height={34} />
         </Link>
         <nav aria-label="เมนูหลัก" className="hidden text-base md:flex">
-          {(app ? NAV_APP : NAV_LANDING).map((n) => (
+          {(signedIn ? NAV_APP : NAV_LANDING).map((n) => (
             <Link
               key={n.href}
               href={n.href}
-              aria-current={app && (path === n.href || path.startsWith(`${n.href}/`)) ? "page" : undefined}
+              aria-current={signedIn && (path === n.href || path.startsWith(`${n.href}/`)) ? "page" : undefined}
               className="inline-flex min-h-[44px] items-center px-3.5 font-medium text-ink-body aria-[current=page]:font-bold aria-[current=page]:text-brand no-underline hover:text-brand"
             >
               {n.label}
@@ -84,10 +83,10 @@ export function LandingHeader({ app = false, signedIn = false }: { app?: boolean
           <ThemeToggle />
           {signedIn && <LogoutButton />}
           <Link
-            href={app ? "/chat" : "/funds"}
-            className={`${app ? "hidden sm:inline-flex" : "inline-flex"} min-h-[44px] items-center rounded-full bg-brand px-5 font-bold text-white no-underline hover:bg-brand-dark`}
+            href={signedIn ? "/chat" : "/funds"}
+            className={`${signedIn ? "hidden sm:inline-flex" : "inline-flex"} min-h-[44px] items-center rounded-full bg-brand px-5 font-bold text-white no-underline hover:bg-brand-dark`}
           >
-            {app ? "คุยกับ Lensy" : "เข้าใช้งาน"}
+            {signedIn ? "คุยกับ Lensy" : "เข้าใช้งาน"}
           </Link>
         </div>
       </div>
