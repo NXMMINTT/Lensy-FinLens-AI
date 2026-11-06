@@ -359,7 +359,7 @@ export function LandingFooter() {
       <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-4 px-5 py-8 text-[15px] md:px-6">
         <div className="flex flex-col gap-1.5">
           <FinLensLogo height={38} />
-          <div className="text-ink-muted">เทียบกองทุนเคียงกัน เห็นค่าธรรมเนียมแฝง</div>
+          <div className="text-ink-muted">FinLens AI — ผู้ช่วยการเงินที่ทำให้เห็นค่าใช้จ่ายที่มองไม่เห็น</div>
         </div>
         <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-ink-muted">
           <Link href="/roadmap" className="font-semibold text-brand no-underline hover:underline">
