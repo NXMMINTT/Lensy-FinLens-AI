@@ -11,7 +11,7 @@ import { Lensy } from "@/components/finlens/Lensy";
 import { SampleBadge } from "@/components/finlens/SampleBadge";
 import { toCompareFund } from "@/lib/compare";
 import { fundDataStatus } from "@/lib/dataStatus";
-import { NOT_FOUND, NOT_IN_DOCS } from "@/lib/disclaimer";
+import { MASTER_COST_NOTE, NOT_FOUND, NOT_IN_DOCS } from "@/lib/disclaimer";
 import { SOURCE_LABEL, sourceRef } from "@/lib/sources";
 import { getFund, getVerifiedFunds } from "@/lib/funds";
 import { baht, docPct, pct } from "@/lib/money";
@@ -168,6 +168,11 @@ export default async function FundPage({ params }: Props) {
           {master.value !== null && master.source === "prospectus" && (
             <p className="m-0 mt-3 rounded-xl bg-sun-soft px-3 py-2 text-[14px] text-sun-ink">
               <b><Icon name="warn" className="mr-1" />ค่าใช้จ่ายของกองทุนหลักอยู่ในหนังสือชี้ชวน ไม่อยู่ใน Factsheet</b> ถ้าดูแค่ Factsheet จะเห็นค่าใช้จ่ายไม่ครบ
+            </p>
+          )}
+          {master.value !== null && master.source === "master" && (
+            <p className="m-0 mt-3 rounded-xl bg-sun-soft px-3 py-2 text-[14px] text-sun-ink">
+              <b><Icon name="warn" className="mr-1" />{MASTER_COST_NOTE}</b> ถ้าดูแค่ Factsheet จะเห็นค่าใช้จ่ายไม่ครบ
             </p>
           )}
           {c.masterInclusionUnknown && (

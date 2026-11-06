@@ -1,17 +1,18 @@
 import Link from "next/link";
 
 import { GENERAL_NOTE } from "@/lib/ask";
-import { baht, pct, RISK_TAG, SAMPLE_ACTIVE, SAMPLE_CALC, SAMPLE_INDEX, SAMPLE_RISKS, sampleTrueCost } from "@/lib/sampleFunds";
+import { HOME_CALC, homeFeeDifference, homeFunds, homeRisks, homeTrueCost, MASTER_COST_NOTE, RISK_TAG } from "@/lib/homeFunds";
+import { baht, docPct, pct } from "@/lib/money";
+import { SOURCE_LABEL, sourceRef } from "@/lib/sources";
 
 import { PageRef } from "../chat";
 import { TitleDecor } from "../Decor";
 import { Lensy, LensyFace, type LensyPose } from "../Lensy";
-import { SampleBadge } from "../SampleBadge";
 
 /*
  * Four equal cards, each a short title + one line + a small scene: a document sheet rising from the
  * bottom edge (FinLens reads documents), a floating note, and Lensy peeking from a corner.
- * Every figure is from the sample funds, with its page.
+ * Every figure is from the two real example funds (lib/homeFunds.ts), with where it came from.
  */
 
 function Card({ title, text, href, children }: { title: string; text: string; href: string; children: React.ReactNode }) {
@@ -54,21 +55,22 @@ function Peek({ pose, className = "" }: { pose: LensyPose; className?: string })
 
 /* ── 1. compare two funds ── */
 function CompareScene() {
-  const funds = [SAMPLE_ACTIVE, SAMPLE_INDEX] as const;
-  const cost = funds.map((f) => Math.round(sampleTrueCost(f).feeCost));
+  const [A, B] = homeFunds();
   return (
     <>
-      {funds.map((f, i) => (
-        <Sheet key={f.code} label={`กอง ${i === 0 ? "A" : "B"}`} className={`h-[150px] w-[34%] ${i === 0 ? "left-[30%]" : "left-[63%]"}`}>
+      {[A, B].map((f, i) => (
+        <Sheet key={f.code} label={f.code} className={`h-[150px] w-[34%] ${i === 0 ? "left-[30%]" : "left-[63%]"}`}>
           <span className="text-[12px] leading-tight">ค่าใช้จ่ายระหว่างถือ</span>
           <b className="text-[18px] leading-none text-[#1A7637]">{f.masterFundExpense ? "2 ชั้น" : "1 ชั้น"}</b>
-          <span className="text-[10px] text-[#7A8C81]">
-            หน้า {f.ter.page} + หน้า {f.masterFundExpense?.page}
+          <span className="text-[10px] leading-snug text-[#7A8C81]">
+            {sourceRef(f.ter.page, f.ter.source)}
+            {f.masterFundExpense && ` + ${sourceRef(f.masterFundExpense.page, f.masterFundExpense.source)}`}
           </span>
         </Sheet>
       ))}
-      <Note className="right-4 top-0 bg-[#9BE07A] text-[#0F2A12]">ต่างกัน {baht(Math.abs(cost[0] - cost[1]))} ใน 10 ปี</Note>
-      <SampleBadge className="absolute left-6 top-2" />
+      <Note className="right-4 top-0 bg-[#9BE07A] text-[#0F2A12]">
+        ต่างกัน {baht(homeFeeDifference(A, B))} ใน {HOME_CALC.years} ปี
+      </Note>
       <Peek pose="magnifier" className="left-2" />
     </>
   );
@@ -76,23 +78,23 @@ function CompareScene() {
 
 /* ── 2. fee cost in baht ── */
 function MoneyScene() {
-  const f = SAMPLE_ACTIVE;
-  const r = sampleTrueCost(f);
+  const [f] = homeFunds();
+  const r = homeTrueCost(f);
   return (
     <>
       <Sheet label={f.nameTh} className="left-[32%] h-[168px] w-[56%]">
         <span className="flex justify-between text-[12.5px]">
           <span>เงินลงทุน</span>
-          <b>{SAMPLE_CALC.principal.toLocaleString("th-TH")} บาท</b>
+          <b>{HOME_CALC.principal.toLocaleString("th-TH")} บาท</b>
         </span>
         <span className="flex justify-between text-[12.5px]">
           <span>ถือไว้</span>
-          <b>{SAMPLE_CALC.years} ปี</b>
+          <b>{HOME_CALC.years} ปี</b>
         </span>
         <span className="h-2 rounded-full bg-[#EEF2EF]">
           <span className="block h-full w-[62%] rounded-full bg-[#1A7637]" />
         </span>
-        <span className="text-[10px] text-[#7A8C81]">สมมติผลตอบแทน {pct(SAMPLE_CALC.annualReturn, 0)} ต่อปี ไม่ใช่การคาดการณ์</span>
+        <span className="text-[10px] text-[#7A8C81]">สมมติผลตอบแทน {pct(HOME_CALC.annualReturn, 0)} ต่อปี ไม่ใช่การคาดการณ์</span>
       </Sheet>
       <Note className="left-6 top-1 bg-white text-[#1A7637]">ปรับเงินและจำนวนปีได้</Note>
       <Note className="right-4 top-12 bg-[#1A7637] text-white">เสียค่าธรรมเนียม {baht(r.feeCost)}</Note>
@@ -103,24 +105,24 @@ function MoneyScene() {
 
 /* ── 3. one fund explained ── */
 function ExplainScene() {
-  const f = SAMPLE_ACTIVE;
+  const [f] = homeFunds();
   const master = f.masterFundExpense!;
   return (
     <>
-      <Sheet label="หนังสือชี้ชวน" className="left-[6%] h-[176px] w-[56%]">
+      <Sheet label={SOURCE_LABEL[master.source]} className="left-[6%] h-[176px] w-[56%]">
         <span className="text-[12px] leading-snug">ค่าใช้จ่ายของกองทุนหลัก</span>
-        <span className="self-start rounded bg-[#FFE7A3] px-1.5 text-[15px] font-extrabold">{pct(master.value)} ต่อปี</span>
+        <span className="self-start rounded bg-[#FFE7A3] px-1.5 text-[15px] font-extrabold">{docPct(master.value)} ต่อปี</span>
         <span className="mt-1 flex flex-col gap-1">
-          {SAMPLE_RISKS.slice(0, 2).map((r) => (
+          {homeRisks(f).slice(0, 2).map((r) => (
             <span key={r.topic} className="flex items-center gap-1.5 text-[12px]">
               <span className={`rounded-full border px-1.5 text-[10.5px] font-bold ${RISK_TAG[r.level].className}`}>{RISK_TAG[r.level].label}</span>
               {r.topic}
             </span>
           ))}
         </span>
-        <span className="mt-auto text-[10px] text-[#7A8C81]">หน้า {master.page}</span>
+        <span className="mt-auto text-[10px] text-[#7A8C81]">{sourceRef(master.page, master.source)}</span>
       </Sheet>
-      <Note className="right-[24%] top-3 max-w-[46%] bg-[#FFF4D1] text-[13px] text-[#7A5200]">⚠ ซ่อนในหนังสือชี้ชวน ไม่อยู่ใน Factsheet</Note>
+      <Note className="right-[22%] top-2 max-w-[52%] bg-[#FFF4D1] text-[12px] leading-snug text-[#7A5200]">⚠ {MASTER_COST_NOTE}</Note>
       <Peek pose="checklist" className="right-2" />
     </>
   );
@@ -128,7 +130,7 @@ function ExplainScene() {
 
 /* ── 4. ask Lensy ── */
 function AskScene() {
-  const f = SAMPLE_ACTIVE;
+  const [f] = homeFunds();
   return (
     <>
       <Note className="right-5 top-0 bg-[#9BE07A] text-[#0F2A12]">กองทุนฟีดเดอร์คืออะไร</Note>
@@ -140,7 +142,7 @@ function AskScene() {
         </span>
       </div>
       <Note className="bottom-6 right-5 bg-white text-[13px] font-semibold text-[#16301F]">
-        กองนี้ TER {pct(f.ter.value)} <PageRef {...f.ter} />
+        {f.code} TER {docPct(f.ter.value)} <PageRef {...f.ter} />
       </Note>
       <Peek pose="idea" className="left-1" />
     </>
@@ -156,7 +158,7 @@ export function FeatureBento() {
             <TitleDecor />
             น้อง Lensy <span className="marker-green">ช่วยอะไรได้บ้าง</span>
           </h2>
-          <p className="m-0 text-ink-muted">ตัวเลขของกองบอกเลขหน้าในเอกสารทุกครั้ง เปิดตรวจเองได้</p>
+          <p className="m-0 text-ink-muted">ทุกตัวเลขบอกที่มา เปิดเอกสารต้นฉบับได้</p>
         </div>
         <div className="grid gap-5 md:grid-cols-2">
           <Card href="/compare" title="เทียบ 2 กองเคียงกัน" text="วางค่าใช้จ่ายทุกชั้นเทียบกัน ชั้นที่ซ่อนอยู่ก็เห็น">

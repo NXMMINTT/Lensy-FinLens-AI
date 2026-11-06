@@ -8,7 +8,7 @@ import { getVerifiedFunds } from "@/lib/funds";
 
 export const metadata: Metadata = {
   title: "ดูทีละกอง | FinLens AI",
-  description: "ค่าใช้จ่ายทุกชั้น เสียกี่บาท และความเสี่ยงของแต่ละกอง พร้อมเลขหน้าในเอกสาร ข้อมูลเพื่อความเข้าใจ ไม่ใช่คำแนะนำการลงทุน",
+  description: "ค่าใช้จ่ายทุกชั้น เสียกี่บาท และความเสี่ยงของแต่ละกอง ทุกตัวเลขบอกที่มา ข้อมูลเพื่อความเข้าใจ ไม่ใช่คำแนะนำการลงทุน",
 };
 
 export default function ExplainPage() {

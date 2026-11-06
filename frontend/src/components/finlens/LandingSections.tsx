@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { LineAddFriendButton } from "@/components/brand/LineAddFriendButton";
-import { NOT_FOUND, SAMPLE_DATA_LABEL } from "@/lib/disclaimer";
-import { SAMPLE_ACTIVE as F, SAMPLE_INDEX as B } from "@/lib/sampleFunds";
+import { thaiDate } from "@/lib/dataStatus";
+import { NOT_FOUND } from "@/lib/disclaimer";
+import { homeFunds } from "@/lib/homeFunds";
+import { SOURCE_LABEL, sourceRef } from "@/lib/sources";
 
 import { AnswerCard } from "./chat";
 import { Disclaimer } from "./Disclaimer";
@@ -23,14 +25,13 @@ export function Hero() {
             <Icon name="search" className="mr-1.5" />
             ผู้ช่วยเทียบกองทุนรวม ใน LINE และเว็บ
           </span>
-          <h1 id="hero-title" className="m-0 text-[34px] font-bold leading-[1.3] tracking-tight sm:text-[44px] md:text-[52px]">
-            เทียบกองทุนเคียงกัน
+          <h1 id="hero-title" className="m-0 text-[32px] font-bold leading-[1.3] tracking-tight sm:text-[42px] md:text-[48px]">
+            ผู้ช่วยการเงินที่ทำให้เห็น
             <br />
-            เห็น<span className="marker-green-strong">ค่าธรรมเนียมแฝง</span>
+            <span className="marker-green-strong whitespace-nowrap">ค่าใช้จ่ายที่มองไม่เห็น</span>
           </h1>
           <p className="m-0 max-w-[540px] text-lg text-ink-body">
-            สองกองอาจลงทุนคล้ายกัน แต่ค่าใช้จ่ายบางชั้นซ่อนอยู่ในหนังสือชี้ชวน ไม่อยู่ใน Factsheet น้อง Lensy อ่านเอกสารของทั้งสองกอง
-            วางค่าใช้จ่ายทุกชั้นเทียบกัน แล้วบอกว่าต่างกันกี่บาท พร้อมเลขหน้าที่มาทุกตัวเลข ดูทีละกองก็ได้ หรือถามศัพท์การเงินที่สงสัยก็ได้ค่ะ
+            ถามเรื่องการเงินได้ทุกเรื่องด้วยภาษาง่าย ๆ หรือให้น้อง Lensy เทียบ 2 กองให้ดูว่ามีค่าใช้จ่ายอะไรซ่อนอยู่ และต่างกันกี่บาท
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <LineAddFriendButton label="เพิ่มเพื่อนน้อง Lensy" />
@@ -47,12 +48,15 @@ export function Hero() {
   );
 }
 
-/** Says out loud that every figure on the page is made up. */
-export function SampleNotice() {
+/** Says where the examples on the page come from: the two real funds, their date and documents. */
+export function DataNotice() {
+  const [A, B] = homeFunds();
+  const dates = [...new Set([A.asOfDate, B.asOfDate].filter((d): d is string => Boolean(d)))];
   return (
     <div className="flex flex-wrap items-center justify-center gap-2 border-y border-line bg-surface px-5 py-3 text-center text-[15px] text-ink-muted">
-      <span className="rounded-full border border-dashed border-sun-ink/50 bg-sun-soft px-2 py-0.5 text-[12px] font-bold text-sun-ink">{SAMPLE_DATA_LABEL}</span>
-      กองทุนและตัวเลขในหน้านี้สร้างขึ้นเพื่อสาธิตการทำงาน ไม่ใช่กองทุนจริง
+      <span className="rounded-full border border-brand/30 bg-brand-soft px-2 py-0.5 text-[12px] font-bold text-brand">ข้อมูลกองจริง</span>
+      ตัวอย่างในหน้านี้คือ {A.code} กับ {B.code}
+      {dates.length > 0 && ` ข้อมูล ณ ${dates.map(thaiDate).join(", ")}`} จาก Factsheet ของ บลจ. และเอกสารของกองหลัก ตัวเลขเงินบาทคำนวณจากสมมติฐาน
     </div>
   );
 }
@@ -60,6 +64,7 @@ export function SampleNotice() {
 /* ── How it works: 3 steps ── */
 
 export function HowItWorks() {
+  const [A, B] = homeFunds();
   const steps = [
     {
       no: 1,
@@ -67,17 +72,17 @@ export function HowItWorks() {
       text: "ใส่ 2 กองในข้อความเดียวได้ ทั้งใน LINE และบนเว็บ",
       body: (
         <span className="rounded-2xl rounded-br-sm bg-chat px-3 py-1.5 text-[#0F2A12]">
-          {F.nameTh} กับ {B.nameTh}
+          {A.code} กับ {B.code}
         </span>
       ),
     },
     {
       no: 2,
       title: "น้อง Lensy อ่านเอกสารทั้งสองกอง",
-      text: "ดึงค่าจาก Factsheet และหนังสือชี้ชวน ทีมตรวจทีละค่าก่อนใช้จริง",
+      text: "ดึงค่าจาก Factsheet ของกองไทย และเอกสารของกองหลักต่างประเทศ ทุกตัวเลขบอกที่มา",
       body: (
         <span className="flex flex-wrap gap-1.5">
-          {["กอง A · Factsheet + หนังสือชี้ชวน", "กอง B · Factsheet + หนังสือชี้ชวน"].map((t) => (
+          {[A, B].map((f) => `${f.code} · Factsheet${f.masterFundExpense ? ` + ${SOURCE_LABEL[f.masterFundExpense.source]}` : ""}`).map((t) => (
             <span key={t} className="rounded-md border border-line bg-brand-tint px-2 py-1 text-[13px]">
               <Icon name="doc" size={14} className="mr-1 text-brand" />
               {t}
@@ -89,17 +94,17 @@ export function HowItWorks() {
     {
       no: 3,
       title: "เห็นค่าใช้จ่ายเทียบกัน",
-      text: "ทุกชั้นเคียงกัน ส่วนต่างเป็นบาท ทุกตัวเลขมีเลขหน้า",
+      text: "ทุกชั้นเคียงกัน ส่วนต่างเป็นบาท",
       body: (
         <div className="force-light w-full text-[12px]">
           <AnswerCard title="ค่าใช้จ่ายทุกชั้น">
             <div className="flex flex-col gap-1">
-              {[F, B].map((f, i) => (
+              {[A, B].map((f) => (
                 <div key={f.code} className="flex items-center justify-between gap-2">
-                  <span>กอง {i === 0 ? "A" : "B"}</span>
-                  <span className="text-[11px] text-ink-muted">
-                    กองไทย หน้า {f.ter.page}
-                    {f.masterFundExpense ? ` + กองหลัก หน้า ${f.masterFundExpense.page}` : ""}
+                  <span>{f.code}</span>
+                  <span className="text-right text-[11px] text-ink-muted">
+                    กองไทย {sourceRef(f.ter.page, f.ter.source)}
+                    {f.masterFundExpense ? ` + กองหลัก ${sourceRef(f.masterFundExpense.page, f.masterFundExpense.source)}` : ""}
                   </span>
                 </div>
               ))}
@@ -135,7 +140,7 @@ export function HowItWorks() {
 
 export function Promises() {
   const wont = ["เชียร์ให้ซื้อหรือขาย", "จัดอันดับว่ากองไหนดีกว่า", "คาดการณ์ผลตอบแทนในอนาคต", "เดาตัวเลขที่เอกสารไม่มี"];
-  const will = ["บอกเลขหน้าที่มาของทุกตัวเลข", `บอกตรง ๆ ว่า “${NOT_FOUND}”`, "คิดตัวเลขเงินด้วยสูตร ไม่ใช่ AI", "เก็บข้อมูลส่วนตัวเท่าที่จำเป็น"];
+  const will = ["บอกที่มาของทุกตัวเลข เปิดเอกสารต้นฉบับได้", `บอกตรง ๆ ว่า “${NOT_FOUND}”`, "คิดตัวเลขเงินด้วยสูตร ไม่ใช่ AI", "เก็บข้อมูลส่วนตัวเท่าที่จำเป็น"];
   return (
     <section aria-labelledby="promise-title" className="bg-navy px-5 py-16 text-white md:px-6">
       <div className="mx-auto grid max-w-[1100px] items-center gap-10 lg:grid-cols-[auto_1fr]">
@@ -195,42 +200,6 @@ function Check({ light = false }: { light?: boolean }) {
     >
       ✓
     </span>
-  );
-}
-
-/* ── For securities companies (B2B) ── */
-
-const FOR_BROKERS: { title: string; text: string }[] = [
-  { title: "ฝังน้อง Lensy ในช่องทางของบริษัท", text: "ใช้ใน LINE OA หรือแอปของบริษัทได้ ลูกค้าถามเรื่องกองทุนในที่ที่คุยกับบริษัทอยู่แล้ว" },
-  { title: "ลดคำถามซ้ำที่พนักงานต้องตอบ", text: "คำถามเรื่องค่าธรรมเนียม ความเสี่ยง และเงื่อนไขขายคืน น้องตอบให้ก่อน พนักงานมีเวลาให้เรื่องที่ต้องใช้คน" },
-  { title: "ข้อมูลทุกช่องทางตรงกัน", text: "เว็บ LINE และแอปอ่านข้อมูลกองชุดเดียวกันที่ตรวจแล้ว ทุกตัวเลขมีเลขหน้าในเอกสารอ้างอิง" },
-  { title: "ลูกค้าของบริษัทได้ Premium ฟรี", text: "ส่องพอร์ตและเช็กก่อนเชื่อ ใช้ได้โดยไม่ต้องจ่ายเอง" },
-];
-
-export function ForBrokers() {
-  return (
-    <section id="business" aria-labelledby="business-title" className="scroll-mt-20 bg-brand-tint px-5 py-14 md:px-6">
-      <div className="mx-auto flex max-w-[1000px] flex-col gap-6">
-        <div className="flex flex-col gap-2">
-          <span className="self-start rounded-md bg-brand-soft px-2.5 py-1 text-[14px] font-bold text-brand">สำหรับบริษัทหลักทรัพย์</span>
-          <h2 id="business-title" className="m-0 text-[26px] font-bold leading-snug md:text-[32px]">
-            ให้ลูกค้าเข้าใจกองทุน<span className="marker-green">ก่อนถามพนักงาน</span>
-          </h2>
-        </div>
-        <ul className="m-0 grid list-none gap-3 p-0 sm:grid-cols-2">
-          {FOR_BROKERS.map((b) => (
-            <li key={b.title} className="flex items-start gap-3 rounded-2xl border border-line bg-surface p-4">
-              <Check />
-              <span className="flex flex-col gap-0.5">
-                <b className="text-[16px]">{b.title}</b>
-                <span className="text-[14.5px] text-ink-body">{b.text}</span>
-              </span>
-            </li>
-          ))}
-        </ul>
-        <p className="m-0 text-[13.5px] text-ink-muted">น้อง Lensy ยังคงไม่แนะนำให้ซื้อหรือขาย และไม่จัดอันดับกองทุน ไม่ว่าจะใช้ผ่านช่องทางของใคร</p>
-      </div>
-    </section>
   );
 }
 
@@ -313,10 +282,10 @@ export function PricingTable() {
 /* ── FAQ: accordion ── */
 
 const FAQ: [string, string][] = [
-  ["ค่าธรรมเนียมแฝงคืออะไร", "ค่าใช้จ่ายที่ไม่ได้จ่ายตอนกดซื้อ แต่ถูกหักจากเงินในกองทุนทุกปีค่ะ เช่น กองที่ไปลงทุนต่อในกองต่างประเทศ จะมีค่าใช้จ่ายของกองทุนหลักอีกชั้น ซึ่งมักเขียนไว้ในหนังสือชี้ชวน ไม่อยู่ใน Factsheet น้องรวมทุกชั้นให้ พร้อมบอกหน้าที่เจอ"],
-  ["ข้อมูลมาจากไหน เชื่อได้แค่ไหน", "ตัวเลขของกองมาจาก Factsheet และหนังสือชี้ชวนเท่านั้นค่ะ ทุกค่ามีเลขหน้าให้เปิดตรวจเอง และทีมตรวจทีละค่าก่อนนำมาแสดง ถ้าเอกสารไม่มี น้องจะบอกว่าไม่พบ ไม่เดา ส่วนศัพท์การเงินทั่วไป น้องอธิบายได้โดยติดป้ายว่าเป็นความรู้ทั่วไป"],
+  ["ค่าธรรมเนียมแฝงคืออะไร", "ค่าใช้จ่ายที่ไม่ได้จ่ายตอนกดซื้อ แต่ถูกหักจากเงินในกองทุนทุกปีค่ะ เช่น กองที่ไปลงทุนต่อในกองต่างประเทศ จะมีค่าใช้จ่ายของกองทุนหลักอีกชั้น ซึ่ง Factsheet ของกองไทยไม่ได้แสดง ต้องไปหาจากเอกสารของกองหลักต่างประเทศ น้องรวมทุกชั้นให้ พร้อมบอกที่มา"],
+  ["ข้อมูลมาจากไหน เชื่อได้แค่ไหน", "ตัวเลขของกองมาจาก Factsheet หนังสือชี้ชวน เอกสารของกองหลัก หรือข้อมูลที่ ก.ล.ต. เผยแพร่ค่ะ ทุกตัวเลขบอกที่มา กองที่ตรวจเลขหน้าครบแล้วมีป้าย “ตรวจกับเอกสารแล้ว” ถ้าเอกสารไม่มี น้องจะบอกว่าไม่พบ ไม่เดา ส่วนศัพท์การเงินทั่วไป น้องอธิบายได้โดยติดป้ายว่าเป็นความรู้ทั่วไป"],
   ["บอกได้ไหมว่ากองไหนดีที่สุด", "น้องไม่แนะนำให้ซื้อหรือขาย และไม่จัดอันดับกองทุนค่ะ แต่ช่วยวางค่าใช้จ่ายและความเสี่ยงของแต่ละกองเทียบกันให้ดูได้"],
-  ["ถามเรื่องการเงินทั่วไปได้ไหม", "ได้ค่ะ ถามความหมายของศัพท์หรือแนวคิดได้ เช่น TER คืออะไร กองทุนรวมฟีดเดอร์ต่างจากกองทั่วไปยังไง หรือดอกเบี้ยทบต้นทำงานยังไง น้องอธิบายด้วยภาษาง่ายและติดป้าย \"ความรู้ทั่วไป\" ให้เห็นว่าไม่ได้มาจากเอกสารของกองใด คำตอบแบบนี้ไม่มีตัวเลข และน้องไม่พูดเรื่องราคา ข่าว หรือคาดการณ์ตลาด ส่วนตัวเลขของกองยังมาจากเอกสารพร้อมเลขหน้าเสมอ"],
+  ["ถามเรื่องการเงินทั่วไปได้ไหม", "ได้ค่ะ ถามความหมายของศัพท์หรือแนวคิดได้ เช่น TER คืออะไร กองทุนรวมฟีดเดอร์ต่างจากกองทั่วไปยังไง หรือดอกเบี้ยทบต้นทำงานยังไง น้องอธิบายด้วยภาษาง่ายและติดป้าย \"ความรู้ทั่วไป\" ให้เห็นว่าไม่ได้มาจากเอกสารของกองใด คำตอบแบบนี้ไม่มีตัวเลข และน้องไม่พูดเรื่องราคา ข่าว หรือคาดการณ์ตลาด ส่วนตัวเลขของกองยังบอกที่มาเสมอ"],
   ["ตัวเลขเป็นบาทคำนวณยังไง", "คำนวณด้วยสูตรในระบบ ไม่ได้ให้ AI คิดค่ะ ใช้ค่าธรรมเนียมจากเอกสาร กับผลตอบแทนสมมติที่ปรับเองได้ (ค่าเริ่มต้น 6% ต่อปี) ซึ่งเป็นสมมติฐาน ไม่ใช่การคาดการณ์"],
   ["เก็บข้อมูลส่วนตัวอะไรบ้าง", "เก็บเท่าที่จำเป็นค่ะ ไม่ต้องโหลดแอปหรือสมัครสมาชิก ใช้บัญชี LINE ที่มีอยู่ ไม่ขอชื่อ เบอร์โทร หรือข้อมูลบัญชี และรหัสผู้ใช้ LINE ถูกแปลงเป็นรหัสที่ย้อนกลับไม่ได้ (hash) ก่อนบันทึก"],
 ];
@@ -390,7 +359,7 @@ export function LandingFooter() {
       <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-4 px-5 py-8 text-[15px] md:px-6">
         <div className="flex flex-col gap-1.5">
           <FinLensLogo height={38} />
-          <div className="text-ink-muted">เทียบกองทุนเคียงกัน เห็นค่าธรรมเนียมแฝง ทุกตัวเลขมีเลขหน้าที่มา</div>
+          <div className="text-ink-muted">เทียบกองทุนเคียงกัน เห็นค่าธรรมเนียมแฝง</div>
         </div>
         <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-ink-muted">
           <Link href="/roadmap" className="font-semibold text-brand no-underline hover:underline">

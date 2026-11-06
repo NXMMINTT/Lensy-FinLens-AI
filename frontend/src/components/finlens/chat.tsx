@@ -1,6 +1,7 @@
 /* LINE chat pieces drawn inside the landing page phone mockups (illustrations, aria-hidden by Phone). */
 import { DISCLAIMER } from "@/lib/disclaimer";
-import { SOURCE_LABEL, type DocSource } from "@/lib/sampleFunds";
+import type { DocSource } from "@/lib/schema";
+import { sourceRef } from "@/lib/sources";
 
 import { LensyFace } from "./Lensy";
 import { SampleBadge } from "./SampleBadge";
@@ -31,15 +32,15 @@ export function BotMsg({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** Answer card (what the LINE Flex Message will look like): title, body, sample label, disclaimer. */
-export function AnswerCard({ title, children }: { title: string; children: React.ReactNode }) {
+/** Answer card (what the LINE Flex Message will look like): title, body, sample label when the data is made up, disclaimer. */
+export function AnswerCard({ title, sample = false, children }: { title: string; sample?: boolean; children: React.ReactNode }) {
   return (
     <div className="flex shrink-0 flex-col overflow-hidden rounded-2xl bg-surface shadow-[0_2px_8px_rgba(20,46,34,.08)]">
       <div className="flex items-center justify-between gap-2 bg-brand px-3 py-2 text-white">
         <b className="text-[12.5px]">{title}</b>
       </div>
       <div className="flex flex-col gap-1.5 px-3 py-2.5">
-        <SampleBadge className="self-start" />
+        {sample && <SampleBadge className="self-start" />}
         {children}
       </div>
       <div className="border-t border-line px-3 py-1.5 text-[10px] text-ink-muted">{DISCLAIMER}</div>
@@ -47,11 +48,7 @@ export function AnswerCard({ title, children }: { title: string; children: React
   );
 }
 
-/** "หน้า 2 · Factsheet" source tag next to a number. */
-export function PageRef({ page, source }: { page: number; source: DocSource }) {
-  return (
-    <span className="whitespace-nowrap text-[10px] text-ink-muted">
-      หน้า {page} · {SOURCE_LABEL[source]}
-    </span>
-  );
+/** "หน้า 2 · Factsheet" source tag next to a number, or just the source when it gives no page. */
+export function PageRef({ page, source }: { page: number | null; source: DocSource }) {
+  return <span className="whitespace-nowrap text-[10px] text-ink-muted">{sourceRef(page, source)}</span>;
 }

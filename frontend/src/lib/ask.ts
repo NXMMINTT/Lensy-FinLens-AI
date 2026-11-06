@@ -341,7 +341,7 @@ export function checkAiAnswer(raw: unknown, funds: Fund[], pdfPages: Record<stri
   const unbacked = unbackedNumbers(answer, acceptedQuotes, refs.map((r) => r.page), question, funds);
   if (unbacked.length) {
     if (funds.length === 0) return { kind: "ai", answer: NEED_FUND_FOR_NUMBERS, refs: [] };
-    return { kind: "ai", answer: `${NOT_FOUND}ที่ยืนยันเลขหน้าได้ค่ะ ลองถามให้เจาะจงขึ้น หรือดูหน้ากองทุนซึ่งมีเลขหน้าทุกค่านะคะ`, refs: [] };
+    return { kind: "ai", answer: `${NOT_FOUND}ที่ยืนยันเลขหน้าได้ค่ะ ลองถามให้เจาะจงขึ้น หรือดูหน้ากองทุนซึ่งบอกที่มาของทุกตัวเลขนะคะ`, refs: [] };
   }
   // no page to cite and no numbers: a general-knowledge explanation, labelled as such
   if (refs.length === 0) return { kind: "ai", answer: withTaxNote(answer, question), refs, note: GENERAL_NOTE };

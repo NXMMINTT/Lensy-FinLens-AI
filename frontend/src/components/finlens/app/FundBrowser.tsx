@@ -8,7 +8,7 @@ import { pct } from "@/lib/money";
 
 import { SampleBadge } from "../SampleBadge";
 import { DataStatusBadge } from "./DataStatusBadge";
-import { NOT_IN_DOCS } from "@/lib/disclaimer";
+import { MASTER_COST_NOTE, NOT_IN_DOCS } from "@/lib/disclaimer";
 import type { DocSource } from "@/lib/schema";
 import { sourceRef } from "@/lib/sources";
 
@@ -102,6 +102,9 @@ export function FundBrowser({ funds }: { funds: FundSummary[] }) {
                 </div>
               </div>
 
+              {f.masterCostElsewhere && (
+                <p className="m-0 rounded-xl bg-sun-soft px-3 py-2 text-[13.5px] font-semibold text-sun-ink"><Icon name="warn" className="mr-1" />{MASTER_COST_NOTE}</p>
+              )}
               {f.hiddenInProspectus && (
                 <p className="m-0 rounded-xl bg-sun-soft px-3 py-2 text-[13.5px] font-semibold text-sun-ink"><Icon name="warn" className="mr-1" />มีค่าใช้จ่ายของกองทุนหลักที่อยู่ในหนังสือชี้ชวน ไม่อยู่ใน Factsheet</p>
               )}

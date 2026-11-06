@@ -23,6 +23,8 @@ export type FundSummary = {
   status: DataStatus;
   /** master fund expense is only in the prospectus */
   hiddenInProspectus: boolean;
+  /** master fund expense comes from the master fund's own document (the Thai factsheet leaves it out) */
+  masterCostElsewhere: boolean;
   alertCounts: Record<RiskLevel, number>;
   topAlert: string | null;
 };
@@ -50,6 +52,7 @@ export function toFundSummary(f: Fund): FundSummary {
     costSourcesWithoutPage: [...new Set([f.fees.ter, f.fees.masterFundExpense].filter((s) => s.value !== null && s.page === null).map((s) => s.source))],
     status: fundDataStatus(f),
     hiddenInProspectus: f.fees.masterFundExpense.value !== null && f.fees.masterFundExpense.source === "prospectus",
+    masterCostElsewhere: f.fees.masterFundExpense.value !== null && f.fees.masterFundExpense.source === "master",
     alertCounts: counts,
     topAlert: alerts[0]?.title ?? null,
   };

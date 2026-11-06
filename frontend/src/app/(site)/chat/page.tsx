@@ -17,8 +17,10 @@ export default async function ChatPage({ searchParams }: { searchParams: Promise
   // a question handed over from the glossary ("ถามน้องต่อ"): pre-filled, not sent until the user taps send
   const initialInput = (q ?? "").trim().slice(0, 500);
   const funds = getVerifiedFunds().map((f) => ({ code: f.code, nameTh: f.nameTh.value ?? f.code, isSample: f.meta.isSample }));
-  const wanted = funds.find((f) => f.code.toUpperCase() === fund?.trim().toUpperCase());
-  const initialCodes = wanted ? [wanted.code] : funds.slice(0, 1).map((f) => f.code);
+  // ?fund=A or ?fund=A,B (up to 3, e.g. the money question on the home page asks about both example funds)
+  const asked = (fund ?? "").split(",").map((c) => c.trim().toUpperCase()).filter(Boolean);
+  const wanted = funds.filter((f) => asked.includes(f.code.toUpperCase())).slice(0, 3);
+  const initialCodes = wanted.length ? wanted.map((f) => f.code) : funds.slice(0, 1).map((f) => f.code);
   const questions = [...SAMPLE_QUESTIONS, "ลงทุน 100,000 บาท 10 ปี เสียค่าธรรมเนียมกี่บาท"];
 
   return (

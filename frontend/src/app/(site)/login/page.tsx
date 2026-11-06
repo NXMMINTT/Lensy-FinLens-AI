@@ -62,7 +62,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
             ))}
           </ul>
 
-          <p className="relative m-0 mt-auto text-[13.5px] text-white/80 max-md:hidden">ทุกตัวเลขของกองมีเลขหน้าในเอกสาร เปิดตรวจเองได้</p>
+          <p className="relative m-0 mt-auto text-[13.5px] text-white/80 max-md:hidden">ทุกตัวเลขบอกที่มา เปิดเอกสารต้นฉบับได้</p>
         </section>
 
         {/* login side */}

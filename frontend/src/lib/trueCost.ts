@@ -92,3 +92,14 @@ export function defaultReturnFor(classes: AssetClass[]): number {
   if (classes.length === 0) return DEFAULT_ANNUAL_RETURN;
   return Math.max(...classes.map((c) => DEFAULT_RETURN_BY_CLASS[c]));
 }
+
+/**
+ * The baht gap between fee costs as people read them: each cost rounded to whole baht first, then
+ * subtracted, so "A − B" on screen always matches the difference shown next to them.
+ * Every page that shows a difference uses this (home page, compare page).
+ */
+export function feeGapBaht(feeCosts: number[]): number | null {
+  if (feeCosts.length < 2) return null;
+  const shown = feeCosts.map((c) => Math.round(c));
+  return Math.max(...shown) - Math.min(...shown);
+}

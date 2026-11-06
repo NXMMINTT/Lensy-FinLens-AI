@@ -5,10 +5,10 @@ import { Fragment, useEffect, useMemo, useState } from "react";
 
 import type { CompareFund } from "@/lib/compare";
 import { FEE_PHASES } from "@/lib/feePhases";
-import { NOT_FOUND, NOT_IN_DOCS } from "@/lib/disclaimer";
+import { MASTER_COST_NOTE, NOT_FOUND, NOT_IN_DOCS } from "@/lib/disclaimer";
 import { baht, docPct, pct } from "@/lib/money";
 import { useTheme } from "@/lib/theme";
-import { ASSET_CLASS_LABEL, DEFAULT_ANNUAL_RETURN, defaultReturnFor, MAX_YEARS, MIN_YEARS, trueCost, type TrueCostResult } from "@/lib/trueCost";
+import { ASSET_CLASS_LABEL, DEFAULT_ANNUAL_RETURN, defaultReturnFor, feeGapBaht, MAX_YEARS, MIN_YEARS, trueCost, type TrueCostResult } from "@/lib/trueCost";
 import type { DocSource } from "@/lib/schema";
 import { sourceRef } from "@/lib/sources";
 
@@ -95,7 +95,7 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
   const series: ChartSeries[] = computed.map((x) => ({ key: x.code, name: x.fund.nameTh, slot: x.slot }));
 
   const feeCosts = computed.map((x) => x.r.feeCost);
-  const spread = feeCosts.length >= 2 ? Math.max(...feeCosts) - Math.min(...feeCosts) : null;
+  const spread = feeGapBaht(feeCosts);
   const anySample = chosen.some((s) => s.fund.isSample);
 
   const assumptions = [
@@ -286,7 +286,7 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
           <h2 id="table-title" className="m-0 text-[18px] font-bold">
             Fee X-Ray: ค่าใช้จ่ายทุกชั้น แยกตามช่วงที่จ่าย
           </h2>
-          <p className="m-0 text-[13.5px] text-ink-muted">ทุกค่ามีเลขหน้าในเอกสาร ค่าที่รวมอยู่ใน TER แล้วจะแสดงไว้ให้รู้ แต่ไม่นับซ้ำ</p>
+          <p className="m-0 text-[13.5px] text-ink-muted">ทุกตัวเลขบอกที่มา ค่าที่รวมอยู่ใน TER แล้วจะแสดงไว้ให้รู้ แต่ไม่นับซ้ำ</p>
         </div>
         <div className="overflow-x-auto p-2 md:p-3">
           <table className="w-full min-w-[560px] border-collapse text-left text-[14.5px]">
@@ -328,7 +328,7 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
                     const own = s.fund.layers.find((l) => l.key === layer.key)!;
                     const item = own.item;
                     const rest = own.remainder;
-                    const hidden = layer.key === "masterFundExpense" && item.value !== null && item.source === "prospectus";
+                    const hidden = layer.key === "masterFundExpense" && item.value !== null && (item.source === "prospectus" || item.source === "master");
                     return (
                       <td key={s.code} className={`p-3 align-top ${hidden ? "bg-sun-soft" : ""}`}>
                         {item.value === null && rest ? (
@@ -349,7 +349,7 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
                           <span className="flex flex-col">
                             <b className="text-ink">{docPct(item.value)}</b>
                             <PageTag page={item.page} source={item.source} />
-                            {hidden && <span className="text-[12px] font-semibold text-sun-ink"><Icon name="warn" className="mr-1" />อยู่ในหนังสือชี้ชวน ไม่อยู่ใน Factsheet</span>}
+                            {hidden && <span className="text-[12px] font-semibold text-sun-ink"><Icon name="warn" className="mr-1" />{item.source === "master" ? MASTER_COST_NOTE : "อยู่ในหนังสือชี้ชวน ไม่อยู่ใน Factsheet"}</span>}
                           </span>
                         )}
                       </td>

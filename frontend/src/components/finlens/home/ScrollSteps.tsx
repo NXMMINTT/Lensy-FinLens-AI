@@ -14,6 +14,7 @@ export function ScrollSteps({
   steps,
   visuals,
   decor,
+  backdrop,
 }: {
   head: React.ReactNode;
   steps: [string, string][];
@@ -21,6 +22,8 @@ export function ScrollSteps({
   visuals: React.ReactNode[];
   /** stays put beside the screens (the mascot) */
   decor?: React.ReactNode;
+  /** decoration behind the whole pinned row (fills the empty space on wide screens) */
+  backdrop?: React.ReactNode;
 }) {
   const [current, setCurrent] = useState(0);
   const outer = useRef<HTMLDivElement>(null);
@@ -56,7 +59,8 @@ export function ScrollSteps({
 
   return (
     <div ref={outer} className="w-full lg:h-[220vh]">
-      <div className="flex flex-wrap items-center justify-center gap-12 px-5 py-14 md:px-6 lg:sticky lg:top-[66px] lg:h-[calc(100svh-66px)] lg:flex-nowrap lg:py-0">
+      <div className="relative isolate flex flex-wrap items-center justify-center gap-12 px-5 py-14 md:px-6 lg:sticky lg:top-[66px] lg:h-[calc(100svh-66px)] lg:flex-nowrap lg:py-0">
+        {backdrop}
         <div className="relative flex min-w-0 flex-[0_1_460px] flex-col gap-3.5 rounded-[28px] border border-line bg-surface p-7 shadow-[0_12px_32px_rgba(20,46,34,.08)]">
           <span className="text-lg font-bold text-brand">{`${current + 1}/${steps.length}`}</span>
           {head}

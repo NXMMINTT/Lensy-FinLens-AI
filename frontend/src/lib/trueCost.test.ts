@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { assetClassOf, DEFAULT_ANNUAL_RETURN, DEFAULT_RETURN_BY_CLASS, defaultReturnFor, trueCost } from "./trueCost";
+import { assetClassOf, DEFAULT_ANNUAL_RETURN, DEFAULT_RETURN_BY_CLASS, defaultReturnFor, feeGapBaht, trueCost } from "./trueCost";
 
 const base = { principal: 100_000, years: 10, annualReturn: 0.06, frontEnd: 0, backEnd: 0, annualCost: 0 };
 
@@ -88,5 +88,13 @@ describe("default assumed return by kind of fund", () => {
     expect(defaultReturnFor([])).toBe(DEFAULT_ANNUAL_RETURN);
     expect(DEFAULT_RETURN_BY_CLASS.money).toBeLessThan(DEFAULT_ANNUAL_RETURN);
     expect(DEFAULT_RETURN_BY_CLASS.bond).toBeLessThan(DEFAULT_ANNUAL_RETURN);
+  });
+});
+
+describe("feeGapBaht", () => {
+  it("rounds each cost to whole baht first, so the gap matches the figures on screen", () => {
+    expect(feeGapBaht([38193.6, 11852.4])).toBe(38194 - 11852); // not Math.round(26341.2)
+    expect(feeGapBaht([100.4, 200.6, 150])).toBe(201 - 100);
+    expect(feeGapBaht([5])).toBeNull();
   });
 });
