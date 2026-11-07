@@ -2,6 +2,7 @@ import Link from "next/link";
 import { LineAddFriendButton } from "@/components/brand/LineAddFriendButton";
 import { DISCLAIMER } from "@/lib/disclaimer";
 import { GLOSSARY } from "@/lib/glossary";
+import { LEARN } from "@/lib/learn";
 import { homeFunds } from "@/lib/homeFunds";
 import { SOURCE_LABEL, sourceRef } from "@/lib/sources";
 
@@ -212,8 +213,7 @@ export function PricingTable() {
 /* ── Meanings: the investment-type terms from the glossary as open cards (the FAQ is the accordion) ── */
 
 export function MeaningSection() {
-  const [group, ...others] = GLOSSARY;
-  const more = others.reduce((n, g) => n + g.terms.length, 0);
+  const group = GLOSSARY[0];
   return (
     <section id="glossary" aria-labelledby="glossary-title" className="scroll-mt-20 bg-brand-tint px-5 py-16 md:px-6">
       <div className="mx-auto flex max-w-[1100px] flex-col gap-8">
@@ -253,20 +253,20 @@ export function MeaningSection() {
           <div className="flex flex-col gap-3 rounded-[20px] bg-gradient-to-br from-brand-soft to-surface p-5">
             <div className="flex items-center gap-2.5">
               <LensyFace size={36} />
-              <h3 className="m-0 text-[19px] font-bold leading-snug">ยังมีอีก {more} คำ</h3>
+              <h3 className="m-0 text-[19px] font-bold leading-snug">คำถามที่ควรรู้ก่อนลงทุน</h3>
             </div>
             <ul className="m-0 flex list-none flex-wrap gap-1.5 p-0">
-              {others.map((g) => (
-                <li key={g.title} className="rounded-full border border-line bg-surface px-2.5 py-1 text-[13.5px] text-ink-body">
-                  {g.title}
+              {LEARN.map((g) => (
+                <li key={g.id} className="rounded-full border border-line bg-surface px-2.5 py-1 text-[13.5px] text-ink-body">
+                  {g.title.replace(/^คำถาม(เรื่อง|ด้าน|เกี่ยวกับ)?/, "")}
                 </li>
               ))}
             </ul>
             <Link
-              href="/glossary"
+              href="/learn"
               className="mt-auto inline-flex min-h-[44px] items-center justify-center rounded-full bg-brand px-5 font-bold text-white no-underline hover:bg-brand-dark"
             >
-              ดูศัพท์ทั้งหมด
+              ดูทั้งหมด
             </Link>
           </div>
         </div>
