@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { LineAddFriendButton } from "@/components/brand/LineAddFriendButton";
 import { DISCLAIMER } from "@/lib/disclaimer";
+import { GLOSSARY } from "@/lib/glossary";
 import { homeFunds } from "@/lib/homeFunds";
 import { SOURCE_LABEL, sourceRef } from "@/lib/sources";
 
@@ -56,7 +57,7 @@ export function HowItWorks() {
   const steps = [
     {
       no: 1,
-      title: "พิมพ์ชื่อกองที่ลังเล",
+      title: "พิมพ์ชื่อสิ่งที่จะลงทุนที่ลังเล",
       text: "ใส่ 2 กองในข้อความเดียวได้ ทั้งใน LINE และบนเว็บ",
       body: (
         <span className="rounded-2xl rounded-br-sm bg-chat px-3 py-1.5 text-[#0F2A12]">
@@ -66,8 +67,8 @@ export function HowItWorks() {
     },
     {
       no: 2,
-      title: "น้อง Lensy อ่านเอกสารทั้งสองกอง",
-      text: "ดึงค่าจาก Factsheet ของกองไทย และเอกสารของกองหลักต่างประเทศ ทุกตัวเลขบอกที่มา",
+      title: "น้อง Lensy อ่านเอกสารทั้งสอง",
+      text: "ดึงค่าจาก Factsheet ของไทย และเอกสารของกองหลักต่างประเทศ ทุกตัวเลขบอกที่มา",
       body: (
         <span className="flex flex-wrap gap-1.5">
           {[A, B].map((f) => `${f.code} · Factsheet${f.masterFundExpense ? ` + ${SOURCE_LABEL[f.masterFundExpense.source]}` : ""}`).map((t) => (
@@ -124,52 +125,62 @@ export function HowItWorks() {
   );
 }
 
-/* ── Pricing: two receipts ── */
+/* ── Pricing: the free plan as one wide receipt ── */
 
-type Plan = { name: string; tagline: string; features: string[]; price: string; per?: string; badge?: string; premium?: boolean };
-
-const PLANS: Plan[] = [
-  {
-    name: "Free",
-    tagline: "ฟีเจอร์หลักครบ ใช้ได้ทั้ง LINE และเว็บ",
-    features: ["เทียบค่าใช้จ่ายทุกชั้นของหลายกอง", "คำนวณส่วนต่างเป็นเงินบาท", "อธิบายทีละกอง พร้อมความเสี่ยง", "ถามน้อง Lensy เรื่องการเงิน"],
-    price: "฿0",
-  },
-  {
-    name: "Premium",
-    tagline: "ทุกอย่างใน Free + ส่องทั้งพอร์ต",
-    features: ["รวมค่าใช้จ่ายทุกกองที่ถืออยู่", "รวมความเสี่ยงของทั้งพอร์ต", "เช็กโฆษณากองทุนกับเอกสารจริง"],
-    price: "฿99",
-    per: "/ เดือน",
-    badge: "เร็ว ๆ นี้",
-    premium: true,
-  },
+const FREE_FEATURES: [string, string][] = [
+  ["เทียบค่าใช้จ่ายทุกชั้นของหลายกอง", "รวมชั้นของกองทุนหลักที่ Factsheet ไม่ได้แสดง"],
+  ["คำนวณส่วนต่างเป็นเงินบาท", "ปรับเงินลงทุนและจำนวนปีได้เอง"],
+  ["อธิบายทีละกอง พร้อมความเสี่ยง", "ทุกตัวเลขบอกที่มาและเลขหน้า"],
+  ["ถามน้อง Lensy เรื่องการเงิน", "ภาษาง่าย ทั้งใน LINE และบนเว็บ"],
 ];
 
-function Receipt({ plan }: { plan: Plan }) {
+function Check() {
   return (
-    <article className="flex flex-col drop-shadow-[0_14px_24px_rgba(20,46,34,.10)]">
-      <div className="flex flex-1 flex-col rounded-t-[20px] bg-surface px-7 pb-5 pt-7">
-        <div className="flex items-center justify-between gap-3">
-          <h3 className={`m-0 text-[28px] font-bold ${plan.premium ? "text-brand" : "text-ink"}`}>{plan.name}</h3>
-          {plan.badge && <span className="rounded-full bg-sun px-3 py-1 text-[13px] font-bold text-[#4A3500]">{plan.badge}</span>}
-        </div>
-        <p className="m-0 mt-2 text-[15px] text-ink-muted">{plan.tagline}</p>
-        <hr className="my-5 border-0 border-t-2 border-dashed border-line" />
-        <ul className="m-0 mb-6 flex flex-1 list-none flex-col gap-3 p-0">
-          {plan.features.map((f) => (
-            <li key={f} className="text-[15.5px] text-ink-body">
-              {f}
-            </li>
-          ))}
-        </ul>
-        <hr className="mb-4 mt-0 border-0 border-t-2 border-dashed border-line" />
-        <div className="flex items-baseline justify-between gap-3">
-          <span className="text-[15px] font-bold text-ink-muted">รวม</span>
-          <span className="font-heading text-[40px] font-bold leading-none text-ink">
-            {plan.price}
-            {plan.per && <span className="ml-1.5 text-[15px] font-medium text-ink-muted">{plan.per}</span>}
+    <span aria-hidden="true" className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand text-white">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M5 12.5 10 17.5 19 7" />
+      </svg>
+    </span>
+  );
+}
+
+function FreeReceipt() {
+  return (
+    <article className="w-full max-w-[820px] drop-shadow-[0_18px_30px_rgba(20,46,34,.12)]">
+      <div className="relative grid overflow-hidden rounded-t-[24px] bg-surface md:grid-cols-[0.9fr_1.1fr]">
+        {/* left: plan and price */}
+        <div className="relative flex flex-col gap-4 bg-brand-soft/60 px-7 pb-7 pt-8 md:px-9">
+          <span className="absolute right-5 top-5 rotate-[8deg] rounded-lg border-2 border-dashed border-brand px-2.5 py-0.5 text-[13px] font-bold tracking-wide text-brand">
+            ใช้ฟรี
           </span>
+          <div className="flex flex-col gap-1">
+            <h3 className="m-0 text-[26px] font-bold text-ink">Free</h3>
+            <p className="m-0 text-[15px] text-ink-muted">ฟีเจอร์หลักครบ ใช้ได้ทั้ง LINE และเว็บ</p>
+          </div>
+          <div className="flex items-end gap-2">
+            <span className="font-heading text-[72px] font-bold leading-none text-brand">฿0</span>
+            <span className="pb-2 text-[15px] font-medium text-ink-muted">ไม่มีค่าสมัคร</span>
+          </div>
+          <div className="mt-auto flex flex-col items-start gap-2 pt-2">
+            <LineAddFriendButton label="เพิ่มเพื่อนน้อง Lensy" />
+            <p className="m-0 text-[13px] text-ink-muted">ช่วงเดโมยังไม่เปิดรับชำระเงิน</p>
+          </div>
+        </div>
+
+        {/* right: what is included */}
+        <div className="flex flex-col gap-1 border-t-2 border-dashed border-line px-7 py-7 md:border-l-2 md:border-t-0 md:px-9 md:py-8">
+          <span className="mb-3 text-[13px] font-bold tracking-wide text-ink-muted">สิ่งที่ได้</span>
+          <ul className="m-0 flex list-none flex-col gap-4 p-0">
+            {FREE_FEATURES.map(([title, sub]) => (
+              <li key={title} className="flex gap-3">
+                <Check />
+                <span className="flex flex-col">
+                  <span className="text-[16px] font-semibold text-ink">{title}</span>
+                  <span className="text-[14px] text-ink-muted">{sub}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
       <div aria-hidden="true" className="receipt-edge" />
@@ -188,19 +199,76 @@ export function PricingTable() {
               <TitleDecor />
               เริ่ม<span className="text-brand">ฟรี</span> จ่ายเมื่ออยากส่องทั้งพอร์ต
             </h2>
-            <p className="m-0 text-ink-muted">เทียบกองทุนได้ครบโดยไม่ต้องจ่าย Premium สำหรับคนที่ถือหลายกอง</p>
+            <p className="m-0 text-ink-muted">เทียบการลงทุนได้ครบโดยไม่ต้องจ่าย Premium สำหรับคนที่ถือหลายการลงทุน</p>
           </div>
         </div>
 
-        <div className="grid w-full items-stretch gap-6 md:grid-cols-2">
-          {PLANS.map((p) => (
-            <Receipt key={p.name} plan={p} />
-          ))}
+        <FreeReceipt />
+      </div>
+    </section>
+  );
+}
+
+/* ── Meanings: the investment-type terms from the glossary as open cards (the FAQ is the accordion) ── */
+
+export function MeaningSection() {
+  const [group, ...others] = GLOSSARY;
+  const more = others.reduce((n, g) => n + g.terms.length, 0);
+  return (
+    <section id="glossary" aria-labelledby="glossary-title" className="scroll-mt-20 bg-brand-tint px-5 py-16 md:px-6">
+      <div className="mx-auto flex max-w-[1100px] flex-col gap-8">
+        <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:justify-center sm:text-left">
+          <Lensy pose="idea" size={96} />
+          <div className="flex flex-col gap-1.5">
+            <h2 id="glossary-title" className="m-0 text-[30px] font-bold leading-tight md:text-[38px]">
+              ความหมาย<span className="text-brand">{group.title}</span>
+            </h2>
+            <p className="m-0 text-ink-muted">ศัพท์ที่เจอบ่อย อธิบายแบบเข้าใจง่าย ไม่ต้องกดเปิดค่ะ</p>
+          </div>
         </div>
 
-        <div className="flex flex-col items-center gap-3">
-          <LineAddFriendButton label="เพิ่มเพื่อนน้อง Lensy" />
-          <p className="m-0 text-center text-[13px] text-ink-muted">ช่วงเดโมยังไม่เปิดรับชำระเงิน</p>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {group.terms.map((t, i) => {
+            const [label, growth] = t.tip?.startsWith("การเติบโตโดยรวม:") ? ["การเติบโตโดยรวม", t.tip.slice("การเติบโตโดยรวม:".length).trim()] : ["ควรรู้", t.tip];
+            return (
+              <article key={t.id} className="flex flex-col gap-3 rounded-[20px] border border-line bg-surface p-5 shadow-[0_6px_20px_rgba(20,46,34,.05)]">
+                <div className="flex items-start gap-3">
+                  <span aria-hidden="true" className="font-heading text-[28px] font-bold leading-none text-brand/30">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="m-0 flex flex-col text-[19px] font-bold leading-snug">
+                    {t.term}
+                    {t.en && <span className="text-[13px] font-medium text-ink-muted">{t.en}</span>}
+                  </h3>
+                </div>
+                <p className="m-0 text-[15px] text-ink-body">{t.text}</p>
+                {growth && (
+                  <p className="m-0 mt-auto rounded-xl bg-brand-soft/60 px-3 py-2 text-[14px] text-ink-body">
+                    <b className="text-brand">{label}:</b> {growth}
+                  </p>
+                )}
+              </article>
+            );
+          })}
+          <div className="flex flex-col gap-3 rounded-[20px] bg-gradient-to-br from-brand-soft to-surface p-5">
+            <div className="flex items-center gap-2.5">
+              <LensyFace size={36} />
+              <h3 className="m-0 text-[19px] font-bold leading-snug">ยังมีอีก {more} คำ</h3>
+            </div>
+            <ul className="m-0 flex list-none flex-wrap gap-1.5 p-0">
+              {others.map((g) => (
+                <li key={g.title} className="rounded-full border border-line bg-surface px-2.5 py-1 text-[13.5px] text-ink-body">
+                  {g.title}
+                </li>
+              ))}
+            </ul>
+            <Link
+              href="/glossary"
+              className="mt-auto inline-flex min-h-[44px] items-center justify-center rounded-full bg-brand px-5 font-bold text-white no-underline hover:bg-brand-dark"
+            >
+              ดูศัพท์ทั้งหมด
+            </Link>
+          </div>
         </div>
       </div>
     </section>

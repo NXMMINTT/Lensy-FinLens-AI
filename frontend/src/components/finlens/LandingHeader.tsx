@@ -15,6 +15,7 @@ const NAV_LANDING = [
   { href: "/#how", label: "วิธีใช้" },
   { href: "/#pricing", label: "ราคา" },
   { href: "/#faq", label: "ถามบ่อย" },
+  { href: "/#glossary", label: "ความหมาย" },
 ];
 
 /** Dashboard (signed in): the app pages. */

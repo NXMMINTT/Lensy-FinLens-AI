@@ -8,6 +8,7 @@ import {
   Hero,
   HowItWorks,
   LandingFooter,
+  MeaningSection,
   PricingTable,
   StartCta,
 } from "@/components/finlens/LandingSections";
@@ -28,6 +29,7 @@ export default function HomePage() {
         <HowItWorks />
         <PricingTable />
         <FaqAccordion />
+        <MeaningSection />
         <StartCta />
       </main>
       <LandingFooter />
