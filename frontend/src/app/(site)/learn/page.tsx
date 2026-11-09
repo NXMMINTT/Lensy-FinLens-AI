@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { Disclaimer } from "@/components/finlens/Disclaimer";
 import { LandingHeader } from "@/components/finlens/LandingHeader";
 import { LandingFooter } from "@/components/finlens/LandingSections";
 import { LearnHashRedirect } from "@/components/finlens/learn/LearnHashRedirect";
@@ -61,7 +60,6 @@ export default function LearnPage() {
 
           <div className="flex flex-col gap-3">
             <p className="m-0 text-[14px] text-ink-muted">{GENERAL_NOTE}</p>
-            <Disclaimer />
           </div>
         </div>
       </main>

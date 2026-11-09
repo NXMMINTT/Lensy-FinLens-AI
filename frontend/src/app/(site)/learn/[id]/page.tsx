@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { Disclaimer } from "@/components/finlens/Disclaimer";
 import { LandingHeader } from "@/components/finlens/LandingHeader";
 import { LandingFooter } from "@/components/finlens/LandingSections";
 import { MiniMarkdown } from "@/components/finlens/learn/MiniMarkdown";
@@ -84,7 +83,6 @@ export default async function LearnChapterPage({ params }: Props) {
             <p className="m-0 text-[14px] text-ink-muted">
               {GENERAL_NOTE} ตัวเลขในคำตอบเป็นตัวอย่างสมมติเพื่ออธิบายหลักการ ส่วนกฎหมายและภาษีอาจเปลี่ยนแปลงได้ ควรตรวจประกาศฉบับล่าสุดก่อนตัดสินใจ
             </p>
-            <Disclaimer />
           </div>
         </article>
       </main>

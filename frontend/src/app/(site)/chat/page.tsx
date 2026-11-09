@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default async function ChatPage({ searchParams }: { searchParams: Promise<{ fund?: string; q?: string }> }) {
   const { fund, q } = await searchParams;
-  // a question handed over from the glossary ("ถามน้องต่อ"): pre-filled, not sent until the user taps send
+  // a question handed over by a link (e.g. a topic page): pre-filled, not sent until the user taps send
   const initialInput = (q ?? "").trim().slice(0, 500);
   const funds = getVerifiedFunds().map((f) => ({ code: f.code, nameTh: f.nameTh.value ?? f.code, isSample: f.meta.isSample }));
   // ?fund=A or ?fund=A,B (up to 3, e.g. the money question on the home page asks about both example funds)

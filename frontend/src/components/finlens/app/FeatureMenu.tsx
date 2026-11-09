@@ -17,7 +17,7 @@ const MAIN: Tile[] = [
 const LEARN: Tile[] = [
   { title: "คลังศัพท์กองทุน", text: "TER ฟีดเดอร์ ค่าเงิน อธิบายง่าย ๆ", pose: "question", href: "/glossary" },
   { title: "เช็กลิสต์ก่อนซื้อ", text: "ต้องเปิดดูอะไรในเอกสารบ้าง", pose: "shield", href: "/checklist" },
-  { title: "ข้อมูลหุ้น", text: "P/E P/BV ปันผล Beta ของหุ้นไทย", pose: "chart", href: "/stocks" },
+  { title: "สัญญาณเตือนกลโกง", text: "เช็กอะไรบ้างก่อนโอนเงินลงทุน", pose: "laptop", href: "/red-flags" },
 ];
 
 function GroupTitle({ children, aside }: { children: React.ReactNode; aside?: React.ReactNode }) {

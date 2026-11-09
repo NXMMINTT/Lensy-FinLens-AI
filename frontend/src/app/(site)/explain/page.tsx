@@ -13,7 +13,8 @@ export const metadata: Metadata = {
     "ค่าใช้จ่ายทุกชั้น เสียกี่บาท และความเสี่ยงของแต่ละกอง พร้อมข้อมูลอ้างอิงการลงทุน 10 หมวด ทุกตัวเลขบอกที่มา ข้อมูลเพื่อความเข้าใจ ไม่ใช่คำแนะนำการลงทุน",
 };
 
-export default function ExplainPage() {
+export default async function ExplainPage({ searchParams }: { searchParams: Promise<{ cat?: string }> }) {
+  const { cat } = await searchParams;
   const funds = getVerifiedFunds().map(toFundSummary);
   const refs = REFERENCE.flatMap((c) => c.items.map(toRefCard));
   const categories = REFERENCE.map((c) => ({ num: c.num, title: c.title }));
@@ -27,7 +28,7 @@ export default function ExplainPage() {
         text="เลือกกองเพื่อดูค่าใช้จ่ายทุกชั้น ต้นทุนต่อปีรวม และความเสี่ยงที่อาจมองข้าม หรือเลือกหัวข้อการลงทุนเพื่อดูตัวเลขล่าสุด วิธีตรวจเอง และแหล่งที่มา"
         pose="checklist"
       />
-      <FundBrowser funds={funds} refs={refs} categories={categories} />
+      <FundBrowser funds={funds} refs={refs} categories={categories} initial={categories.some((c) => String(c.num) === cat) ? cat : "funds"} />
       <p className="m-0 rounded-xl bg-brand-tint px-4 py-3 text-[14px] text-ink-body">
         ตัวเลขของกองตรวจจากเอกสารของกอง ส่วนหมวดการลงทุนอื่น ๆ มาจากผลค้นหาเมื่อ {REFERENCE_ACCESSED} รอบที่ 1
         ยังไม่ได้เปิดอ่านเอกสารต้นฉบับเต็มทุกแหล่ง ดูป้ายสถานะบนการ์ดและกดลิงก์แหล่งที่มาตรวจซ้ำก่อนใช้

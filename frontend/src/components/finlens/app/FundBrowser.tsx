@@ -105,14 +105,17 @@ export function FundBrowser({
   funds,
   refs,
   categories,
+  initial = "funds",
 }: {
   funds: FundSummary[];
   refs: RefCardData[];
   categories: BrowserCategory[];
+  /** what opens first: "funds" or a group number as text (from ?cat= on the page) */
+  initial?: string;
 }) {
   const [q, setQ] = useState("");
   // "funds" or a group number as text
-  const [sel, setSel] = useState("funds");
+  const [sel, setSel] = useState(initial);
   const catTitle = useMemo(
     () => new Map(categories.map((c) => [c.num, c.title])),
     [categories],

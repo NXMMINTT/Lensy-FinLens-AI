@@ -26,6 +26,7 @@ export const config = {
     "/chat/:path*",
     "/glossary/:path*",
     "/checklist/:path*",
+    "/red-flags/:path*",
     "/stocks/:path*",
     "/api/ask",
   ],
