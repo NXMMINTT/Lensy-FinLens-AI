@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { Disclaimer } from "@/components/finlens/Disclaimer";
 import { LandingHeader } from "@/components/finlens/LandingHeader";
 import { LandingFooter } from "@/components/finlens/LandingSections";
 import { Lensy } from "@/components/finlens/Lensy";
@@ -55,7 +54,6 @@ export default function PrivacyPage() {
                 เก็บเท่าที่จำเป็น <span className="marker-green">และบอกตรง ๆ</span>
               </h1>
               <p className="m-0 text-ink-body">หน้านี้บอกว่า FinLens AI เก็บอะไร ไม่เก็บอะไร และส่งอะไรไปประมวลผลที่ไหนบ้างค่ะ</p>
-              <Disclaimer />
             </div>
             <Lensy pose="shield" size={130} className="max-sm:hidden" />
           </header>

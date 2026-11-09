@@ -4,7 +4,6 @@ import { notFound } from "next/navigation";
 
 import { AppShell } from "@/components/finlens/app/AppShell";
 import { Card, RiskBadge, RiskMeter } from "@/components/finlens/app/ui";
-import { Disclaimer } from "@/components/finlens/Disclaimer";
 import { Icon } from "@/components/finlens/Icon";
 import { Lensy } from "@/components/finlens/Lensy";
 import { RefCardGrid } from "@/components/finlens/reference/RefCard";
@@ -312,7 +311,6 @@ export default async function FundPage({ params }: Props) {
           ))}
           {f.meta.verifiedBy && <li>ตรวจข้อมูลโดย: {f.meta.verifiedBy}</li>}
         </ul>
-        <Disclaimer className="mt-3" />
       </Card>
     </AppShell>
   );

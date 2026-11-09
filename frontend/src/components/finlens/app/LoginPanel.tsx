@@ -3,10 +3,8 @@
 import liff from "@line/liff";
 import { useEffect, useState } from "react";
 
-import { DISCLAIMER } from "@/lib/disclaimer";
 import { exchangeLineToken, initLiff, isLiffConfigured, resetRelogin, startLineLogin } from "@/lib/liff";
 
-import { Icon } from "../Icon";
 
 type State = "checking" | "idle" | "working";
 
@@ -145,10 +143,6 @@ export function LoginPanel({ next, demoAllowed }: { next: string; demoAllowed: b
           </li>
         ))}
       </ul>
-      <p className="m-0 flex items-center gap-1.5 border-t border-line pt-4 text-[13px] text-ink-muted">
-        <Icon name="info" />
-        {DISCLAIMER}
-      </p>
     </div>
   );
 }

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import type { AskRef, AskResponse } from "@/lib/ask";
-import { DISCLAIMER, NOT_FOUND } from "@/lib/disclaimer";
+import { NOT_FOUND } from "@/lib/disclaimer";
 
 import { LensyFace } from "../Lensy";
 import { SampleBadge } from "../SampleBadge";
@@ -165,7 +165,6 @@ export function ChatClient({
                     ))}
                   </ul>
                 )}
-                <span className="border-t border-line pt-1.5 text-[11.5px] text-ink-muted">{DISCLAIMER}</span>
               </div>
             </div>
           ),

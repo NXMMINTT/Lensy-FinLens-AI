@@ -4,7 +4,6 @@ import { notFound } from "next/navigation";
 
 import { AppShell } from "@/components/finlens/app/AppShell";
 import { Card } from "@/components/finlens/app/ui";
-import { Disclaimer } from "@/components/finlens/Disclaimer";
 import { Icon } from "@/components/finlens/Icon";
 import { Lensy } from "@/components/finlens/Lensy";
 import { RefStatusBadge } from "@/components/finlens/reference/RefCard";
@@ -179,7 +178,6 @@ export default async function ReferencePage({ params }: Props) {
         <p className="m-0 mt-3 text-[14px] text-ink-muted">
           ตารางอ้างอิงการลงทุน รอบที่ 1 ค้นเมื่อ {REFERENCE_ACCESSED} ตัวเลขมาจากข้อความในผลค้นหา ยังไม่ได้เปิดอ่านเอกสารต้นฉบับเต็มทุกแหล่ง ควรกดลิงก์ตรวจซ้ำก่อนใช้
         </p>
-        <Disclaimer className="mt-3" />
       </Card>
     </AppShell>
   );

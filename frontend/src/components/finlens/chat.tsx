@@ -1,5 +1,4 @@
 /* LINE chat pieces drawn inside the landing page phone mockups (illustrations, aria-hidden by Phone). */
-import { DISCLAIMER } from "@/lib/disclaimer";
 import type { DocSource } from "@/lib/schema";
 import { sourceRef } from "@/lib/sources";
 
@@ -43,7 +42,6 @@ export function AnswerCard({ title, sample = false, children }: { title: string;
         {sample && <SampleBadge className="self-start" />}
         {children}
       </div>
-      <div className="border-t border-line px-3 py-1.5 text-[10px] text-ink-muted">{DISCLAIMER}</div>
     </div>
   );
 }

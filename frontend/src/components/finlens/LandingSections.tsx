@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { LineAddFriendButton } from "@/components/brand/LineAddFriendButton";
-import { DISCLAIMER } from "@/lib/disclaimer";
 import { GLOSSARY } from "@/lib/glossary";
 import { LearnCard } from "./learn/LearnCard";
 import { homeFunds } from "@/lib/homeFunds";
@@ -341,7 +340,6 @@ export function LandingFooter() {
         <div className="flex flex-col gap-1.5">
           <FinLensLogo height={38} />
           <div className="text-ink-muted">FinLens AI — ผู้ช่วยการเงินที่ทำให้เห็นค่าใช้จ่ายที่มองไม่เห็น</div>
-          <div className="text-[13.5px] text-ink-muted">{DISCLAIMER}</div>
         </div>
         <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-ink-muted">
           <Link href="/privacy" className="font-semibold text-brand no-underline hover:underline">

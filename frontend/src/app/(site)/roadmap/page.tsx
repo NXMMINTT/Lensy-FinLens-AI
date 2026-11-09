@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { Disclaimer } from "@/components/finlens/Disclaimer";
 import { LandingHeader } from "@/components/finlens/LandingHeader";
 import { LandingFooter } from "@/components/finlens/LandingSections";
 import { Lensy } from "@/components/finlens/Lensy";
@@ -52,7 +51,6 @@ export default function RoadmapPage() {
                 ก่อนนำเงินไปลงทุน คนควรรู้ว่ากำลังซื้ออะไร จ่ายเงินให้ใคร มีค่าใช้จ่ายเท่าไร เงินอาจเพิ่มหรือลดจากอะไร และถ้ามีปัญหาจะตรวจสอบกับใคร
                 FinLens เริ่มทำเรื่องนี้กับกองทุนรวม แล้วจะใช้โครงเดียวกันกับการลงทุนประเภทอื่น
               </p>
-              <Disclaimer />
             </div>
             <Lensy pose="chart" size={140} className="max-sm:hidden" />
           </header>

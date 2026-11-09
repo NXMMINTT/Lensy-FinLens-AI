@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import { Disclaimer } from "@/components/finlens/Disclaimer";
 import { Lensy } from "@/components/finlens/Lensy";
 
 export default function NotFound() {
@@ -18,7 +17,6 @@ export default function NotFound() {
             หน้าแรก
           </Link>
         </div>
-        <Disclaimer className="mt-2" />
       </section>
     </main>
   );
