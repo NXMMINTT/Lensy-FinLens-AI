@@ -3,14 +3,15 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { EXAMPLE_QUESTIONS, moneyAnswer, refusal, type AskResponse } from "../ask";
 import { DISCLAIMER, MASTER_COST_NOTE, SAMPLE_DATA_LABEL } from "../disclaimer";
 import { getVerifiedFunds } from "../funds";
+import type { RefItem } from "../reference";
 import type { Fund } from "../schema";
 import { handleText, matchFunds, MENU, welcome } from "./bot";
 import { answerCard, appUrl, fundCard } from "./flex";
 
 const funds = getVerifiedFunds();
-const calls: { codes: string[]; question: string }[] = [];
-const ask = async (fs: Fund[], q: string): Promise<AskResponse> => {
-  calls.push({ codes: fs.map((f) => f.code), question: q });
+const calls: { codes: string[]; question: string; topics?: string[] }[] = [];
+const ask = async (fs: Fund[], q: string, topics?: RefItem[]): Promise<AskResponse> => {
+  calls.push({ codes: fs.map((f) => f.code), question: q, ...(topics?.length ? { topics: topics.map((t) => t.id) } : {}) });
   return { kind: "ai", answer: "ตอบทดสอบค่ะ", refs: [] };
 };
 const json = (x: unknown) => JSON.stringify(x);
@@ -68,6 +69,25 @@ describe("handleText", () => {
     expect(calls).toEqual([{ codes: [], question: "TER คืออะไร" }]);
     expect(json(m)).toContain("ตอบทดสอบค่ะ");
     expect(json(m)).toContain("B-INNOTECH TER คืออะไร");
+  });
+
+  it("answers about other investments named in the message from the reference topics", async () => {
+    const [m] = await handleText("พันธบัตรออมพลัส ดอกเบี้ยเท่าไหร่", funds, ask);
+    expect(calls).toEqual([{ codes: [], question: "พันธบัตรออมพลัส ดอกเบี้ยเท่าไหร่", topics: ["2.3"] }]);
+    expect(json(m)).toContain("ตอบทดสอบค่ะ");
+  });
+
+  it("asks about a fund and a topic together", async () => {
+    await handleText("SAMPLE-INDEX กับ ทองคำแท่ง ต่างกันยังไง", funds, ask);
+    expect(calls[0].codes).toEqual(["SAMPLE-INDEX"]);
+    expect(calls[0].topics).toEqual(["7.1"]);
+  });
+
+  it("keeps the welcome quick replies within LINE's 13", () => {
+    const [m] = welcome(funds);
+    const items = (m as { quickReply?: { items: unknown[] } }).quickReply?.items ?? [];
+    expect(items.length).toBeLessThanOrEqual(13);
+    expect(json(m)).toContain(MENU.ask);
   });
 
   it("handles the rich menu words", async () => {

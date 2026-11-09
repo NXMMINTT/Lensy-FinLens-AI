@@ -16,7 +16,7 @@ function inline(text: string): ReactNode[] {
 const cells = (row: string) => row.trim().replace(/^\||\|$/g, "").split("|").map((c) => c.trim());
 
 /** The small Markdown subset used in lib/learn-data.json (see lib/learn.ts). */
-export function MiniMarkdown({ text }: { text: string }) {
+export function MiniMarkdown({ text, className = "gap-3 text-[15.5px]" }: { text: string; className?: string }) {
   const lines = text.split("\n");
   const out: ReactNode[] = [];
   let i = 0;
@@ -90,5 +90,5 @@ export function MiniMarkdown({ text }: { text: string }) {
       i++;
     }
   }
-  return <div className="flex flex-col gap-3 text-[15.5px]">{out}</div>;
+  return <div className={`flex flex-col ${className}`}>{out}</div>;
 }

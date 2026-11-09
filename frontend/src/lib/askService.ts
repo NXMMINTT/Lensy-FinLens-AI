@@ -7,7 +7,8 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { AiBusyError, AiNotConfiguredError, AiTimeoutError, ANSWER_LIMITS, aiConfig, chatJson } from "./ai";
-import { ASK_SYSTEM, askPrompt, checkAiAnswer, checkTaxAnswer, classifyQuestion, isTaxQuestion, moneyAnswer, refusal, stockFacts, stocksInQuestion, TAX_SYSTEM, taxKnowledgeForModel, taxPrompt, type AskResponse } from "./ask";
+import { ASK_SYSTEM, askPrompt, NEED_FUND_FOR_MONEY, checkAiAnswer, checkTaxAnswer, classifyQuestion, isTaxQuestion, moneyAnswer, refusal, stockFacts, stocksInQuestion, TAX_SYSTEM, taxKnowledgeForModel, taxPrompt, type AskResponse } from "./ask";
+import { topicFacts, type RefItem } from "./reference";
 import { getStocks } from "./stocks";
 import { documentsText } from "./extraction";
 import { extractPages } from "./pdfText";
@@ -49,10 +50,12 @@ export const TIMEOUT_ANSWER = `ขอโทษค่ะ ตอนนี้น้
 export const BUSY_ANSWER = `ขอโทษค่ะ ตอนนี้มีคนถามน้อง Lensy เยอะมาก รอสักครู่แล้วลองใหม่นะคะ ${MEANWHILE}`;
 const ERROR_ANSWER = `ขอโทษค่ะ ตอนนี้น้อง Lensy ตอบไม่ได้ ลองถามใหม่อีกครั้งนะคะ ${MEANWHILE}`;
 
-export async function answerQuestion(funds: Fund[], question: string): Promise<AskResponse> {
+export async function answerQuestion(funds: Fund[], question: string, topics: RefItem[] = []): Promise<AskResponse> {
   const kind = classifyQuestion(question);
   if (kind === "advice") return refusal();
-  if (kind === "money") return moneyAnswer(funds, question);
+  // a baht question about funds: the formula; with only topics it goes to the model; with neither, ask for a fund
+  if (kind === "money" && funds.length > 0) return moneyAnswer(funds, question);
+  if (kind === "money" && topics.length === 0) return { kind: "ai", answer: NEED_FUND_FOR_MONEY, refs: [] };
   if (!aiConfig().apiKey) return { kind: "not_configured", answer: NOT_CONFIGURED_ANSWER, refs: [] };
 
   try {
@@ -71,8 +74,12 @@ export async function answerQuestion(funds: Fund[], question: string): Promise<A
     }
     if (pdfText.length > MAX_PDF_CHARS) pdfText = pdfText.slice(0, MAX_PDF_CHARS);
     // a stock named in the question: its real figures go along, to explain them (never to judge)
-    const facts = stocksInQuestion(question, getStocks()).slice(0, 3).map(stockFacts);
-    const { data } = await chatJson(ASK_SYSTEM, askPrompt(funds, question, pdfText, facts.map((f) => f.text).join("\n")), ANSWER_LIMITS);
+    const stockList = stocksInQuestion(question, getStocks()).slice(0, 3).map(stockFacts);
+    // chosen reference topics: their figures go along with their date and status
+    const topicList = topics.map(topicFacts);
+    const facts = [...stockList, ...topicList];
+    const prompt = askPrompt(funds, question, pdfText, stockList.map((f) => f.text).join("\n"), topicList.map((f) => f.text).join("\n"));
+    const { data } = await chatJson(ASK_SYSTEM, prompt, ANSWER_LIMITS);
     return checkAiAnswer(data, funds, pdfPages, question, facts);
   } catch (err) {
     if (err instanceof AiNotConfiguredError) return { kind: "not_configured", answer: NOT_CONFIGURED_ANSWER, refs: [] };

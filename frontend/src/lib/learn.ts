@@ -12,3 +12,12 @@ export type LearnGroup = { id: string; letter: string; title: string; intro: str
 export const LEARN: LearnGroup[] = data;
 
 export const LEARN_COUNT = LEARN.reduce((n, g) => n + g.items.length, 0);
+
+/** A group as a chapter title: "คำถามด้านภาษีการลงทุน" -> "ภาษีการลงทุน". */
+export function chapterTitle(g: LearnGroup): string {
+  return g.title.replace(/^คำถาม(เรื่อง|ด้าน|เกี่ยวกับ)?/, "");
+}
+
+export function learnGroup(id: string): LearnGroup | undefined {
+  return LEARN.find((g) => g.id === id);
+}

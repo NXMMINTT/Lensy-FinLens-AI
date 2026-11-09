@@ -23,10 +23,16 @@ export type AskKind = "refusal" | "money" | "ai" | "not_configured" | "busy" | "
 export type AskResponse = { kind: AskKind; answer: string; refs: AskRef[]; assumptions?: string[]; note?: string };
 
 export const GENERAL_NOTE = "คำอธิบายนี้เป็นความรู้การเงินทั่วไป ไม่ได้มาจากเอกสารของกองใด";
+/** A figure the chosen topic (or stock) data does not have: said instead of a guess. */
+export const NOT_IN_FACTS = "ตัวเลขนี้ไม่มีในข้อมูลที่เลือกไว้ค่ะ ลองดูรายละเอียดในหน้าหัวข้อนั้น ซึ่งมีลิงก์แหล่งที่มาให้ตรวจเองได้นะคะ";
+/** A baht question with no fund in it: the formula needs a fund. */
+export const NEED_FUND_FOR_MONEY = "อยากรู้ว่าเสียค่าธรรมเนียมกี่บาท ใส่ชื่อหรือรหัสกองในคำถามด้วยนะคะ เช่น \"K-US500X-A(A) ลงทุน 100,000 บาท 10 ปี เสียกี่บาท\"";
 export const NEED_FUND_FOR_NUMBERS = "ตัวเลขของกองทุนต้องมาจากเอกสารของกองนั้นค่ะ ลองพิมพ์ชื่อกองที่อยากรู้มาด้วยนะคะ";
 
 export const AskRequestSchema = z.object({
-  fundCodes: z.array(z.string().min(1).max(40)).min(1).max(MAX_COMPARE_FUNDS),
+  fundCodes: z.array(z.string().min(1).max(40)).max(MAX_COMPARE_FUNDS).default([]),
+  /** investment reference topics (e.g. "1.1"), asked about alongside or instead of funds */
+  topicIds: z.array(z.string().regex(/^\d{1,2}\.\d{1,2}$/)).max(MAX_COMPARE_FUNDS).default([]),
   question: z.string().trim().min(2).max(500),
 });
 
@@ -41,7 +47,7 @@ export const EXAMPLE_QUESTIONS: { question: string; short: string; line: string 
   { question: "RMF กับ Thai ESG ต่างกันยังไง", short: "RMF กับ Thai ESG", line: "RMF กับ Thai ESG ต่างกันยังไง" },
   { question: `เทียบ ${FA} กับ ${FB}`, short: "เทียบ 2 กอง", line: `เทียบ ${FA} กับ ${FB}` },
   {
-    question: "ลงทุน 100,000 บาท 10 ปี เสียค่าธรรมเนียมกี่บาท",
+    question: `${FA} ${FB} ลงทุน 100,000 บาท 10 ปี เสียค่าธรรมเนียมกี่บาท`,
     short: "100,000 บาท 10 ปี",
     line: `${FA} ${FB} ลงทุน 100,000 บาท 10 ปี เสียค่าธรรมเนียมกี่บาท`,
   },
@@ -198,6 +204,7 @@ export const ASK_SYSTEM = [
   "7. ถ้าข้อมูลมีหมายเหตุว่า Factsheet ของกองไทยไม่ได้แสดงค่าใช้จ่ายกองหลัก ให้บอกผู้ใช้ด้วยเมื่อถามเรื่องค่าใช้จ่าย",
   `7.1 กองที่มีหมายเหตุว่าลงทุนโดยตรง (ไม่ใช่กองฟีดเดอร์) ให้บอกว่า "${NO_MASTER_NOTE}" เมื่อพูดเรื่องค่าใช้จ่าย ห้ามพูดว่าไม่พบค่าใช้จ่ายกองหลัก หรือ Factsheet ไม่ได้แสดงค่าใช้จ่ายกองหลัก`,
   "9. ถ้าให้ \"ข้อมูลหุ้น\" มา ใช้ตัวเลขจริงของหุ้นนั้นอธิบายความหมายประกอบได้ (type เป็น general) บอกวันที่ข้อมูลและว่ามาจาก Settrade ห้ามบอกว่าหุ้นแพง ถูก น่าซื้อ ควรซื้อ ควรขาย หรือดีกว่าตัวอื่น และห้ามคาดการณ์ราคา ห้ามใช้คำว่า แพง ถูก น่าซื้อ น่าสนใจ แม้แต่ในการอธิบายทั่วไป ให้อธิบายแค่ว่าตัวเลขคำนวณจากอะไร และตัวเลขของหุ้นนี้แปลว่าอะไร เช่น P/E 8.94 แปลว่าราคาหุ้นเป็น 8.94 เท่าของกำไรต่อหุ้นในงวดล่าสุด",
+  "10. ถ้าให้ \"ข้อมูลหัวข้อการลงทุน\" มา (เช่น เงินฝาก พันธบัตร ทองคำ) ใช้ตัวเลขในนั้นตอบได้ (type เป็น general, refs เป็น []) บอกวันที่ของข้อมูลทุกครั้ง และถ้าสถานะไม่ใช่ \"ยืนยันจากแหล่งทางการ\" ให้บอกว่าควรตรวจกับแหล่งที่มาอีกครั้ง ห้ามใช้ตัวเลขที่ไม่อยู่ในข้อมูลนั้น ห้ามแนะนำให้ซื้อขายหรือบอกว่าอันไหนดีกว่า",
   "8. ถ้าให้ข้อมูลมาหลายกอง ให้ตอบครบทุกกอง แยกทีละกอง ขึ้นต้นด้วยรหัสกอง (คำว่า \"กองนี้\" หมายถึงทุกกองที่ให้มา)",
   "ตอบเป็น JSON: {\"type\": \"fund\" | \"general\", \"answer\": \"<คำตอบไม่เกิน 6 ประโยคต่อกอง>\", \"refs\": [{\"code\": \"<รหัสกอง>\", \"key\": \"<key>\"} หรือ {\"code\": \"<รหัสกอง>\", \"page\": <เลขหน้า>, \"source\": \"factsheet\" | \"prospectus\", \"quote\": \"<ข้อความ>\"}]}",
 ].join("\n");
@@ -261,13 +268,18 @@ export function fundContext(f: Fund): string {
   return lines.join("\n");
 }
 
-export function askPrompt(funds: Fund[], question: string, pdfText: string, stockText = ""): string {
+export function askPrompt(funds: Fund[], question: string, pdfText: string, stockText = "", topicText = ""): string {
   const stocks = stockText ? ["", "ข้อมูลหุ้น (ตัวเลขจริงจากไฟล์ของทีม ใช้อธิบายความหมายเท่านั้น):", stockText] : [];
+  const topics = topicText ? ["", "ข้อมูลหัวข้อการลงทุน (จากตารางอ้างอิงของทีม ใช้ตามกติกาข้อ 10):", topicText] : [];
   if (funds.length === 0) {
-    return ["ไม่มีกองทุนที่ระบุ ตอบได้เฉพาะความรู้การเงินทั่วไปตามกติกาข้อ 1.1 และ 1.2 (type เป็น general, refs เป็น [])", ...stocks, "", `คำถาม: ${question}`].join("\n");
+    const scope = topicText
+      ? "ไม่มีกองทุนที่ระบุ ตอบจากข้อมูลหัวข้อการลงทุนที่ให้มาตามกติกาข้อ 10 หรือความรู้การเงินทั่วไปตามกติกาข้อ 1.1 และ 1.2 (type เป็น general, refs เป็น [])"
+      : "ไม่มีกองทุนที่ระบุ ตอบได้เฉพาะความรู้การเงินทั่วไปตามกติกาข้อ 1.1 และ 1.2 (type เป็น general, refs เป็น [])";
+    return [scope, ...stocks, ...topics, "", `คำถาม: ${question}`].join("\n");
   }
   return [
     ...stocks,
+    ...topics,
     "ข้อมูลกองทุน (ใช้เป็นหลัก ทุกบรรทัดบอกที่มา):",
     ...funds.map(fundContext),
     ...(pdfText ? ["", "ข้อความจากเอกสารต้นฉบับ (มีป้ายเลขหน้า):", pdfText] : []),
@@ -549,7 +561,7 @@ export function checkAiAnswer(raw: unknown, funds: Fund[], pdfPages: Record<stri
   const pages = refs.map((r) => r.page).filter((p): p is number => p !== null);
   const unbacked = unbackedNumbers(answer, [...acceptedQuotes, ...factTexts], [...pages, ...extraAllowed], question, funds);
   if (unbacked.length) {
-    if (funds.length === 0) return { kind: "ai", answer: NEED_FUND_FOR_NUMBERS, refs: [] };
+    if (funds.length === 0) return { kind: "ai", answer: facts.length ? NOT_IN_FACTS : NEED_FUND_FOR_NUMBERS, refs: [] };
     return { kind: "ai", answer: `${NOT_FOUND}ที่ยืนยันเลขหน้าได้ค่ะ ลองถามให้เจาะจงขึ้น หรือดูหน้ากองทุนซึ่งบอกที่มาของทุกตัวเลขนะคะ`, refs: [] };
   }
   // no page to cite and no numbers: a general-knowledge explanation, labelled as such

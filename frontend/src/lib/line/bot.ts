@@ -5,12 +5,14 @@
 import type { messagingApi } from "@line/bot-sdk";
 
 import { classifyQuestion, EXAMPLE_QUESTIONS, type AskResponse } from "../ask";
+import { topicsInText, type RefItem } from "../reference";
+import { matchFunds, stripFundNames } from "../subjects";
 import type { Fund } from "../schema";
 import { answerCard, appUrl, fundCard, quickReplies, textMessage } from "./flex";
 import { MAX_COMPARE_FUNDS } from "../limits";
 
 type Message = messagingApi.Message;
-export type Answerer = (funds: Fund[], question: string) => Promise<AskResponse>;
+export type Answerer = (funds: Fund[], question: string, topics?: RefItem[]) => Promise<AskResponse>;
 
 /** Rich menu buttons send these texts. */
 export const MENU = { fees: "ค่าใช้จ่าย", risks: "ความเสี่ยง", calc: "คำนวณ", ask: "ถามน้อง Lensy" } as const;
@@ -21,7 +23,13 @@ const GREETING = /^(สวัสดี|หวัดดี|hi|hello|hey|เริ
 const fundChips = (funds: Fund[], suffix = "") => funds.slice(0, 12).map((f) => ({ label: f.meta.isSample ? `${f.code} (ตัวอย่าง)` : f.code, text: `${f.code}${suffix}` }));
 
 /** The example questions as quick replies (same set as /chat). */
-export const exampleChips = () => EXAMPLE_QUESTIONS.map((q) => ({ label: q.short, text: q.line }));
+export const exampleChips = () => [...EXAMPLE_QUESTIONS.map((q) => ({ label: q.short, text: q.line })), ...TOPIC_EXAMPLES];
+
+/** Questions about other kinds of investment (answered from the reference table). */
+const TOPIC_EXAMPLES = [
+  { label: "ออมพลัสได้กี่ %", text: "พันธบัตรออมพลัส ดอกเบี้ยเท่าไหร่" },
+  { label: "ราคาทองล่าสุด", text: "ราคาทองคำแท่งล่าสุดเท่าไหร่" },
+];
 
 /** Words that only join fund names: "เทียบ A กับ B" is a request for both cards. */
 const JOINERS = /เทียบ|ระหว่าง|กับ|และ|vs\.?|,|ต่างกันยังไง|ต่างกันอย่างไร/gi;
@@ -29,30 +37,13 @@ const JOINERS = /เทียบ|ระหว่าง|กับ|และ|vs\.?
 export function welcome(funds: Fund[]): Message[] {
   return [
     textMessage(
-      "สวัสดีค่ะ น้อง Lensy เองค่ะ พิมพ์ชื่อหรือรหัสกองทุนมาได้เลย ใส่ 2 กองในข้อความเดียวเพื่อดูเทียบกันก็ได้ค่ะ น้องจะสรุปค่าใช้จ่ายทุกชั้น ความเสี่ยงที่ควรรู้ และบอกที่มาของทุกตัวเลข ถ้าเจอศัพท์การเงินที่ไม่เข้าใจ ถามได้เลยนะคะ\n\nข้อมูลเพื่อความเข้าใจ ไม่ใช่คำแนะนำการลงทุนนะคะ",
-      quickReplies([...exampleChips(), ...fundChips(funds).slice(0, 8), { label: MENU.ask, text: MENU.ask }]),
+      "สวัสดีค่ะ น้อง Lensy เองค่ะ พิมพ์ชื่อหรือรหัสกองทุนมาได้เลย ใส่ 2 กองในข้อความเดียวเพื่อดูเทียบกันก็ได้ค่ะ น้องจะสรุปค่าใช้จ่ายทุกชั้น ความเสี่ยงที่ควรรู้ และบอกที่มาของทุกตัวเลข ถามเรื่องการลงทุนอื่นก็ได้ เช่น เงินฝาก พันธบัตร ทองคำ คริปโต หรือศัพท์การเงินที่ไม่เข้าใจ ถามได้เลยนะคะ\n\nข้อมูลเพื่อความเข้าใจ ไม่ใช่คำแนะนำการลงทุนนะคะ",
+      quickReplies([...exampleChips(), ...fundChips(funds).slice(0, 5), { label: MENU.ask, text: MENU.ask }]),
     ),
   ];
 }
 
-/** Funds named in the text, by code or Thai name. */
-export function matchFunds(text: string, funds: Fund[]): Fund[] {
-  const t = text.toUpperCase();
-  const plain = text.replace(/\s+/g, "");
-  return funds.filter((f) => {
-    const name = (f.nameTh.value ?? "").replace(/\s+/g, "");
-    return t.includes(f.code.toUpperCase()) || (name.length > 0 && (plain.includes(name) || (plain.length >= 4 && name.includes(plain))));
-  });
-}
-
-function stripFundNames(text: string, funds: Fund[]): string {
-  let out = text;
-  for (const f of funds) {
-    out = out.replace(new RegExp(f.code.replace(/[.*+?^${}()|[\]\\-]/g, "\\$&"), "gi"), " ");
-    if (f.nameTh.value) out = out.split(f.nameTh.value).join(" ");
-  }
-  return out.replace(/\s+/g, " ").trim();
-}
+export { matchFunds } from "../subjects";
 
 export async function handleText(raw: string, funds: Fund[], ask: Answerer): Promise<Message[]> {
   const text = raw.trim();
@@ -74,7 +65,7 @@ export async function handleText(raw: string, funds: Fund[], ask: Answerer): Pro
   if (text === MENU.ask) {
     return [
       textMessage(
-        "ถามเรื่องค่าใช้จ่าย ความเสี่ยง หรือเงื่อนไขของกอง หรือศัพท์การเงินทั่วไปได้เลยค่ะ ถ้าถามเรื่องตัวเลขของกอง ใส่ชื่อกองในคำถามด้วยนะคะ ลองกดคำถามด้านล่างค่ะ",
+        "ถามเรื่องค่าใช้จ่าย ความเสี่ยง หรือเงื่อนไขของกอง เรื่องการลงทุนอื่น เช่น เงินฝาก พันธบัตร ทองคำ หรือศัพท์การเงินทั่วไปได้เลยค่ะ ถ้าถามเรื่องตัวเลข ใส่ชื่อกองหรือชื่อเรื่องในคำถามด้วยนะคะ ลองกดคำถามด้านล่างค่ะ",
         quickReplies(exampleChips()),
       ),
     ];
@@ -82,12 +73,18 @@ export async function handleText(raw: string, funds: Fund[], ask: Answerer): Pro
 
   const matched = matchFunds(text, funds).slice(0, MAX_COMPARE_FUNDS);
   const rest = stripFundNames(text, matched);
+  // other investments named in the message (deposits, bonds, gold...): answered from the reference table
+  const topics = topicsInText(rest, MAX_COMPARE_FUNDS - matched.length);
 
   // just a fund name or code, or "เทียบ A กับ B" -> their summary card(s)
-  if (matched.length && rest.replace(JOINERS, "").trim().length < 3) return matched.map(fundCard);
+  if (matched.length && !topics.length && rest.replace(JOINERS, "").trim().length < 3) return matched.map(fundCard);
 
   const kind = classifyQuestion(text);
   if (kind === "advice") return [answerCard(await ask(matched.length ? matched : funds.slice(0, 1), text), matched.map((f) => f.code))];
+
+  if (topics.length) {
+    return [answerCard(await ask(matched, matched.length ? rest || text : text, topics), matched.map((f) => f.code), topics.map((t) => t.id))];
+  }
 
   const scope = matched.length ? matched : kind === "money" ? funds.slice(0, 3) : [];
   if (scope.length === 0) {

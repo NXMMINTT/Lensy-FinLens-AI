@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { LearnCard } from "../learn/LearnCard";
 import { Lensy, type LensyPose } from "../Lensy";
 
 type Tile = { title: string; text: string; pose: LensyPose; href: string };
@@ -17,12 +18,6 @@ const LEARN: Tile[] = [
   { title: "คลังศัพท์กองทุน", text: "TER ฟีดเดอร์ ค่าเงิน อธิบายง่าย ๆ", pose: "question", href: "/glossary" },
   { title: "เช็กลิสต์ก่อนซื้อ", text: "ต้องเปิดดูอะไรในเอกสารบ้าง", pose: "shield", href: "/checklist" },
   { title: "ข้อมูลหุ้น", text: "P/E P/BV ปันผล Beta ของหุ้นไทย", pose: "chart", href: "/stocks" },
-];
-
-/** Premium, not open yet: each opens a page that explains the feature. */
-const SOON: Tile[] = [
-  { title: "ส่องพอร์ต", text: "รวมค่าใช้จ่ายและความเสี่ยงทุกกองที่ถือ", pose: "chart", href: "/portfolio" },
-  { title: "เช็กก่อนเชื่อ", text: "เทียบคำโฆษณากับเอกสารจริง", pose: "laptop", href: "/claim-check" },
 ];
 
 function GroupTitle({ children, aside }: { children: React.ReactNode; aside?: React.ReactNode }) {
@@ -67,29 +62,7 @@ export function FeatureMenu() {
             </Link>
           ))}
         </div>
-      </section>
-
-      <section className="flex flex-col gap-3">
-        <GroupTitle
-          aside={
-            <Link href="/premium" className="text-[14px] font-semibold text-brand no-underline hover:underline">
-              ดูราคาและฟีเจอร์ Premium
-            </Link>
-          }
-        >
-          Premium <span className="ml-1 rounded-full bg-sun px-2.5 py-0.5 align-middle text-[12px] font-bold text-[#4A3500]">เร็ว ๆ นี้</span>
-        </GroupTitle>
-        <div className="grid gap-3 sm:grid-cols-2 md:gap-4">
-          {SOON.map((t) => (
-            <Link key={t.href} href={t.href} className={`${CARD} border-dashed border-line bg-surface/60 px-3 py-3`}>
-              <Lensy pose={t.pose} size={52} className="opacity-75" />
-              <span className="flex flex-col">
-                <b className="text-[15px] leading-snug">{t.title}</b>
-                <span className="text-[13px] leading-snug text-ink-muted">{t.text}</span>
-              </span>
-            </Link>
-          ))}
-        </div>
+        <LearnCard wide />
       </section>
     </nav>
   );

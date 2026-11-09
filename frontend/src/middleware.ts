@@ -20,15 +20,13 @@ export const config = {
   matcher: [
     "/funds/:path*",
     "/explain/:path*",
+    "/reference/:path*",
     "/compare/:path*",
     "/calculator/:path*",
     "/chat/:path*",
     "/glossary/:path*",
     "/checklist/:path*",
     "/stocks/:path*",
-    "/portfolio/:path*",
-    "/claim-check/:path*",
-    "/premium/:path*",
     "/api/ask",
   ],
 };

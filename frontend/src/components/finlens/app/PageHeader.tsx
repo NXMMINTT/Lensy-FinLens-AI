@@ -38,4 +38,3 @@ export function PageHeader({
   );
 }
 
-export const SOON_BADGE = <span className="rounded-full bg-sun px-2.5 py-0.5 text-[12px] font-bold text-[#4A3500]">Premium · เร็ว ๆ นี้</span>;

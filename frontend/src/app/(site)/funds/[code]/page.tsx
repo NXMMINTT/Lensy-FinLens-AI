@@ -3,18 +3,19 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { AppShell } from "@/components/finlens/app/AppShell";
-import { DataStatusBadge } from "@/components/finlens/app/DataStatusBadge";
-import { Card, RiskBadge, RiskMeter, SourceChip } from "@/components/finlens/app/ui";
+import { Card, RiskBadge, RiskMeter } from "@/components/finlens/app/ui";
 import { Disclaimer } from "@/components/finlens/Disclaimer";
 import { Icon } from "@/components/finlens/Icon";
 import { Lensy } from "@/components/finlens/Lensy";
+import { RefCardGrid } from "@/components/finlens/reference/RefCard";
 import { SampleBadge } from "@/components/finlens/SampleBadge";
 import { toCompareFund } from "@/lib/compare";
-import { fundDataStatus } from "@/lib/dataStatus";
+import { fundDataStatus, thaiDate } from "@/lib/dataStatus";
 import { MASTER_COST_NOTE, NOT_FOUND, NOT_IN_DOCS, REBATE_LABEL } from "@/lib/disclaimer";
-import { SOURCE_LABEL, sourceRef } from "@/lib/sources";
+import { SOURCE_LABEL } from "@/lib/sources";
 import { getFund, getVerifiedFunds } from "@/lib/funds";
 import { baht, docPct, pct } from "@/lib/money";
+import { REFERENCE_ACCESSED, referenceForFund, toRefCard } from "@/lib/reference";
 import { riskAlerts, RISK_TOPIC_LABEL } from "@/lib/riskRules";
 import { pctToRate, type ReturnPeriod, type Sourced } from "@/lib/schema";
 
@@ -40,19 +41,11 @@ const PERIOD_LABEL: Record<ReturnPeriod, string> = {
   sinceInception: "ตั้งแต่จัดตั้ง",
 };
 
-/** The page tag, or just where it came from when there is no page yet (e.g. SEC data). */
-function Chip<T>({ s }: { s: Sourced<T> }) {
-  if (s.page !== null) return <SourceChip page={s.page} source={s.source} quote={s.quote} />;
-  if (s.value === null) return null;
-  return <span className="inline-flex rounded-md bg-sun-soft px-1.5 py-0.5 text-[12px] text-sun-ink">{sourceRef(null, s.source)} · ยังไม่มีเลขหน้า</span>;
-}
-
 function Value<T>({ s, render, empty = NOT_IN_DOCS }: { s: Sourced<T>; render: (v: T) => React.ReactNode; empty?: string }) {
   if (s.value === null) return <span className="text-[14px] text-ink-muted">{empty}</span>;
   return (
     <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
       <b className="text-ink">{render(s.value)}</b>
-      <Chip s={s} />
     </span>
   );
 }
@@ -64,6 +57,7 @@ export default async function FundPage({ params }: Props) {
   if (!f) notFound();
 
   const c = toCompareFund(f);
+  const asOf = fundDataStatus(f).asOf;
   const alerts = riskAlerts(f);
   const name = f.nameTh.value ?? f.code;
   const total = c.annualCostRate;
@@ -76,6 +70,7 @@ export default async function FundPage({ params }: Props) {
   // the bar splits the layers before the rebate; the rebate is shown as its own minus line
   const gross = yearly.reduce((sum, y) => sum + pctToRate(y.s.value!), 0);
   const rebate = f.fees.rebate;
+  const related = referenceForFund(f);
   const otherCode = getVerifiedFunds().find((x) => x.code !== f.code)?.code;
 
   return (
@@ -99,19 +94,16 @@ export default async function FundPage({ params }: Props) {
           <p className="m-0 text-ink-body">{[f.amc.value, f.type.value].filter(Boolean).join(" · ")}</p>
           {f.masterFundName.value && (
             <div className="m-0 flex flex-wrap items-center gap-2 text-[15px] text-ink-body">
-              กองทุนหลัก: <b>{f.masterFundName.value}</b> <Chip s={f.masterFundName} />
+              กองทุนหลัก: <b>{f.masterFundName.value}</b>
             </div>
           )}
           <div className="mt-1 flex flex-wrap items-center gap-x-6 gap-y-2 text-[14px]">
             <span className="flex flex-wrap items-center gap-2">
               <span className="text-ink-muted">ระดับความเสี่ยง</span>
               {f.riskLevel.value !== null ? <RiskMeter level={f.riskLevel.value} /> : <span className="text-ink-muted">{NOT_FOUND}</span>}
-              <Chip s={f.riskLevel} />
             </span>
           </div>
-          <div className="mt-1">
-            <DataStatusBadge status={fundDataStatus(f)} />
-          </div>
+          {asOf && <p className="m-0 mt-1 text-[13px] text-ink-muted">ข้อมูล ณ {thaiDate(asOf.value)}</p>}
         </div>
         <div className="flex flex-col items-start gap-2 sm:items-end">
           <Link
@@ -156,13 +148,13 @@ export default async function FundPage({ params }: Props) {
                   {yearly.map((y, i) => (
                     <li key={y.label} className="flex flex-wrap items-center gap-x-2 gap-y-1">
                       <i className={`inline-block h-2.5 w-2.5 rounded-full ${SEGMENT_COLORS[i]}`} aria-hidden="true" />
-                      {y.label} <b>{docPct(y.s.value!)}</b> <Chip s={y.s} />
+                      {y.label} <b>{docPct(y.s.value!)}</b>
                     </li>
                   ))}
                   {rebate.value !== null && (
                     <li className="flex flex-wrap items-center gap-x-2 gap-y-1">
                       <i className="inline-block h-2.5 w-2.5 rounded-full border-2 border-brand" aria-hidden="true" />
-                      {REBATE_LABEL} <b>-{docPct(rebate.value)}</b> <Chip s={rebate} />
+                      {REBATE_LABEL} <b>-{docPct(rebate.value)}</b>
                     </li>
                   )}
                 </ul>
@@ -226,11 +218,6 @@ export default async function FundPage({ params }: Props) {
                     </div>
                     <b className="text-[16px] text-ink">{a.title}</b>
                     <span className="text-[14.5px] text-ink-body">{a.detail}</span>
-                    <span className="flex flex-wrap gap-1.5">
-                      {a.refs.map((r) => (
-                        <SourceChip key={`${r.source}${r.page}${r.label}`} page={r.page} source={r.source} quote={r.quote} />
-                      ))}
-                    </span>
                   </li>
                 ))}
               </ul>
@@ -291,6 +278,27 @@ export default async function FundPage({ params }: Props) {
         )}
       </Card>
 
+      {/* reference topics that match this fund's type */}
+      {related.length > 0 && (
+        <Card id="reference">
+          <div className="flex flex-wrap items-end justify-between gap-2">
+            <div>
+              <span className="text-[13px] font-bold uppercase tracking-wider text-brand">ข้อมูลอ้างอิง</span>
+              <h2 className="m-0 text-[20px] font-bold">เรื่องที่เกี่ยวกับกองนี้</h2>
+            </div>
+            <Link href="/explain" className="font-bold text-brand underline-offset-4 hover:underline">
+              ดูทั้ง 10 หมวด →
+            </Link>
+          </div>
+          <p className="m-0 mt-1 text-[14px] text-ink-muted">
+            เลือกตามประเภทของกอง ข้อมูลทั่วไปจากผลค้นหาเมื่อ {REFERENCE_ACCESSED} ยังไม่ได้ตรวจทีละหน้าเหมือนตัวเลขของกองด้านบน ดูป้ายสถานะและกดลิงก์ตรวจซ้ำก่อนใช้
+          </p>
+          <div className="mt-4">
+            <RefCardGrid items={related.map(toRefCard)} />
+          </div>
+        </Card>
+      )}
+
       {/* sources */}
       <Card>
         <h2 className="m-0 text-[17px] font-bold">ที่มาของข้อมูล</h2>
@@ -303,7 +311,6 @@ export default async function FundPage({ params }: Props) {
             </li>
           ))}
           {f.meta.verifiedBy && <li>ตรวจข้อมูลโดย: {f.meta.verifiedBy}</li>}
-          <li>เลขหน้าคือลำดับหน้าในไฟล์ PDF กดที่ป้ายเลขหน้าเพื่อดูข้อความในเอกสาร</li>
         </ul>
         <Disclaimer className="mt-3" />
       </Card>

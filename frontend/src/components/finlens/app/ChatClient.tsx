@@ -14,7 +14,38 @@ import { SourceChip } from "./ui";
 type FundOption = { code: string; nameTh: string; isSample: boolean };
 type Msg = { id: number; role: "user" | "bot"; text: string; refs?: AskRef[]; assumptions?: string[]; note?: string; kind?: AskResponse["kind"] };
 
-const MAX = 3;
+/**
+ * A fund handed over by a link (the fund page's "ask about this fund"): shown as a chip the person
+ * can take away. Without one, the question itself says which funds or topics it is about.
+ */
+function ContextChips({ funds, codes, onRemove }: { funds: FundOption[]; codes: string[]; onRemove: (code: string) => void }) {
+  const byCode = new Map(funds.map((f) => [f.code, f]));
+  if (codes.length === 0) return null;
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      <span className="text-[14px] text-ink-muted">กำลังถามเรื่อง</span>
+      {codes.map((code) => {
+        const f = byCode.get(code);
+        if (!f) return null;
+        return (
+          <span key={code} className="inline-flex min-h-[36px] max-w-full items-center gap-1 rounded-full border border-brand/40 bg-brand-soft py-0.5 pl-3 pr-1 text-[14px] font-semibold text-ink">
+            <span className="max-w-[260px] truncate" title={`${f.nameTh} (${f.code})`}>
+              {f.nameTh}
+            </span>
+            <button
+              type="button"
+              onClick={() => onRemove(code)}
+              aria-label={`ไม่ถามเรื่อง ${f.nameTh}`}
+              className="flex h-7 w-7 items-center justify-center rounded-full text-[17px] leading-none text-ink-muted hover:bg-surface hover:text-ink"
+            >
+              ×
+            </button>
+          </span>
+        );
+      })}
+    </div>
+  );
+}
 
 /** Answer status: cites the documents, or says the documents don't have it. Refusals and general knowledge get none. */
 function answerStatus(m: Msg): "cited" | "not_found" | null {
@@ -47,8 +78,8 @@ export function ChatClient({
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages, busy]);
 
-  function toggle(code: string) {
-    setCodes((cur) => (cur.includes(code) ? (cur.length > 1 ? cur.filter((c) => c !== code) : cur) : cur.length < MAX ? [...cur, code] : cur));
+  function remove(code: string) {
+    setCodes((cur) => cur.filter((c) => c !== code));
   }
 
   async function ask(question: string) {
@@ -73,27 +104,9 @@ export function ChatClient({
 
   return (
     <div className="flex flex-col gap-4">
-      {/* fund picker */}
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="text-[14px] text-ink-muted">ถามเรื่องกอง:</span>
-        {funds.map((f) => {
-          const on = codes.includes(f.code);
-          return (
-            <button
-              key={f.code}
-              type="button"
-              aria-pressed={on}
-              onClick={() => toggle(f.code)}
-              className={`min-h-[40px] rounded-full border px-3.5 text-[14px] font-semibold ${on ? "border-brand bg-brand-soft text-ink" : "border-line bg-surface text-ink-muted hover:border-brand"}`}
-            >
-              {on ? "✓ " : "+ "}
-              {f.nameTh}
-              {f.isSample && <span className="ml-1 text-[12px] font-normal text-sun-ink">(ข้อมูลตัวอย่าง)</span>}
-            </button>
-          );
-        })}
-        {selectedSample && <SampleBadge />}
-      </div>
+      {/* a fund handed over by a link; otherwise the question says what it is about */}
+      <ContextChips funds={funds} codes={codes} onRemove={remove} />
+      {selectedSample && <SampleBadge />}
 
       {!aiReady && (
         <p className="m-0 rounded-xl border border-sun/40 bg-sun-soft px-4 py-2.5 text-[14px] text-sun-ink">

@@ -170,7 +170,7 @@ export function fundCard(f: Fund): messagingApi.FlexMessage {
 }
 
 /** Answer from the ask service as a card, with page references and assumptions. */
-export function answerCard(res: AskResponse, fundCodes: string[]): messagingApi.FlexMessage {
+export function answerCard(res: AskResponse, fundCodes: string[], topicIds: string[] = []): messagingApi.FlexMessage {
   const body: FlexComponent[] = [
     text("น้อง Lensy ตอบ", { size: "xs", color: C.brand, weight: "bold" }),
     text(res.answer, { size: "sm", color: C.ink, margin: "sm" }),
@@ -187,7 +187,11 @@ export function answerCard(res: AskResponse, fundCodes: string[]): messagingApi.
     for (const a of res.assumptions) body.push(text(a, { size: "xxs", color: C.muted }));
   }
   body.push(disclaimer());
-  const footer = uriButton("ถามต่อบนหน้าแชต", `/chat${fundCodes[0] ? `?fund=${encodeURIComponent(fundCodes[0])}` : ""}`);
+  // a single topic: its page (figures, risks, sources) first, then the chat
+  const footer = [
+    ...(topicIds.length === 1 ? uriButton("ดูข้อมูลและแหล่งที่มา", `/reference/${topicIds[0].replace(".", "-")}`) : []),
+    ...uriButton("ถามต่อบนหน้าแชต", `/chat${fundCodes[0] ? `?fund=${encodeURIComponent(fundCodes[0])}` : ""}`),
+  ];
   return {
     type: "flex",
     altText: res.answer.slice(0, 380),
@@ -195,7 +199,7 @@ export function answerCard(res: AskResponse, fundCodes: string[]): messagingApi.
       type: "bubble",
       size: "mega",
       body: { type: "box", layout: "vertical", contents: body },
-      ...(footer.length ? { footer: { type: "box", layout: "vertical", contents: footer } } : {}),
+      ...(footer.length ? { footer: { type: "box", layout: "vertical", spacing: "sm", contents: footer } } : {}),
     },
   };
 }

@@ -1,45 +1,68 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { Disclaimer } from "@/components/finlens/Disclaimer";
 import { LandingHeader } from "@/components/finlens/LandingHeader";
 import { LandingFooter } from "@/components/finlens/LandingSections";
-import { LearnList } from "@/components/finlens/learn/LearnList";
-import { MiniMarkdown } from "@/components/finlens/learn/MiniMarkdown";
+import { LearnHashRedirect } from "@/components/finlens/learn/LearnHashRedirect";
 import { Lensy } from "@/components/finlens/Lensy";
 import { GENERAL_NOTE } from "@/lib/ask";
-import { LEARN, LEARN_COUNT } from "@/lib/learn";
+import { chapterTitle, LEARN } from "@/lib/learn";
 
 export const metadata: Metadata = {
-  title: `${LEARN_COUNT} คำถามก่อนลงทุน | FinLens AI`,
+  title: "คำถามที่ควรรู้ก่อนลงทุน | FinLens AI",
   description:
-    "รวมคำถามที่ควรรู้ก่อนลงทุน ตั้งแต่พื้นฐาน ผลตอบแทนและความเสี่ยง ค่าธรรมเนียม การซื้อขาย ความน่าเชื่อถือ การลงทุนต่างประเทศ ภาษี และการตรวจสอบข้อมูล ข้อมูลเพื่อความเข้าใจ ไม่ใช่คำแนะนำการลงทุน",
+    "รวมคำถามที่ควรรู้ก่อนลงทุน 8 บท ตั้งแต่พื้นฐาน ผลตอบแทนและความเสี่ยง ค่าธรรมเนียม การซื้อขาย ความน่าเชื่อถือ การลงทุนต่างประเทศ ภาษี และการตรวจสอบข้อมูล ข้อมูลเพื่อความเข้าใจ ไม่ใช่คำแนะนำการลงทุน",
 };
 
+/** The table of contents: one row per chapter, each opening /learn/<id>. */
 export default function LearnPage() {
-  const answers = Object.fromEntries(LEARN.flatMap((g) => g.items.map((it) => [it.n, <MiniMarkdown key={it.n} text={it.body} />])));
   return (
     <div className="overflow-x-clip text-ink">
       <LandingHeader />
+      <LearnHashRedirect chapters={LEARN.map((g) => ({ id: g.id, first: g.items[0].n, last: g.items[g.items.length - 1].n }))} />
       <main className="bg-surface">
-        <div className="mx-auto flex max-w-[900px] flex-col gap-8 px-5 py-12 md:px-6">
-          <header className="flex flex-wrap items-center justify-between gap-6">
-            <div className="flex max-w-[620px] flex-col gap-3">
-              <span className="self-start rounded-md bg-brand-soft px-2.5 py-1 text-[14px] font-bold text-brand">ความหมาย</span>
-              <h1 className="m-0 text-[30px] font-bold leading-tight md:text-[40px]">
-                {LEARN_COUNT} คำถาม <span className="marker-green">ก่อนลงทุน</span>
-              </h1>
-              <p className="m-0 text-ink-body">ตั้งแต่ศัพท์พื้นฐาน ค่าธรรมเนียม ภาษี ไปจนถึงวิธีตรวจว่าข้อมูลมาจากไหน อ่านทีละข้อ หรือค้นหาคำที่สงสัยได้เลยค่ะ</p>
-              <span className="self-start rounded-md bg-sky px-2 py-0.5 text-[13px] text-ink-muted">{GENERAL_NOTE}</span>
+        <div className="mx-auto flex max-w-[760px] flex-col gap-10 px-5 py-12 md:px-6 md:py-16">
+          <header className="flex items-center justify-between gap-6">
+            <div className="flex flex-col gap-3">
+              <span className="text-[14px] font-bold tracking-wide text-brand">ความรู้ก่อนลงทุน</span>
+              <h1 className="m-0 text-[32px] font-bold leading-tight md:text-[42px]">คำถามที่ควรรู้ก่อนลงทุน</h1>
+              <p className="m-0 text-[17px] leading-relaxed text-ink-body">
+                อ่านเรียงตามบท หรือเลือกเฉพาะบทที่สงสัย แต่ละบทตอบคำถามที่คนมักถามก่อนตัดสินใจลงทุน ด้วยภาษาง่าย ๆ
+              </p>
             </div>
-            <Lensy pose="idea" size={130} className="max-sm:hidden" />
+            <Lensy pose="idea" size={120} className="max-sm:hidden" />
           </header>
 
-          <LearnList groups={LEARN} answers={answers} />
+          <nav aria-labelledby="toc-title">
+            <h2 id="toc-title" className="m-0 border-b border-line pb-3 text-[15px] font-bold tracking-wide text-ink-muted">
+              สารบัญ
+            </h2>
+            <ol className="m-0 list-none p-0">
+              {LEARN.map((g, i) => (
+                <li key={g.id} className="border-b border-line-subtle">
+                  <Link href={`/learn/${g.id}`} className="group flex items-start gap-5 py-5 no-underline md:gap-7">
+                    <span className="w-16 shrink-0 pt-1 text-[13px] font-semibold text-ink-faint">บทที่ {i + 1}</span>
+                    <span className="flex min-w-0 flex-1 flex-col gap-1.5">
+                      <span className="text-[20px] font-bold leading-snug text-ink group-hover:text-brand md:text-[22px]">{chapterTitle(g)}</span>
+                      <span className="line-clamp-2 text-[15px] leading-relaxed text-ink-muted">
+                        {g.items
+                          .slice(0, 3)
+                          .map((it) => it.q)
+                          .join(" · ")}
+                      </span>
+                    </span>
+                    <span className="shrink-0 pt-1.5 text-[13px] text-ink-faint">{g.items.length} ข้อ</span>
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </nav>
 
-          <p className="m-0 rounded-xl bg-brand-tint px-4 py-3 text-[14px] text-ink-body">
-            ตัวเลขในคำตอบเป็นตัวอย่างสมมติเพื่ออธิบายหลักการ ไม่ใช่ข้อมูลของผลิตภัณฑ์ใด ส่วนกฎหมายและภาษีอาจเปลี่ยนแปลงได้ ควรตรวจประกาศฉบับล่าสุดจากหน่วยงานที่เกี่ยวข้องก่อนตัดสินใจ
-          </p>
-          <Disclaimer />
+          <div className="flex flex-col gap-3">
+            <p className="m-0 text-[14px] text-ink-muted">{GENERAL_NOTE}</p>
+            <Disclaimer />
+          </div>
         </div>
       </main>
       <LandingFooter />

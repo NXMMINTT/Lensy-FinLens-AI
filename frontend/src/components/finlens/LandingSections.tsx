@@ -2,7 +2,7 @@ import Link from "next/link";
 import { LineAddFriendButton } from "@/components/brand/LineAddFriendButton";
 import { DISCLAIMER } from "@/lib/disclaimer";
 import { GLOSSARY } from "@/lib/glossary";
-import { LEARN } from "@/lib/learn";
+import { LearnCard } from "./learn/LearnCard";
 import { homeFunds } from "@/lib/homeFunds";
 import { SOURCE_LABEL, sourceRef } from "@/lib/sources";
 
@@ -198,9 +198,9 @@ export function PricingTable() {
           <div className="flex flex-col gap-2">
             <h2 id="pricing-title" className="relative m-0 text-[30px] font-bold leading-tight md:text-[38px]">
               <TitleDecor />
-              เริ่ม<span className="text-brand">ฟรี</span> จ่ายเมื่ออยากส่องทั้งพอร์ต
+              ใช้ได้<span className="text-brand">ฟรี</span> ทุกฟีเจอร์
             </h2>
-            <p className="m-0 text-ink-muted">เทียบการลงทุนได้ครบโดยไม่ต้องจ่าย Premium สำหรับคนที่ถือหลายการลงทุน</p>
+            <p className="m-0 text-ink-muted">เทียบกองทุน ดูทีละกอง คำนวณเป็นบาท และถามน้อง Lensy ไม่มีค่าใช้จ่าย</p>
           </div>
         </div>
 
@@ -250,25 +250,7 @@ export function MeaningSection() {
               </article>
             );
           })}
-          <div className="flex flex-col gap-3 rounded-[20px] bg-gradient-to-br from-brand-soft to-surface p-5">
-            <div className="flex items-center gap-2.5">
-              <LensyFace size={36} />
-              <h3 className="m-0 text-[19px] font-bold leading-snug">คำถามที่ควรรู้ก่อนลงทุน</h3>
-            </div>
-            <ul className="m-0 flex list-none flex-wrap gap-1.5 p-0">
-              {LEARN.map((g) => (
-                <li key={g.id} className="rounded-full border border-line bg-surface px-2.5 py-1 text-[13.5px] text-ink-body">
-                  {g.title.replace(/^คำถาม(เรื่อง|ด้าน|เกี่ยวกับ)?/, "")}
-                </li>
-              ))}
-            </ul>
-            <Link
-              href="/learn"
-              className="mt-auto inline-flex min-h-[44px] items-center justify-center rounded-full bg-brand px-5 font-bold text-white no-underline hover:bg-brand-dark"
-            >
-              ดูทั้งหมด
-            </Link>
-          </div>
+          <LearnCard />
         </div>
       </div>
     </section>
@@ -279,7 +261,7 @@ export function MeaningSection() {
 
 const FAQ: [string, string][] = [
   ["ค่าธรรมเนียมแฝงคืออะไร", "ค่าใช้จ่ายที่ไม่ได้จ่ายตอนกดซื้อ แต่ถูกหักจากเงินในกองทุนทุกปีค่ะ เช่น กองที่ไปลงทุนต่อในกองต่างประเทศ จะมีค่าใช้จ่ายของกองทุนหลักอีกชั้น ซึ่ง Factsheet ของกองไทยไม่ได้แสดง ต้องไปหาจากเอกสารของกองหลักต่างประเทศ น้องรวมทุกชั้นให้ พร้อมบอกที่มา"],
-  ["ข้อมูลมาจากไหน เชื่อได้แค่ไหน", "ตัวเลขของกองมาจาก Factsheet หนังสือชี้ชวน เอกสารของกองหลัก หรือข้อมูลที่ ก.ล.ต. เผยแพร่ค่ะ ทุกตัวเลขบอกที่มา กองที่ตรวจเลขหน้าครบแล้วมีป้าย “ตรวจกับเอกสารแล้ว” ถ้าเอกสารไม่มี น้องจะบอกว่าไม่พบ ไม่เดา ส่วนศัพท์การเงินทั่วไป น้องอธิบายได้โดยติดป้ายว่าเป็นความรู้ทั่วไป"],
+  ["ข้อมูลมาจากไหน เชื่อได้แค่ไหน", "ตัวเลขของกองมาจาก Factsheet หนังสือชี้ชวน เอกสารของกองหลัก หรือข้อมูลที่ ก.ล.ต. เผยแพร่ค่ะ ทุกกองบอกที่มาของข้อมูลไว้ท้ายหน้า ถ้าเอกสารไม่มี น้องจะบอกว่าไม่พบ ไม่เดา ส่วนศัพท์การเงินทั่วไป น้องอธิบายได้โดยติดป้ายว่าเป็นความรู้ทั่วไป"],
   ["บอกได้ไหมว่ากองไหนดีที่สุด", "น้องไม่แนะนำให้ซื้อหรือขาย และไม่จัดอันดับกองทุนค่ะ แต่ช่วยวางค่าใช้จ่ายและความเสี่ยงของแต่ละกองเทียบกันให้ดูได้"],
   ["ถามเรื่องการเงินทั่วไปได้ไหม", "ได้ค่ะ ถามความหมายของศัพท์หรือแนวคิดได้ เช่น TER คืออะไร กองทุนรวมฟีดเดอร์ต่างจากกองทั่วไปยังไง หรือดอกเบี้ยทบต้นทำงานยังไง น้องอธิบายด้วยภาษาง่ายและติดป้าย \"ความรู้ทั่วไป\" ให้เห็นว่าไม่ได้มาจากเอกสารของกองใด คำตอบแบบนี้ไม่มีตัวเลข และน้องไม่พูดเรื่องราคา ข่าว หรือคาดการณ์ตลาด ส่วนตัวเลขของกองยังบอกที่มาเสมอ"],
   ["ตัวเลขเป็นบาทคำนวณยังไง", "คำนวณด้วยสูตรในระบบ ไม่ได้ให้ AI คิดค่ะ ใช้ค่าธรรมเนียมจากเอกสาร กับผลตอบแทนสมมติที่ปรับเองได้ (ค่าเริ่มต้น 6% ต่อปี) ซึ่งเป็นสมมติฐาน ไม่ใช่การคาดการณ์"],
@@ -362,9 +344,6 @@ export function LandingFooter() {
           <div className="text-[13.5px] text-ink-muted">{DISCLAIMER}</div>
         </div>
         <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-ink-muted">
-          <Link href="/roadmap" className="font-semibold text-brand no-underline hover:underline">
-            แผนในอนาคต
-          </Link>
           <Link href="/privacy" className="font-semibold text-brand no-underline hover:underline">
             ความเป็นส่วนตัว
           </Link>
