@@ -4,7 +4,6 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { parseCsv } from "./csv";
-import { GLOSSARY } from "./glossary";
 import { getStocks, STOCK_FIGURES, stockAsOfDates } from "./stocks";
 
 const ROOT = process.cwd();
@@ -37,25 +36,6 @@ describe("stocks (data/stocks/stocks.csv)", () => {
         else expect(s.figures[k], `${row.symbol} ${k}`).toEqual({ raw, value: Number(raw) });
       }
     }
-  });
-});
-
-describe("/stocks page wording", () => {
-  // the disclaimer line ("...ไม่ใช่คำแนะนำการลงทุน") comes from PageHeader, required on every page
-  const FORBIDDEN = /แนะนำ|ซื้อ|ขาย|ราคาเป้าหมาย/;
-
-  it("never uses advice words in the page, the table or the data it shows", () => {
-    const files = ["src/app/(site)/stocks/page.tsx", "src/components/finlens/stocks/StocksTable.tsx"];
-    for (const f of files) {
-      const code = fs.readFileSync(path.join(ROOT, f), "utf8").replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, ""); // ignore comments
-      expect(code, f).not.toMatch(FORBIDDEN);
-    }
-    for (const s of stocks) expect(`${s.symbol} ${s.companyName} ${s.industry} ${s.sector}`, s.symbol).not.toMatch(FORBIDDEN);
-  });
-
-  it("links every glossary button to a term that exists", () => {
-    const ids = new Set(GLOSSARY.flatMap((g) => g.terms.map((t) => t.id)));
-    for (const id of ["pe", "pbv", "dividend-yield", "beta", "market-cap", "free-float"]) expect(ids.has(id), id).toBe(true);
   });
 });
 

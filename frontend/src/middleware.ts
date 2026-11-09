@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { SESSION_COOKIE, verifySession } from "@/lib/session";
 
-/** Dashboard pages and the AI endpoint need a login; the promo home page does not. */
+/** The AI chat and its endpoint need a login; every other page can be read without one. */
 export async function middleware(req: NextRequest) {
   const session = await verifySession(req.cookies.get(SESSION_COOKIE)?.value);
   if (session) return NextResponse.next();
@@ -17,17 +17,7 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/funds/:path*",
-    "/explain/:path*",
-    "/reference/:path*",
-    "/compare/:path*",
-    "/calculator/:path*",
-    "/chat/:path*",
-    "/glossary/:path*",
-    "/checklist/:path*",
-    "/red-flags/:path*",
-    "/stocks/:path*",
-    "/api/ask",
-  ],
+  // everything else (funds, compare, calculator, topics, knowledge pages) is open to read without
+  // a login; only the AI chat needs one, so its quota is spent on signed-in people
+  matcher: ["/chat/:path*", "/api/ask"],
 };

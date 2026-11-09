@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { checkAiAnswer, classifyQuestion, fundContext, GENERAL_NOTE, moneyAnswer, NEED_FUND_FOR_NUMBERS, parseMoneyQuestion, SAMPLE_QUESTIONS, TAX_NOTE, unbackedNumbers } from "./ask";
+import { adviceInAnswer, checkAiAnswer, classifyQuestion, fundContext, GENERAL_NOTE, moneyAnswer, NEED_FUND_FOR_NUMBERS, parseMoneyQuestion, SAMPLE_QUESTIONS, TAX_NOTE, unbackedNumbers } from "./ask";
 import { getFund } from "./funds";
 import { trueCost } from "./trueCost";
 
@@ -240,5 +240,39 @@ describe("checkAiAnswer", () => {
       { "SAMPLE-INDEX": [{ source: "prospectus", pages: ["สารบัญ", "ลงทุนในกองทุนหลักไมนอยกวารอยละ 80 ของ NAV"] }] },
     );
     expect(r.refs).toHaveLength(1);
+  });
+});
+
+describe("advice that used to reach the AI", () => {
+  it.each([
+    "มีเงินแสนนึงลงอะไรดี",
+    "เอาเงินไปลงตัวไหนดี",
+    "กองไหนค่าธรรมเนียมถูกสุด",
+    "กองไหนเสี่ยงต่ำที่สุด",
+    "Should I buy KFUS-A?",
+    "Which fund is the best?",
+    "Is KFUS-A a good investment?",
+    "where should I invest 100k",
+  ])("refused by rule: %s", (q) => {
+    expect(classifyQuestion(q)).toBe("advice");
+  });
+
+  it.each(["TER คืออะไร", "KFUS-A ลงทุนในอะไร", "What is a feeder fund?", "ดอกเบี้ยทบต้นคืออะไร", "KFUS-A มีความเสี่ยงอะไรบ้าง"])("still answered: %s", (q) => {
+    expect(classifyQuestion(q)).not.toBe("advice");
+  });
+});
+
+describe("adviceInAnswer (the model's own wording)", () => {
+  it("catches advice and promised returns", () => {
+    expect(adviceInAnswer("น้อง Lensy ขอแนะนำว่าการมีเงินหนึ่งแสนบาท… เราก็จะได้ผลตอบแทนสม่ำเสมอค่ะ")).toBe(true);
+    expect(adviceInAnswer("กองนี้น่าลงทุนค่ะ")).toBe(true);
+    expect(adviceInAnswer("You should buy this fund.")).toBe(true);
+  });
+
+  it("lets refusals and plain explanations through", () => {
+    expect(adviceInAnswer("น้อง Lensy ไม่สามารถแนะนำให้ซื้อหรือขายกองทุนรวมได้นะคะ TER ของกองคือ 1.54% ต่อปี")).toBe(false);
+    expect(adviceInAnswer("ขอแนะนำให้อ่านหนังสือชี้ชวนหน้า 5 ประกอบค่ะ")).toBe(false);
+    expect(adviceInAnswer("กองทุนไม่มีการรับประกันผลตอบแทนค่ะ")).toBe(false);
+    expect(adviceInAnswer("ดอกเบี้ยทบต้นคือการนำดอกเบี้ยมารวมกับเงินต้น")).toBe(false);
   });
 });

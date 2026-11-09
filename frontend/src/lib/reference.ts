@@ -117,6 +117,7 @@ export function topicFacts(t: RefItem): { text: string; note: string } {
 /** Everyday words people type for a topic (Thai spellings, short names). Checked topics only. */
 const TOPIC_ALIAS: Record<string, string> = {
   ราคาทอง: "7.1",
+  ทองคำ: "7.1",
   ทองแท่ง: "7.1",
   บิตคอยน์: "9.1",
   บิทคอยน์: "9.1",

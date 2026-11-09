@@ -2,6 +2,7 @@
  * POST /api/ask  { fundCodes?: string[], topicIds?: string[], question: string } -> AskResponse
  * (logic in lib/askService.ts). Funds and topics named in the question are added to the chosen ones.
  */
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { AskRequestSchema, type AskResponse } from "@/lib/ask";
@@ -9,6 +10,8 @@ import { answerQuestion } from "@/lib/askService";
 import { getFund, getVerifiedFunds } from "@/lib/funds";
 import { refItem, type RefItem } from "@/lib/reference";
 import type { Fund } from "@/lib/schema";
+import { allowAsk, SLOW_DOWN } from "@/lib/rateLimit";
+import { SESSION_COOKIE, verifySession } from "@/lib/session";
 import { subjectsInQuestion } from "@/lib/subjects";
 
 export const runtime = "nodejs";
@@ -26,6 +29,10 @@ export async function POST(req: Request) {
   const chosenTopics = parsed.data.topicIds.map((id) => refItem(id)).filter((t): t is RefItem => t !== undefined && t.status !== "unchecked");
   // plus what the question names ("ออมพลัส", "K-US500X"); nothing named = general finance knowledge
   const { funds, topics } = subjectsInQuestion(parsed.data.question, getVerifiedFunds(), chosenFunds, chosenTopics);
+  // the middleware already checked the login; the signed-in id is who the limit counts
+  const session = await verifySession((await cookies()).get(SESSION_COOKIE)?.value);
+  const who = session?.sub ?? req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "anon";
+  if (!allowAsk(`web:${who}`)) return NextResponse.json(SLOW_DOWN, { status: 429 });
   const res = await answerQuestion(funds, parsed.data.question, topics);
   return NextResponse.json(res, { status: STATUS[res.kind] });
 }

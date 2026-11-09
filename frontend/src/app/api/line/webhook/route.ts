@@ -9,6 +9,7 @@ import { NextResponse } from "next/server";
 import { answerQuestion } from "@/lib/askService";
 import { getVerifiedFunds } from "@/lib/funds";
 import { handleText, welcome } from "@/lib/line/bot";
+import { allowAsk, SLOW_DOWN } from "@/lib/rateLimit";
 
 export const runtime = "nodejs";
 // The AI call gives up after ANSWER_LIMITS (lib/ai.ts); this leaves room to send the fallback reply.
@@ -38,7 +39,10 @@ async function handleEvent(event: webhook.Event) {
         .showLoadingAnimation({ chatId: event.source.userId, loadingSeconds: LOADING_SECONDS })
         .catch((err: unknown) => console.error("[line/webhook] loading", err instanceof Error ? err.message : err));
     }
-    return reply(event.replyToken, await handleText(event.message.text, funds, answerQuestion));
+    // only questions for น้อง Lensy count toward the limit; fund cards need no AI
+    const who = event.source?.type === "user" && event.source.userId ? event.source.userId : "line";
+    const answer: typeof answerQuestion = async (...args) => (allowAsk(`line:${who}`) ? answerQuestion(...args) : SLOW_DOWN);
+    return reply(event.replyToken, await handleText(event.message.text, funds, answer));
   }
   if (event.type === "message" && event.replyToken) {
     return reply(event.replyToken, [{ type: "text", text: "ตอนนี้น้อง Lensy อ่านได้เฉพาะข้อความค่ะ พิมพ์ชื่อกองหรือคำถามมาได้เลยนะคะ" }]);

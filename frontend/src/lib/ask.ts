@@ -76,8 +76,15 @@ const ADVICE = new RegExp(
     "จะ(ขึ้น|ลง|ได้กำไร|ขาดทุน|ได้กี่)",
     "คาดการณ์|ทำนาย|ผลตอบแทน\\s*(ใน)?อนาคต|ปีหน้า\\s*(จะ|ได้)",
     "จัดอันดับ|อันดับ\\s*(หนึ่ง|1|ที่\\s*1)",
+    // "มีเงินแสนนึงลงอะไรดี", "เอาเงินไปลงตัวไหนดี": asking where to put money
+    "(ลง|ลงทุน|ซื้อ|เอาเงิน\\s*ไป\\s*ลง|ฝาก|ทำ)\\s*(ใน)?\\s*(อะไร|ไหน|ตัวไหน|กองไหน|ที่ไหน)\\s*ดี",
+    // "กองไหนค่าธรรมเนียมถูกสุด": a ranking, even when it is about fees
+    "(กอง|ตัว|อัน|หุ้น)\\s*(ไหน|ใด)[^?]*?(ที่)?สุด",
   ].join("|"),
 );
+/** The same questions in English ("Should I buy KFUS-A?", "Which fund is best?"). */
+const ADVICE_EN =
+  /\b(should\s+i\s+(buy|sell|invest|hold|pick|choose)|(is|are)\s+\S+.*\b(a\s+)?good\s+(buy|investment|fund)|which\s+(fund|one|stock)s?\s+(is|are|should|to)\b|recommend|worth\s+(buying|investing|it)|where\s+(should|do|can)\s+i\s+invest|what\s+should\s+i\s+(buy|invest)|best\s+fund|cheapest\s+fund)/i;
 /** A forecast: a future time word together with a return / price word ("ผลตอบแทนปีหน้าเท่าไร"). Past returns still pass. */
 const FUTURE = /(ปีหน้า|ปีถัดไป|ปีต่อไป|เดือนหน้า|อาทิตย์หน้า|สัปดาห์หน้า|อนาคต|ข้างหน้า|ต่อจากนี้|ต่อไปจะ|สิ้นปี|next year|future)/i;
 const RETURN_WORD = /(ผลตอบแทน|กำไร|ขาดทุน|ราคา|nav|มูลค่า|ขึ้น|ลง|โต|ได้กี่|เท่า(ไร|ไหร่)|%|เปอร์เซ็นต์|return)/i;
@@ -93,11 +100,23 @@ const MONEY = /(\d[\d,]*(\.\d+)?\s*(บาท|แสน|ล้าน|หมื�
 
 export function classifyQuestion(q: string): "advice" | "money" | "general" {
   const s = q.replace(/\s+/g, " ").trim();
-  if (ADVICE.test(s) || OVERRIDE.test(s) || WILL_RETURN.test(s)) return "advice";
+  if (ADVICE.test(s) || ADVICE_EN.test(s) || OVERRIDE.test(s) || WILL_RETURN.test(s)) return "advice";
   if (FUTURE.test(s) && RETURN_WORD.test(s)) return "advice";
   if (COMPARE_JUDGEMENT.test(s) && !WHY.test(s)) return "advice";
   if (MONEY.test(s)) return "money";
   return "general";
+}
+
+/**
+ * Advice or a promised return in the model's own answer ("ขอแนะนำว่า…", "จะได้ผลตอบแทนสม่ำเสมอ").
+ * Negated phrases ("ไม่สามารถแนะนำให้ซื้อ…", "ไม่มีการรับประกันผลตอบแทน") are dropped first.
+ */
+const ADVICE_OUT =
+  /(ขอแนะนำ(?!\s*(ว่า)?\s*(ให้)?\s*(อ่าน|ศึกษา|ตรวจ|ดู|เช็ก|เช็ค|ปรึกษา|สอบถาม|ถาม))|แนะนำให้\s*(ซื้อ|ขาย|ลงทุน|เลือก|ถือ)|ควร(จะ)?\s*(ซื้อ|ขาย|เลือก|ลงทุนใน)|จะได้(รับ)?\s*ผลตอบแทน|ได้ผลตอบแทน(ที่)?\s*สม่ำเสมอ|รับประกัน(ผลตอบแทน|กำไร|เงินต้น)|ไม่มีทางขาดทุน|กำไรแน่นอน|น่า(ซื้อ|ลงทุน)|\b(you\s+should\s+(buy|invest)|i\s+recommend|guaranteed)\b)/i;
+const NEGATED = /(ไม่|มิ|ห้าม)\S{0,60}/g;
+
+export function adviceInAnswer(answer: string): boolean {
+  return ADVICE_OUT.test(answer.replace(NEGATED, " "));
 }
 
 export function refusal(): AskResponse {

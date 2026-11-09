@@ -7,7 +7,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { AiBusyError, AiNotConfiguredError, AiTimeoutError, ANSWER_LIMITS, aiConfig, chatJson } from "./ai";
-import { ASK_SYSTEM, askPrompt, NEED_FUND_FOR_MONEY, checkAiAnswer, checkTaxAnswer, classifyQuestion, isTaxQuestion, moneyAnswer, refusal, stockFacts, stocksInQuestion, TAX_SYSTEM, taxKnowledgeForModel, taxPrompt, type AskResponse } from "./ask";
+import { adviceInAnswer, ASK_SYSTEM, askPrompt, NEED_FUND_FOR_MONEY, checkAiAnswer, checkTaxAnswer, classifyQuestion, isTaxQuestion, moneyAnswer, refusal, stockFacts, stocksInQuestion, TAX_SYSTEM, taxKnowledgeForModel, taxPrompt, type AskResponse } from "./ask";
 import { topicFacts, type RefItem } from "./reference";
 import { getStocks } from "./stocks";
 import { documentsText } from "./extraction";
@@ -50,7 +50,35 @@ export const TIMEOUT_ANSWER = `ขอโทษค่ะ ตอนนี้น้
 export const BUSY_ANSWER = `ขอโทษค่ะ ตอนนี้มีคนถามน้อง Lensy เยอะมาก รอสักครู่แล้วลองใหม่นะคะ ${MEANWHILE}`;
 const ERROR_ANSWER = `ขอโทษค่ะ ตอนนี้น้อง Lensy ตอบไม่ได้ ลองถามใหม่อีกครั้งนะคะ ${MEANWHILE}`;
 
+/* ── answer cache: the same question about the same funds and topics gets the same checked answer ── */
+const CACHE_MS = 60 * 60 * 1000;
+const CACHE_MAX = 500;
+const answerCache = new Map<string, { at: number; res: AskResponse }>();
+
+function cacheKey(funds: Fund[], question: string, topics: RefItem[]): string {
+  const q = question.toLowerCase().replace(/[\s?？!.,]+/g, " ").trim();
+  return [q, funds.map((f) => f.code).sort().join(","), topics.map((t) => t.id).sort().join(",")].join("|");
+}
+
+/**
+ * Answers a question (web chat and LINE). Model answers are cached for an hour, so repeated
+ * questions (a demo, many people trying the same example) do not use the AI quota again.
+ */
 export async function answerQuestion(funds: Fund[], question: string, topics: RefItem[] = []): Promise<AskResponse> {
+  const key = cacheKey(funds, question, topics);
+  const hit = answerCache.get(key);
+  if (hit && Date.now() - hit.at < CACHE_MS) return hit.res;
+  const res = await answerFresh(funds, question, topics);
+  // the model's own wording is checked too: advice or a promised return becomes the refusal
+  const out = res.kind === "ai" && adviceInAnswer(res.answer) ? refusal() : res;
+  if (out.kind === "ai" || out.kind === "refusal") {
+    if (answerCache.size >= CACHE_MAX) answerCache.delete(answerCache.keys().next().value!);
+    answerCache.set(key, { at: Date.now(), res: out });
+  }
+  return out;
+}
+
+async function answerFresh(funds: Fund[], question: string, topics: RefItem[]): Promise<AskResponse> {
   const kind = classifyQuestion(question);
   if (kind === "advice") return refusal();
   // a baht question about funds: the formula; with only topics it goes to the model; with neither, ask for a fund
