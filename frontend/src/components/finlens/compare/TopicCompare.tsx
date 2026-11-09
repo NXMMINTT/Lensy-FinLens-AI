@@ -66,9 +66,9 @@ export function TopicCompare({ catNum, catTitle, items, initialIds }: { catNum: 
 
   return (
     <div className="flex flex-col gap-6">
-      <section aria-labelledby="pick-topic-title" className="rounded-[24px] border border-line bg-surface p-5 md:p-6">
+      <section aria-labelledby="pick-topic-title" className="rounded-[24px] border border-line bg-surface p-4 sm:p-5 md:p-6">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 id="pick-topic-title" className="m-0 text-[20px] font-bold">
+          <h2 id="pick-topic-title" className="m-0 text-[18px] font-bold leading-snug sm:text-[20px]">
             เลือกหัวข้อในหมวด {catTitle} ที่จะเทียบ
           </h2>
           <span className="text-[13px] text-ink-muted">

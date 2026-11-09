@@ -66,7 +66,7 @@ export function RateCalc({ rows }: { rows: RateRow[] }) {
       </section>
 
       <section aria-labelledby="rate-result" className="flex flex-col gap-3">
-        <h2 id="rate-result" className="m-0 text-[22px] font-bold">
+        <h2 id="rate-result" className="m-0 text-[19px] font-bold leading-snug sm:text-[22px]">
           ได้ดอกเบี้ยหรือผลตอบแทนประมาณกี่บาท ใน {years} ปี
         </h2>
         <ul className="m-0 grid list-none gap-4 p-0 md:grid-cols-2">
@@ -86,7 +86,7 @@ export function RateCalc({ rows }: { rows: RateRow[] }) {
                   {r.compound ? "สมมติทบต้นปีละครั้ง" : "ดอกเบี้ยไม่ทบต้น"} · ข้อมูล ณ {r.asOf.split(" / ")[0]} · {REF_STATUS_LABEL[r.status]}
                 </span>
                 <Link href={refPath(r.topic, r.status)} className="font-semibold text-brand no-underline hover:underline">
-                  ที่มา →
+                  ที่มา
                 </Link>
               </p>
             </li>

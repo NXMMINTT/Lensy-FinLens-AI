@@ -74,8 +74,8 @@ export function IconRail({ items, active, onSelect, label }: { items: RailItem[]
   }
 
   return (
-    <nav aria-label={label} className="border-b border-line pb-5">
-      <ul className="m-0 grid list-none grid-cols-4 gap-y-4 p-0 sm:grid-cols-6 xl:grid-cols-11">
+    <nav aria-label={label} className="border-b border-line pb-4 sm:pb-5">
+      <ul className="m-0 grid list-none grid-cols-4 gap-y-3 p-0 sm:grid-cols-6 sm:gap-y-4 xl:grid-cols-11">
         {items.map((it) => {
           const on = it.key === active;
           const name = GROUP_SHORT[it.key] ?? it.label;
@@ -85,13 +85,13 @@ export function IconRail({ items, active, onSelect, label }: { items: RailItem[]
             <>
               <span
                 aria-hidden="true"
-                className={`flex h-12 w-12 items-center justify-center rounded-full transition ${
+                className={`flex h-11 w-11 items-center justify-center rounded-full transition sm:h-12 sm:w-12 ${
                   on ? "bg-brand text-white" : "bg-brand-soft text-brand group-hover:bg-sky-deep"
                 }`}
               >
                 <Icon size={22} strokeWidth={1.9} />
               </span>
-              <span className={`whitespace-nowrap text-[13.5px] leading-none ${on ? "font-bold text-brand" : "font-medium text-ink-body group-hover:text-ink"}`}>{name}</span>
+              <span className={`whitespace-nowrap text-[12.5px] leading-none sm:text-[13.5px] ${on ? "font-bold text-brand" : "font-medium text-ink-body group-hover:text-ink"}`}>{name}</span>
             </>
           );
           return (

@@ -59,16 +59,16 @@ export default async function ReferencePage({ params }: Props) {
             <RefStatusBadge status={item.status} />
           </div>
         </div>
-        <div className="flex flex-col items-start gap-2 sm:items-end">
+        <div className="flex w-full flex-col items-stretch gap-2 sm:w-auto sm:items-end">
           <Link
             href={`/chat?q=${encodeURIComponent(ask)}`}
-            className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-brand px-5 font-bold text-white no-underline hover:bg-brand-dark"
+            className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full bg-brand px-5 font-bold text-white no-underline hover:bg-brand-dark"
           >
             ถามน้อง Lensy เรื่องนี้
           </Link>
           <Link
             href="/explain"
-            className="inline-flex min-h-[44px] items-center rounded-full border-2 border-brand px-5 font-bold text-brand no-underline hover:bg-brand-soft"
+            className="inline-flex min-h-[44px] items-center justify-center rounded-full border-2 border-brand px-5 font-bold text-brand no-underline hover:bg-brand-soft"
           >
             ดูหัวข้ออื่น
           </Link>

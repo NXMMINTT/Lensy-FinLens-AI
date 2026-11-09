@@ -104,16 +104,16 @@ export default async function FundPage({ params }: Props) {
           </div>
           {asOf && <p className="m-0 mt-1 text-[13px] text-ink-muted">ข้อมูล ณ {thaiDate(asOf.value)}</p>}
         </div>
-        <div className="flex flex-col items-start gap-2 sm:items-end">
+        <div className="flex w-full flex-col items-stretch gap-2 sm:w-auto sm:items-end">
           <Link
             href={`/chat?fund=${encodeURIComponent(f.code)}`}
-            className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-brand px-5 font-bold text-white no-underline hover:bg-brand-dark"
+            className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full bg-brand px-5 font-bold text-white no-underline hover:bg-brand-dark"
           >
             ถามน้อง Lensy เรื่องกองนี้
           </Link>
           <Link
             href={`/compare?funds=${encodeURIComponent([f.code, otherCode].filter(Boolean).join(","))}`}
-            className="inline-flex min-h-[44px] items-center rounded-full border-2 border-brand px-5 font-bold text-brand no-underline hover:bg-brand-soft"
+            className="inline-flex min-h-[44px] items-center justify-center rounded-full border-2 border-brand px-5 font-bold text-brand no-underline hover:bg-brand-soft"
           >
             เทียบค่าธรรมเนียมกับกองอื่น
           </Link>

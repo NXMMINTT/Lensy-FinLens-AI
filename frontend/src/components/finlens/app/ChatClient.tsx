@@ -115,12 +115,12 @@ export function ChatClient({
       )}
 
       {/* conversation */}
-      <div className="force-light flex min-h-[420px] flex-col gap-3 rounded-[24px] bg-[#DCEBFD] p-4 md:p-5" aria-live="polite">
+      <div className="force-light flex min-h-[220px] flex-col gap-3 rounded-[24px] bg-[#DCEBFD] p-3.5 sm:min-h-[420px] md:p-5" aria-live="polite">
         {messages.length === 0 && (
           <div className="flex items-end gap-2">
             <LensyFace size={36} />
             <div className="max-w-[85%] rounded-[18px] rounded-bl-md bg-surface px-4 py-3 text-[15px] text-ink-body">
-              สวัสดีค่ะ น้อง Lensy เอง ถามเรื่องค่าใช้จ่าย ความเสี่ยง หรือเงื่อนไขของกองที่เลือก หรือถามศัพท์การเงินที่ไม่เข้าใจก็ได้ค่ะ ตัวเลขของกองจะบอกที่มาทุกครั้ง
+              สวัสดีค่ะ น้อง Lensy เอง ใส่ชื่อกองหรือเรื่องที่อยากรู้ในคำถามได้เลย เช่น ค่าใช้จ่ายของกอง ดอกเบี้ยออมพลัส หรือศัพท์การเงินที่ไม่เข้าใจ ตัวเลขจะบอกที่มาทุกครั้งค่ะ
             </div>
           </div>
         )}
