@@ -8,7 +8,7 @@ import { classifyQuestion, EXAMPLE_QUESTIONS, type AskResponse } from "../ask";
 import { topicsInText, type RefItem } from "../reference";
 import { matchFunds, stripFundNames } from "../subjects";
 import type { Fund } from "../schema";
-import { answerCard, appUrl, fundCard, quickReplies, textMessage } from "./flex";
+import { answerCard, appUrl, compareMessages, fundCard, quickReplies, textMessage } from "./flex";
 import { MAX_COMPARE_FUNDS } from "../limits";
 
 type Message = messagingApi.Message;
@@ -77,7 +77,8 @@ export async function handleText(raw: string, funds: Fund[], ask: Answerer): Pro
   const topics = topicsInText(rest, MAX_COMPARE_FUNDS - matched.length);
 
   // just a fund name or code, or "เทียบ A กับ B" -> their summary card(s)
-  if (matched.length && !topics.length && rest.replace(JOINERS, "").trim().length < 3) return matched.map(fundCard);
+  // two or more: one comparison card, then their cards side by side
+  if (matched.length && !topics.length && rest.replace(JOINERS, "").trim().length < 3) return matched.length > 1 ? compareMessages(matched) : matched.map(fundCard);
 
   const kind = classifyQuestion(text);
   if (kind === "advice") return [answerCard(await ask(matched.length ? matched : funds.slice(0, 1), text), matched.map((f) => f.code))];

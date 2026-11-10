@@ -46,6 +46,11 @@ function ref<T>(label: string, s: Sourced<T>): RiskRef[] {
 
 const ORDER: Record<RiskLevel, number> = { high: 0, medium: 1, info: 2 };
 
+/** An English name between Thai words gets a space on each side ("ลงทุนใน United States 94.8%"); a Thai one stays joined. */
+function spaced(name: string): string {
+  return /^[A-Za-z0-9]/.test(name) ? ` ${name} ` : `${name} `;
+}
+
 export function riskAlerts(f: Fund): RiskAlert[] {
   const T = RISK_THRESHOLDS;
   const out: RiskAlert[] = [];
@@ -68,7 +73,7 @@ export function riskAlerts(f: Fund): RiskAlert[] {
   // foreign market
   const country = f.risk.topCountry.value;
   if (country && country.pct >= T.topCountryPct) {
-    add({ id: "foreign-country", topic: "foreign", level: "medium", title: `ลงทุนใน${country.name} ${country.pct}%`, detail: `ผลตอบแทนขึ้นกับตลาด${country.name}เป็นหลัก รวมถึงเหตุการณ์และวันหยุดของตลาดนั้น`, refs: ref("ประเทศที่ลงทุน", f.risk.topCountry) });
+    add({ id: "foreign-country", topic: "foreign", level: "medium", title: `ลงทุนใน${spaced(country.name)}${country.pct}%`, detail: `ผลตอบแทนขึ้นกับตลาด${spaced(country.name)}เป็นหลัก รวมถึงเหตุการณ์และวันหยุดของตลาดนั้น`, refs: ref("ประเทศที่ลงทุน", f.risk.topCountry) });
   }
   if (f.isFeeder.value === true) {
     add({
@@ -91,7 +96,7 @@ export function riskAlerts(f: Fund): RiskAlert[] {
   }
   const sector = f.risk.topSector.value;
   if (sector && sector.pct >= T.topSectorPct) {
-    add({ id: "conc-sector", topic: "concentration", level: "medium", title: `กลุ่ม${sector.name} ${sector.pct}%`, detail: `มูลค่ากองขึ้นกับอุตสาหกรรม${sector.name}ค่อนข้างมาก`, refs: ref("อุตสาหกรรมที่ลงทุน", f.risk.topSector) });
+    add({ id: "conc-sector", topic: "concentration", level: "medium", title: `กลุ่ม${spaced(sector.name)}${sector.pct}%`, detail: `มูลค่ากองขึ้นกับอุตสาหกรรม${spaced(sector.name)}ค่อนข้างมาก`, refs: ref("อุตสาหกรรมที่ลงทุน", f.risk.topSector) });
   }
 
   // redemption
