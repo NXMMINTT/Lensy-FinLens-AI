@@ -75,18 +75,18 @@ export function TopicCompare({ catNum, catTitle, items, initialIds }: { catNum: 
             เลือกได้ {MAX} หัวข้อ · เลือกแล้ว {chosen.length}
           </span>
         </div>
-        <ul className="m-0 mt-4 grid list-none gap-1 rounded-2xl border border-line p-2 sm:grid-cols-2">
+        <ul className="m-0 mt-4 grid list-none grid-cols-1 gap-1 rounded-2xl border border-line p-2 sm:grid-cols-2">
           {items.map((t) => {
             const n = picked.indexOf(t.id);
             const sel = n >= 0;
             return (
-              <li key={t.id}>
+              <li key={t.id} className="min-w-0">
                 <button
                   type="button"
                   onClick={() => toggle(t.id)}
                   aria-pressed={sel}
                   disabled={!sel && picked.length >= MAX}
-                  className={`flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${sel ? "bg-brand-soft" : "hover:bg-line-subtle"}`}
+                  className={`flex w-full min-w-0 items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${sel ? "bg-brand-soft" : "hover:bg-line-subtle"}`}
                 >
                   <span
                     aria-hidden="true"
@@ -95,8 +95,8 @@ export function TopicCompare({ catNum, catTitle, items, initialIds }: { catNum: 
                     {sel ? n + 1 : ""}
                   </span>
                   <span className="flex min-w-0 flex-1 flex-col">
-                    <span className="truncate text-[14.5px] font-semibold text-ink">{t.title}</span>
-                    <span className="truncate text-[12.5px] text-ink-muted">
+                    <span className="line-clamp-2 break-words text-[14.5px] font-semibold leading-snug text-ink">{t.title}</span>
+                    <span className="line-clamp-2 break-words text-[12.5px] text-ink-muted">
                       {t.id}
                       {t.headline ? ` · ${t.headline.value} ${t.headline.label}` : ""}
                     </span>
@@ -129,7 +129,40 @@ export function TopicCompare({ catNum, catTitle, items, initialIds }: { catNum: 
             </h2>
             <p className="m-0 text-[13.5px] text-ink-muted">ตัวเลขมาจากผลค้นหา (ตารางอ้างอิงรอบที่ 1) ดูป้ายสถานะและวันที่ของแต่ละหัวข้อก่อนเทียบ ตัวเลขต่างวันกันอาจเทียบกันตรง ๆ ไม่ได้</p>
           </div>
-          <div className="overflow-x-auto px-3 pb-3 pt-3 md:px-4">
+          {/* phones: one card per topic stacked down the page (the same for 2, 3 or 4); sm and up: the table */}
+          <ul className="m-0 flex list-none flex-col gap-3 p-3 sm:hidden">
+            {chosen.map((t, n) => (
+              <li key={t.id} className="overflow-hidden rounded-2xl border border-line">
+                <div className="flex flex-col gap-1 bg-brand-dark px-4 py-3 text-white">
+                  <span className="flex items-center gap-1.5 text-[15px] font-bold">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/20 text-[11px]">{n + 1}</span>
+                    {t.id}
+                  </span>
+                  <span className="text-[13.5px] leading-snug text-white/85">{t.title}</span>
+                </div>
+                <div className="flex flex-col gap-0.5 border-b-2 border-brand/20 bg-brand-soft px-4 py-3">
+                  <span className="text-[13px] font-bold text-ink">ตัวเลขล่าสุด</span>
+                  {t.headline ? (
+                    <>
+                      <b className="text-[22px] leading-tight text-brand">{t.headline.value}</b>
+                      <span className="text-[12.5px] text-ink-body">{t.headline.label}</span>
+                      {t.asOf && <span className="text-[12px] text-ink-muted">ณ {shortAsOf(t.asOf)}</span>}
+                    </>
+                  ) : (
+                    <span className="text-[13px] text-ink-muted">ไม่มีตัวเลขเด่น ดูรายการด้านล่าง</span>
+                  )}
+                </div>
+                {rows.map((r) => (
+                  <div key={r.label} className="flex flex-col gap-1 border-b border-line-subtle px-4 py-3 last:border-0">
+                    <span className="text-[13px] font-semibold text-ink-muted">{r.label}</span>
+                    <div className="break-words text-[14.5px] text-ink-body">{r.render(t)}</div>
+                  </div>
+                ))}
+              </li>
+            ))}
+          </ul>
+
+          <div className="hidden overflow-x-auto px-3 pb-3 pt-3 sm:block md:px-4">
             <table className="w-full min-w-[620px] table-fixed border-collapse overflow-hidden rounded-2xl text-left text-[14.5px]">
               <colgroup>
                 <col className="w-[22%]" />

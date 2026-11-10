@@ -24,8 +24,8 @@ export type RailItem = { key: string; label: string; count: number; href?: strin
 /**
  * The group menu of ดูทีละกอง and เทียบ: every item (funds and each reference group) as a round line
  * icon with a one-line name, all the same size, so no item stands out. The chosen one has a filled
- * circle and a bold name. One row on wide screens, a grid on phones, never sideways
- * scrolling. Counts are not shown here (the heading under the menu says how many).
+ * circle and a bold name. Phones: one row that scrolls sideways. Wider screens: rows of 6, one row on xl.
+ * Counts are not shown here (the heading under the menu says how many).
  * An item is a link when it has `href`, otherwise a button that calls `onSelect` (client pages only).
  */
 export function IconRail({ items, active, onSelect, label }: { items: RailItem[]; active: string; onSelect?: (key: string) => void; label: string }) {
@@ -74,8 +74,9 @@ export function IconRail({ items, active, onSelect, label }: { items: RailItem[]
   }
 
   return (
-    <nav aria-label={label} className="border-b border-line pb-4 sm:pb-5">
-      <ul className="m-0 grid list-none grid-cols-4 gap-y-3 p-0 sm:grid-cols-6 sm:gap-y-4 xl:grid-cols-11">
+    <nav aria-label={label} className="relative border-b border-line pb-4 sm:pb-5">
+      {/* phones: one row that scrolls sideways (edge to edge); wider screens: rows of 6, or one row on xl */}
+      <ul className="-mx-4 m-0 flex list-none snap-x gap-1 overflow-x-auto px-4 py-1.5 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:justify-center sm:gap-0 sm:gap-y-4 sm:overflow-visible sm:px-0 sm:py-0 [&::-webkit-scrollbar]:hidden">
         {items.map((it) => {
           const on = it.key === active;
           const name = GROUP_SHORT[it.key] ?? it.label;
@@ -95,7 +96,7 @@ export function IconRail({ items, active, onSelect, label }: { items: RailItem[]
             </>
           );
           return (
-            <li key={it.key} className="flex justify-center">
+            <li key={it.key} className="flex w-[74px] shrink-0 snap-start justify-center sm:w-1/6 xl:w-[calc(100%/11)]">
               {it.href ? (
                 <Link href={it.href} title={it.label} aria-current={on ? "page" : undefined} className={cls}>
                   {body}
@@ -109,6 +110,8 @@ export function IconRail({ items, active, onSelect, label }: { items: RailItem[]
           );
         })}
       </ul>
+      {/* phones: a soft fade at the right edge says there is more to scroll */}
+      <span aria-hidden="true" className="pointer-events-none absolute -right-4 top-0 h-[78px] w-10 bg-gradient-to-l from-surface to-transparent sm:hidden" />
     </nav>
   );
 }

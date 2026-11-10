@@ -3,7 +3,7 @@ import { Lensy, type LensyPose } from "../Lensy";
 /**
  * Same header on every dashboard page, so each menu tile clearly lands on its own page:
  * a label, the title, one line of what the page does, and Lensy in that tile's pose.
- * On a phone it stays short: smaller title, the description cut to two lines, no Lensy.
+ * On a phone: smaller title with its highlighted end on a line of its own, the full description, no Lensy.
  */
 export function PageHeader({
   label,
@@ -29,9 +29,9 @@ export function PageHeader({
           {badge}
         </span>
         <h1 className="m-0 text-[23px] font-bold leading-snug text-white sm:text-[28px] md:text-[36px]">
-          {title} {mark && <span className="sm:whitespace-nowrap">{mark}</span>}
+          {title} {mark && <span className="block whitespace-nowrap sm:inline">{mark}</span>}
         </h1>
-        <p className="m-0 line-clamp-2 max-w-[720px] text-[14.5px] leading-relaxed text-white/90 sm:line-clamp-none sm:text-[16px]">{text}</p>
+        <p className="m-0 max-w-[720px] text-[14.5px] leading-relaxed text-white/90 sm:text-[16px]">{text}</p>
       </div>
       <Lensy pose={pose} size={130} className="hidden shrink-0 sm:block" />
     </header>

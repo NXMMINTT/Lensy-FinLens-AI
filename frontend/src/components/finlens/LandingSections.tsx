@@ -20,36 +20,44 @@ export function Hero() {
   return (
     <section aria-labelledby="hero-title" className="relative bg-surface">
       <div className="mx-auto grid max-w-[1200px] items-center gap-x-10 gap-y-12 px-5 pb-16 pt-10 md:px-6 lg:min-h-[min(calc(100svh-66px),780px)] lg:grid-cols-[1.05fr_1fr] lg:py-10">
-        <div className="relative flex min-w-0 flex-col gap-5">
+        {/* phones: centred, one phrase per line, so the eye reads it top to bottom; sm and up: as before */}
+        <div className="relative flex min-w-0 flex-col items-center gap-5 text-center sm:items-stretch sm:text-left">
           <HeroTextDecor />
-          <span className="inline-flex items-center gap-2 self-start rounded-full bg-brand-soft px-3.5 py-1.5 text-[14px] font-semibold text-brand">
+          <span className="inline-flex items-center gap-2 rounded-full bg-brand-soft px-3.5 py-1.5 text-[14px] font-semibold text-brand sm:self-start">
             <span className="relative flex h-2 w-2" aria-hidden="true">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-linegreen opacity-60" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-linegreen" />
             </span>
             สำหรับคนที่อยากเข้าใจเงินของตัวเองมากขึ้น
           </span>
-          <h1 id="hero-title" className="m-0 text-[27px] font-bold leading-[1.35] tracking-tight sm:text-[38px] lg:text-[44px]">
+          <h1 id="hero-title" className="m-0 text-[31px] font-bold leading-[1.3] tracking-tight sm:text-[38px] lg:text-[44px]">
             {/* Thai has no spaces between words: each phrase stays whole, lines break only between phrases */}
-            <span className="whitespace-nowrap">ลงทุนอยู่ทุกวัน</span> <span className="whitespace-nowrap">แต่รู้หรือเปล่า…</span>
-            <br />
-            <span className="text-brand-dark dark:text-brand">
-              <span className="whitespace-nowrap">เงินของคุณ</span>
-              <wbr />
-              <span className="whitespace-nowrap">กำลังเสียค่าอะไรไปบ้าง?</span>
+            <span className="block whitespace-nowrap sm:inline">ลงทุนอยู่ทุกวัน</span> <span className="block whitespace-nowrap sm:inline">แต่รู้หรือเปล่า…</span>
+            <br className="hidden sm:block" />
+            <span className="block text-brand-dark sm:inline dark:text-brand">
+              <span className="block whitespace-nowrap sm:inline">เงินของคุณ</span>{" "}
+              <span className="block whitespace-nowrap sm:inline">กำลังเสียค่าอะไรไปบ้าง?</span>
             </span>
           </h1>
-          <p className="m-0 max-w-[540px] text-lg leading-relaxed text-ink-body">
-            เปรียบเทียบกองทุน วิเคราะห์ค่าธรรมเนียมเป็นเงินบาท เข้าใจความเสี่ยง และตรวจสอบข้อมูลจากเอกสารต้นทางได้ง่ายขึ้น
+          <p className="m-0 max-w-[540px] text-[17px] leading-[1.7] text-ink-body sm:text-lg">
+            {["เปรียบเทียบกองทุน", "วิเคราะห์ค่าธรรมเนียม", "เป็นเงินบาท", "เข้าใจความเสี่ยง", "และตรวจสอบข้อมูล", "จากเอกสารต้นทาง", "ได้ง่ายขึ้น"].map((t, i) => (
+              <span key={t} className="whitespace-nowrap">
+                {t}
+                {i < 6 && <wbr />}
+              </span>
+            ))}
           </p>
-          <p className="m-0 max-w-[540px] text-lg font-bold leading-relaxed text-ink">
+          <p className="m-0 w-full max-w-[540px] rounded-2xl bg-brand-tint px-4 py-3 text-[17px] font-bold leading-relaxed text-ink sm:bg-transparent sm:p-0 sm:text-lg">
             <span className="whitespace-nowrap">อยากลงทุนเอง</span> <span className="whitespace-nowrap">หรือให้มืออาชีพช่วยดูแล</span>{" "}
             <span className="whitespace-nowrap">ก็เลือกได้ในแบบของคุณ</span>
           </p>
-          <div className="mt-1 flex flex-wrap items-center gap-3">
-            <LineAddFriendButton label="เริ่มต้นทำความเข้าใจการลงทุนฟรี" />
+          <div className="mt-1 flex w-full flex-wrap items-center gap-3">
+            <LineAddFriendButton label="เริ่มต้นทำความเข้าใจการลงทุนฟรี" className="w-full justify-center text-[17px] sm:w-auto" />
           </div>
-          <p className="m-0 text-[14px] text-ink-muted">ไม่มีค่าสมัคร · เครื่องมือหลักใช้ฟรี · เลือกเส้นทางได้เอง</p>
+          <p className="m-0 text-[13px] text-ink-muted sm:text-[14px]">
+            <span className="whitespace-nowrap">ไม่มีค่าสมัคร</span> · <span className="whitespace-nowrap">เครื่องมือหลักใช้ฟรี</span> ·{" "}
+            <span className="whitespace-nowrap">เลือกเส้นทางได้เอง</span>
+          </p>
         </div>
         <div className="relative flex justify-center px-2 lg:justify-end">
           <span aria-hidden="true" className="pointer-events-none absolute left-1/2 top-1/2 h-[min(520px,95vw)] w-[min(520px,95vw)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-brand-soft via-brand-tint to-surface lg:left-[55%]" />
@@ -431,16 +439,27 @@ export function StartCta() {
 export function LandingFooter() {
   return (
     <footer className="border-t border-line bg-surface">
-      <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-4 px-5 py-8 text-[15px] md:px-6">
-        <div className="flex flex-col gap-1.5">
-          <FinLensLogo height={38} />
-          <div className="text-ink-muted">FinLens AI — ผู้ช่วยการเงินที่ทำให้เห็นค่าใช้จ่ายที่มองไม่เห็น</div>
+      {/* logo and what FinLens is, then one quiet line: links on the left, the event on the right */}
+      <div className="mx-auto flex max-w-[1200px] flex-col gap-5 px-5 pb-5 pt-8 md:flex-row md:items-center md:justify-between md:px-6">
+        <div className="flex flex-col gap-2">
+          <FinLensLogo height={36} />
+          <p className="m-0 text-[15px] text-ink-muted">
+            <span className="whitespace-nowrap">ผู้ช่วยการเงิน</span>
+            <wbr />
+            <span className="whitespace-nowrap">ที่ทำให้เห็นค่าใช้จ่ายที่มองไม่เห็น</span>
+          </p>
         </div>
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-ink-muted">
-          <Link href="/privacy" className="font-semibold text-brand no-underline hover:underline">
-            ความเป็นส่วนตัว
-          </Link>
-          <span>Trinity Hackathon 2026</span>
+        <Link
+          href="/privacy"
+          className="inline-flex min-h-[40px] items-center self-start rounded-full border border-line px-4 text-[14px] font-semibold text-ink-body no-underline transition hover:border-brand hover:text-brand md:self-auto"
+        >
+          ความเป็นส่วนตัว
+        </Link>
+      </div>
+      <div className="border-t border-line-subtle">
+        <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-x-4 gap-y-1 px-5 py-4 text-[13px] text-ink-faint md:px-6">
+          <span>© 2026 FinLens AI</span>
+          <span>ผลงานส่ง Trinity Hackathon 2026</span>
         </div>
       </div>
     </footer>

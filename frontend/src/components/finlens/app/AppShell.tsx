@@ -13,11 +13,12 @@ export async function AppShell({ children }: { children: React.ReactNode; sample
   const signedIn = (await verifySession((await cookies()).get(SESSION_COOKIE)?.value)) !== null;
   return (
     <div className="overflow-x-clip text-ink">
-      <LandingHeader signedIn={signedIn} />
+      <LandingHeader signedIn={signedIn} inApp />
       <main className="min-h-[70svh] bg-surface pb-24 md:pb-0">
         <div className="mx-auto flex max-w-[1100px] flex-col gap-6 px-4 py-8 md:px-6 md:py-10">{children}</div>
       </main>
-      <div className="pb-[60px] md:pb-0">
+      {/* phones: no footer inside the app (the tab bar is the way around; ☰ links the privacy page) */}
+      <div className="hidden md:block">
         <LandingFooter />
       </div>
       <AppTabBar />

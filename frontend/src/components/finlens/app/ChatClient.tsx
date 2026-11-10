@@ -29,7 +29,7 @@ function ContextChips({ funds, codes, onRemove }: { funds: FundOption[]; codes: 
         if (!f) return null;
         return (
           <span key={code} className="inline-flex min-h-[36px] max-w-full items-center gap-1 rounded-full border border-brand/40 bg-brand-soft py-0.5 pl-3 pr-1 text-[14px] font-semibold text-ink">
-            <span className="max-w-[260px] truncate" title={`${f.nameTh} (${f.code})`}>
+            <span className="min-w-0 truncate" title={`${f.nameTh} (${f.code})`}>
               {f.nameTh}
             </span>
             <button

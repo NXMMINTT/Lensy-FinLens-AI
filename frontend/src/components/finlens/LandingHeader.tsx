@@ -23,6 +23,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { LINE_ADD_FRIEND_URL } from "@/components/brand/LineAddFriendButton";
 import { LineIcon } from "@/components/ui/LineIcon";
 import { useTheme } from "@/lib/theme";
 
@@ -203,6 +204,9 @@ function MobileMenu({
         {/* theme and sign in / out sit at the bottom of the screen */}
         <div className="mt-auto flex flex-col gap-3 pt-2">
           <ThemeSwitch />
+          <Link href="/privacy" onClick={onClose} className="self-center text-[14px] font-semibold text-ink-muted no-underline hover:text-brand">
+            ความเป็นส่วนตัว
+          </Link>
 
           {signedIn ? (
             <button
@@ -231,9 +235,11 @@ function MobileMenu({
 
 export function LandingHeader({
   signedIn = false,
-}: { signedIn?: boolean } = {}) {
+  inApp = false,
+}: { signedIn?: boolean; inApp?: boolean } = {}) {
   const path = usePathname();
-  const nav = signedIn ? NAV_APP : NAV_LANDING;
+  // inside the app the menu lists the app's pages, whether or not the visitor has signed in
+  const nav = signedIn || inApp ? NAV_APP : NAV_LANDING;
   // phones: the links open as a menu card over the page
   const [open, setOpen] = useState(false);
   useEffect(() => setOpen(false), [path]);
@@ -292,12 +298,25 @@ export function LandingHeader({
               ออกจากระบบ
             </button>
           )}
-          <Link
-            href={signedIn ? "/chat" : "/funds"}
-            className={`${signedIn ? "hidden sm:inline-flex" : "inline-flex"} min-h-[44px] items-center rounded-full bg-brand px-5 font-bold text-white no-underline hover:bg-brand-dark`}
-          >
-            {signedIn ? "คุยกับ Lensy" : "เข้าใช้งาน"}
-          </Link>
+          {/* phones: no button in the header (the ☰ menu has the way in), so the bar stays uncluttered */}
+          {signedIn ? (
+            // signed in: straight to น้อง Lensy's LINE account (add friend), in a new tab
+            <a
+              href={LINE_ADD_FRIEND_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden min-h-[44px] items-center gap-2 rounded-full bg-brand px-5 font-bold text-white no-underline hover:bg-brand-dark sm:inline-flex"
+            >
+              คุยกับ Lensy
+            </a>
+          ) : (
+            <Link
+              href="/funds"
+              className="hidden min-h-[44px] items-center rounded-full bg-brand px-5 font-bold text-white no-underline hover:bg-brand-dark sm:inline-flex"
+            >
+              เข้าใช้งาน
+            </Link>
+          )}
           <button
             type="button"
             onClick={() => setOpen(true)}

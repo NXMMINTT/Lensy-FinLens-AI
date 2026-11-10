@@ -70,9 +70,9 @@ function FundPicker({
             const f = byCode.get(s.code);
             if (!f) return null;
             return (
-              <li key={s.code} className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-brand/40 bg-brand-soft py-1 pl-3.5 pr-1.5 text-[15px] font-semibold text-ink">
+              <li key={s.code} className="inline-flex min-h-[44px] max-w-full items-center gap-2 rounded-full border border-brand/40 bg-brand-soft py-1 pl-3.5 pr-1.5 text-[15px] font-semibold text-ink">
                 <Swatch slot={s.slot} />
-                <span className="max-w-[260px] truncate">{f.nameTh}</span>
+                <span className="min-w-0 truncate">{f.nameTh}</span>
                 <button
                   type="button"
                   onClick={() => onToggle(s.code)}
@@ -110,19 +110,19 @@ function FundPicker({
                 : ""
             : "แนะนำ · พิมพ์ชื่อหรือรหัสเพื่อค้นหากองอื่น"}
         </p>
-        <ul className="m-0 grid list-none gap-1 p-0 sm:grid-cols-2">
+        <ul className="m-0 grid list-none grid-cols-1 gap-1 p-0 sm:grid-cols-2">
           {options.length === 0 && <li className="px-3 py-2.5 text-[14px] text-ink-muted">ไม่พบกองที่ตรงกับคำค้น ลองพิมพ์รหัสกอง เช่น KFUS</li>}
           {options.map((f) => {
             const sel = selected.find((s) => s.code === f.code);
             const disabled = !sel && full;
             return (
-              <li key={f.code}>
+              <li key={f.code} className="min-w-0">
                 <button
                   type="button"
                   onClick={() => onToggle(f.code)}
                   aria-pressed={Boolean(sel)}
                   disabled={disabled}
-                  className={`flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
+                  className={`flex w-full min-w-0 items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
                     sel ? "bg-brand-soft" : "hover:bg-line-subtle"
                   }`}
                 >
@@ -133,10 +133,11 @@ function FundPicker({
                     {sel && <Swatch slot={sel.slot} />}
                   </span>
                   <span className="flex min-w-0 flex-col">
-                    <span className="truncate text-[14.5px] font-semibold text-ink">
+                    {/* long fund names wrap to two lines inside the box instead of running past it */}
+                    <span className="line-clamp-2 break-words text-[14.5px] font-semibold leading-snug text-ink">
                       {f.nameTh} {f.isSample && <span className="text-[11px] font-medium text-sun-ink">(ตัวอย่าง)</span>}
                     </span>
-                    <span className="text-[12.5px] text-ink-muted">{f.code}</span>
+                    <span className="truncate text-[12.5px] text-ink-muted">{f.code}</span>
                   </span>
                 </button>
               </li>
@@ -177,6 +178,44 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
 
   const byCode = useMemo(() => new Map(funds.map((f) => [f.code, f])), [funds]);
   const chosen = selected.map((s) => ({ ...s, fund: byCode.get(s.code)! })).filter((s) => s.fund);
+
+  // fee rows per phase, shared by the phone cards and the table: rows where no chosen fund has a figure say nothing
+  const phaseRows = FEE_PHASES.map((ph) => ({
+    ph,
+    layers: (chosen[0]?.fund.layers ?? []).filter(
+      (l) =>
+        l.phase === ph.phase &&
+        chosen.some((s) => {
+          const own = s.fund.layers.find((x) => x.key === l.key);
+          return own && (own.item.value !== null || own.remainder);
+        }),
+    ),
+  })).filter((p) => p.layers.length > 0);
+
+  /** One fund's figure for one fee row: its label, the value (source on hover), and whether Factsheet hides it. */
+  function feeCell(fund: CompareFund, key: string) {
+    const own = fund.layers.find((l) => l.key === key)!;
+    const isMaster = key === "masterFundExpense";
+    // already inside the TER: shown as a breakdown under it, never added again
+    const insideTer = key === "management" || key === "otherExpenses";
+    const label = insideTer ? `${own.label.replace("ค่าธรรมเนียม", "ค่า")} (อยู่ใน TER แล้ว)` : own.label;
+    const item = own.item;
+    const rest = own.remainder;
+    const hidden = isMaster && item.value !== null && (item.source === "prospectus" || item.source === "master");
+    const value = item.value !== null ? item.value : rest ? rest.value : null;
+    const ref = item.value !== null ? item : rest ? rest.ter : null;
+    const node =
+      value === null || !ref ? (
+        <span className="text-[13.5px] text-ink-faint">{own.emptyText ? "ไม่มี (ลงทุนตรง)" : NOT_IN_DOCS}</span>
+      ) : (
+        // the source of every figure shows on hover (title)
+        <span className={insideTer ? "text-ink-muted" : "font-bold text-ink"} title={sourceRef(ref.page, ref.source)}>
+          {own.sign === -1 ? "-" : ""}
+          {docPct(value)}
+        </span>
+      );
+    return { label, insideTer, hidden, node };
+  }
 
   function toggle(code: string) {
     setSelected((cur) => {
@@ -395,7 +434,8 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
 
       {mode === "fees" && (
         <>
-      {/* fee table */}
+      {/* fee table: phones get one card per fund stacked down the page (the same for 2, 3 or 4 funds);
+          sm and up get the side-by-side table */}
       <section aria-labelledby="table-title" className="rounded-[24px] border border-line bg-surface">
         <div className="flex flex-col gap-1 px-5 pt-5 md:px-6">
           <h2 id="table-title" className="m-0 text-[18px] font-bold">
@@ -403,7 +443,52 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
           </h2>
           <p className="m-0 text-[13.5px] text-ink-muted">ชี้ที่ตัวเลขเพื่อดูว่ามาจากเอกสารหน้าไหน · ช่องสีเหลืองคือค่าใช้จ่ายที่ Factsheet ไม่ได้แสดง</p>
         </div>
-        <div className="overflow-x-auto px-3 pb-3 md:px-4">
+
+        <ul className="m-0 flex list-none flex-col gap-3 p-3 sm:hidden">
+          {chosen.map((s) => (
+            <li key={s.code} className="overflow-hidden rounded-2xl border border-line">
+              <div className="flex flex-col gap-1 bg-brand-dark px-4 py-3 text-white">
+                <span className="flex items-center gap-1.5 text-[16px] font-bold">
+                  <span className="flex rounded-full ring-2 ring-white">
+                    <Swatch slot={s.slot} />
+                  </span>
+                  {s.code}
+                </span>
+                <span className="text-[13px] leading-snug text-white/80">{s.fund.nameTh}</span>
+                {s.fund.status.kind !== "verified" && <DataStatusBadge status={s.fund.status} chipOnly />}
+              </div>
+              <div className="flex items-center justify-between gap-3 border-b-2 border-brand/20 bg-brand-soft px-4 py-3">
+                <span className="text-[15px] font-bold text-ink">ต้นทุนต่อปีรวม</span>
+                {s.fund.annualCostRate === null ? (
+                  <span className="text-[13px] text-ink-muted">คำนวณไม่ได้</span>
+                ) : (
+                  <b className="text-[22px] leading-none text-brand">{pct(s.fund.annualCostRate)}</b>
+                )}
+              </div>
+              {phaseRows.map(({ ph, layers }) => (
+                <Fragment key={ph.phase}>
+                  <div className="bg-brand px-4 py-1.5 text-[13.5px] font-bold text-white">
+                    {ph.title} <span className="font-normal text-white/80">· {ph.phase === "hold" ? "ต่อปี" : "ต่อครั้ง"}</span>
+                  </div>
+                  {layers.map((layer) => {
+                    const c = feeCell(s.fund, layer.key);
+                    return (
+                      <div
+                        key={layer.key}
+                        className={`flex items-start justify-between gap-3 border-b border-line-subtle py-2.5 pr-4 last:border-0 ${c.insideTer ? "pl-8" : "pl-4"} ${c.hidden ? "bg-sun-soft" : ""}`}
+                      >
+                        <span className={`text-[14px] ${c.insideTer ? "text-ink-muted" : "text-ink"}`}>{c.label}</span>
+                        <span className="shrink-0 text-right text-[15px]">{c.node}</span>
+                      </div>
+                    );
+                  })}
+                </Fragment>
+              ))}
+            </li>
+          ))}
+        </ul>
+
+        <div className="hidden overflow-x-auto px-3 pb-3 sm:block md:px-4">
           <table className="w-full min-w-[620px] table-fixed border-collapse overflow-hidden rounded-2xl text-left text-[15px]">
             <colgroup>
               <col className="w-[30%]" />
@@ -447,62 +532,31 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
               </tr>
             </thead>
             <tbody>
-              {FEE_PHASES.map((ph) => {
-                // rows where no chosen fund has a figure say nothing: leave them out
-                const layers = (chosen[0]?.fund.layers ?? []).filter(
-                  (l) =>
-                    l.phase === ph.phase &&
-                    chosen.some((s) => {
-                      const own = s.fund.layers.find((x) => x.key === l.key);
-                      return own && (own.item.value !== null || own.remainder);
-                    }),
-                );
-                if (layers.length === 0) return null;
-                return (
-                  <Fragment key={ph.phase}>
-                    <tr className="bg-brand text-white">
-                      <td colSpan={chosen.length + 1} className="px-3 py-2 text-[14px] font-bold">
-                        {ph.title} <span className="font-normal text-white/80">· {ph.phase === "hold" ? "ต่อปี" : "ต่อครั้ง"}</span>
-                      </td>
-                    </tr>
-                    {layers.map((layer) => {
-                      const isMaster = layer.key === "masterFundExpense";
-                      // already inside the TER: shown as a breakdown under it, never added again
-                      const insideTer = layer.key === "management" || layer.key === "otherExpenses";
-                      return (
-                        <tr key={layer.key} className="border-b border-line-subtle">
-                          <td className={`p-3 align-top ${insideTer ? "pl-8 text-[14px] text-ink-muted" : "text-ink"}`}>
-                            {insideTer ? `${layer.label.replace("ค่าธรรมเนียม", "ค่า")} (อยู่ใน TER แล้ว)` : layer.label}
-                          </td>
-                          {chosen.map((s) => {
-                            const own = s.fund.layers.find((l) => l.key === layer.key)!;
-                            const item = own.item;
-                            const rest = own.remainder;
-                            const hidden = isMaster && item.value !== null && (item.source === "prospectus" || item.source === "master");
-                            const value = item.value !== null ? item.value : rest ? rest.value : null;
-                            const ref = item.value !== null ? item : rest ? rest.ter : null;
-                            return (
-                              <td key={s.code} className={`p-3 align-top ${hidden ? "bg-sun-soft" : ""}`}>
-                                {value === null || !ref ? (
-                                  <span className="text-[13.5px] text-ink-faint">{own.emptyText ? "ไม่มี (ลงทุนตรง)" : NOT_IN_DOCS}</span>
-                                ) : (
-                                  // the source of every figure shows on hover (title)
-                                  <span className="flex flex-col" title={sourceRef(ref.page, ref.source)}>
-                                    <span className={insideTer ? "text-ink-muted" : "font-bold text-ink"}>
-                                      {own.sign === -1 ? "-" : ""}
-                                      {docPct(value)}
-                                    </span>
-                                  </span>
-                                )}
-                              </td>
-                            );
-                          })}
-                        </tr>
-                      );
-                    })}
-                  </Fragment>
-                );
-              })}
+              {phaseRows.map(({ ph, layers }) => (
+                <Fragment key={ph.phase}>
+                  <tr className="bg-brand text-white">
+                    <td colSpan={chosen.length + 1} className="px-3 py-2 text-[14px] font-bold">
+                      {ph.title} <span className="font-normal text-white/80">· {ph.phase === "hold" ? "ต่อปี" : "ต่อครั้ง"}</span>
+                    </td>
+                  </tr>
+                  {layers.map((layer) => {
+                    const head = feeCell(chosen[0].fund, layer.key);
+                    return (
+                      <tr key={layer.key} className="border-b border-line-subtle">
+                        <td className={`p-3 align-top ${head.insideTer ? "pl-8 text-[14px] text-ink-muted" : "text-ink"}`}>{head.label}</td>
+                        {chosen.map((s) => {
+                          const c = feeCell(s.fund, layer.key);
+                          return (
+                            <td key={s.code} className={`p-3 align-top ${c.hidden ? "bg-sun-soft" : ""}`}>
+                              {c.node}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
+                </Fragment>
+              ))}
             </tbody>
           </table>
         </div>
