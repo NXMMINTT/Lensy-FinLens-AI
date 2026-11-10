@@ -1,3 +1,5 @@
+import { Briefcase, Info } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { LineAddFriendButton } from "@/components/brand/LineAddFriendButton";
 import { GLOSSARY } from "@/lib/glossary";
@@ -25,20 +27,29 @@ export function Hero() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-linegreen opacity-60" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-linegreen" />
             </span>
-            ผู้ช่วยการเงินสำหรับนักลงทุนมือใหม่ · LINE และเว็บ
+            สำหรับคนที่อยากเข้าใจเงินของตัวเองมากขึ้น
           </span>
-          <h1 id="hero-title" className="m-0 text-[32px] font-bold leading-[1.3] tracking-tight sm:text-[42px] lg:text-[50px]">
-            ผู้ช่วยการเงินที่ทำให้เห็น
+          <h1 id="hero-title" className="m-0 text-[27px] font-bold leading-[1.35] tracking-tight sm:text-[38px] lg:text-[44px]">
+            {/* Thai has no spaces between words: each phrase stays whole, lines break only between phrases */}
+            <span className="whitespace-nowrap">ลงทุนอยู่ทุกวัน</span> <span className="whitespace-nowrap">แต่รู้หรือเปล่า…</span>
             <br />
-            <span className="marker-green whitespace-nowrap">ค่าใช้จ่ายที่มองไม่เห็น</span>
+            <span className="text-brand-dark dark:text-brand">
+              <span className="whitespace-nowrap">เงินของคุณ</span>
+              <wbr />
+              <span className="whitespace-nowrap">กำลังเสียค่าอะไรไปบ้าง?</span>
+            </span>
           </h1>
           <p className="m-0 max-w-[540px] text-lg leading-relaxed text-ink-body">
-            น้อง Lensy ตอบคำถามการเงินด้วยภาษาง่าย และเทียบกองทุนให้เห็นเคียงกันว่าแต่ละกองมีค่าใช้จ่ายอะไรบ้าง รวมถึงค่าใช้จ่ายที่มองไม่เห็น
-            ทุกตัวเลขมาจากเอกสารทางการและบอกที่มาให้ตรวจสอบได้
+            เปรียบเทียบกองทุน วิเคราะห์ค่าธรรมเนียมเป็นเงินบาท เข้าใจความเสี่ยง และตรวจสอบข้อมูลจากเอกสารต้นทางได้ง่ายขึ้น
+          </p>
+          <p className="m-0 max-w-[540px] text-lg font-bold leading-relaxed text-ink">
+            <span className="whitespace-nowrap">อยากลงทุนเอง</span> <span className="whitespace-nowrap">หรือให้มืออาชีพช่วยดูแล</span>{" "}
+            <span className="whitespace-nowrap">ก็เลือกได้ในแบบของคุณ</span>
           </p>
           <div className="mt-1 flex flex-wrap items-center gap-3">
-            <LineAddFriendButton label="เพิ่มเพื่อนน้อง Lensy" />
+            <LineAddFriendButton label="เริ่มต้นทำความเข้าใจการลงทุนฟรี" />
           </div>
+          <p className="m-0 text-[14px] text-ink-muted">ไม่มีค่าสมัคร · เครื่องมือหลักใช้ฟรี · เลือกเส้นทางได้เอง</p>
         </div>
         <div className="relative flex justify-center px-2 lg:justify-end">
           <span aria-hidden="true" className="pointer-events-none absolute left-1/2 top-1/2 h-[min(520px,95vw)] w-[min(520px,95vw)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-brand-soft via-brand-tint to-surface lg:left-[55%]" />
@@ -188,6 +199,82 @@ function FreeReceipt() {
   );
 }
 
+/* ── Option 02: a licensed partner manages the portfolio (FinLens only connects) ── */
+
+const PRO_POINTS = [
+  "รับข้อมูลเกี่ยวกับบริการบริหารพอร์ต",
+  "ทำความเข้าใจรูปแบบและเงื่อนไขบริการ",
+  "เชื่อมต่อผู้เชี่ยวชาญเพื่อประเมินความเหมาะสม",
+  "มีผู้ให้บริการที่ตรวจสอบข้อมูลได้",
+];
+const TRINITY_URL = "https://www.trinitythai.com";
+
+function ProfessionalCard() {
+  return (
+    <article aria-labelledby="pro-title" className="w-full max-w-[820px] drop-shadow-[0_18px_30px_rgba(20,46,34,.12)]">
+      <div className="relative grid overflow-hidden rounded-[24px] border border-sun/30 bg-surface md:grid-cols-[1.05fr_0.95fr]">
+        {/* left: what it is, and the way to the partner */}
+        <div className="relative flex flex-col gap-4 bg-gradient-to-br from-sun-soft via-sun-soft/50 to-surface px-7 pb-7 pt-8 md:px-9">
+          <div className="flex items-center justify-between gap-3">
+            <span className="rounded-full border border-sun/40 bg-surface/70 px-3 py-1 text-[12px] font-bold tracking-[0.12em] text-sun-ink">OPTION 02</span>
+            <span aria-hidden="true" className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E8C766] text-[#2B2410] shadow-md">
+              <Briefcase size={24} />
+            </span>
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <span className="text-[12px] font-bold tracking-[0.16em] text-sun-ink">PROFESSIONAL MANAGEMENT</span>
+            <h3 id="pro-title" className="m-0 text-[28px] font-bold leading-tight text-ink md:text-[32px]">
+              ให้มืออาชีพช่วยบริหาร
+            </h3>
+          </div>
+          <p className="m-0 text-[16px] leading-relaxed text-ink-body">
+            สำหรับคนที่ไม่มีเวลาอ่านข้อมูล วิเคราะห์ตลาด หรือติดตามพอร์ตด้วยตัวเอง และต้องการให้ผู้เชี่ยวชาญช่วยดูแลการลงทุน
+          </p>
+
+          <div className="mt-auto flex flex-col gap-4 pt-2">
+            <a
+              href={TRINITY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex min-h-[54px] items-center justify-center gap-2 rounded-full bg-[#E8C766] px-7 text-[17px] font-bold text-[#2B2410] no-underline shadow-[0_8px_20px_rgba(201,160,60,.35)] transition hover:-translate-y-0.5 hover:brightness-105 md:self-start"
+            >
+              ค้นหาผู้เชี่ยวชาญจาก Trinity
+            </a>
+            <div className="flex items-center gap-3 rounded-2xl border border-line bg-surface/80 px-4 py-3">
+              <Image src="/brand/trinity-logo.png" alt="โลโก้ Trinity" width={44} height={44} className="h-11 w-11 shrink-0 rounded-lg object-contain" />
+              <span className="flex min-w-0 flex-col leading-tight">
+                <span className="text-[15px] font-bold tracking-wide text-ink">TRINITY SECURITIES</span>
+                <span className="text-[13px] text-ink-muted">Anchor Partner · Professional Portfolio Management</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* right: what the person gets */}
+        <div className="flex flex-col gap-1 border-t-2 border-dashed border-line px-7 py-7 md:border-l-2 md:border-t-0 md:px-9 md:py-8">
+          <span className="mb-3 text-[13px] font-bold tracking-wide text-ink-muted">สิ่งที่ได้</span>
+          <ul className="m-0 flex list-none flex-col gap-4 p-0">
+            {PRO_POINTS.map((t) => (
+              <li key={t} className="flex gap-3">
+                <span aria-hidden="true" className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#E8C766] text-[#2B2410]">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12.5 10 17.5 19 7" />
+                  </svg>
+                </span>
+                <span className="text-[16px] font-semibold text-ink">{t}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="m-0 mt-auto flex items-start gap-2 pt-6 text-[13px] leading-relaxed text-ink-muted">
+            <Info aria-hidden="true" size={16} className="mt-0.5 shrink-0" />
+            FinLens AI เป็นแพลตฟอร์มข้อมูลและเชื่อมต่อผู้ให้บริการ การบริหารพอร์ตดำเนินการโดยผู้ให้บริการโดยตรง
+          </p>
+        </div>
+      </div>
+    </article>
+  );
+}
+
 export function PricingTable() {
   return (
     <section id="pricing" aria-labelledby="pricing-title" className="scroll-mt-20 bg-brand-tint px-5 py-16 md:px-6">
@@ -204,6 +291,14 @@ export function PricingTable() {
         </div>
 
         <FreeReceipt />
+
+        <div className="-my-4 flex w-full max-w-[820px] items-center gap-4" aria-hidden="true">
+          <span className="h-px flex-1 bg-gradient-to-r from-transparent to-line" />
+          <span className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-line bg-surface text-[15px] font-bold text-ink-muted shadow-sm">หรือ</span>
+          <span className="h-px flex-1 bg-gradient-to-l from-transparent to-line" />
+        </div>
+
+        <ProfessionalCard />
       </div>
     </section>
   );
