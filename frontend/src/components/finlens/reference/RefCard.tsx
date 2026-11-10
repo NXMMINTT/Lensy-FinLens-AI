@@ -4,12 +4,14 @@ import { refPath, REF_STATUS_LABEL, shortAsOf, type RefCardData, type RefStatus 
 
 const STATUS_STYLE: Record<RefStatus, string> = {
   official: "border-success-line bg-success-soft text-success-ink",
+  "source-checked": "border-success-line bg-success-soft text-success-ink",
+  definition: "border-line bg-sky text-ink-body",
   media: "border-line bg-sky text-ink-body",
   partial: "border-sun/60 bg-sun-soft text-sun-ink",
   stale: "border-sun/60 bg-sun-soft text-sun-ink",
   unchecked: "border-line bg-surface text-ink-muted",
 };
-const STATUS_MARK: Record<RefStatus, string> = { official: "✓", media: "i", partial: "!", stale: "!", unchecked: "?" };
+const STATUS_MARK: Record<RefStatus, string> = { official: "✓", "source-checked": "✓", definition: "i", media: "i", partial: "!", stale: "!", unchecked: "?" };
 
 export function RefStatusBadge({ status }: { status: RefStatus }) {
   return (

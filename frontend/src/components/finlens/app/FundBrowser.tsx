@@ -1,5 +1,6 @@
 "use client";
 
+import { totalCostLabel } from "@/lib/disclaimer";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
@@ -52,7 +53,7 @@ function FundCard({ f }: { f: FundSummary }) {
       <div className="mt-auto flex flex-col gap-2 border-t border-line-subtle px-5 py-4">
         <div className="flex items-end justify-between gap-3">
           <span className="flex flex-col">
-            <span className="text-[12px] text-ink-muted">ต้นทุนต่อปีรวม</span>
+            <span className="text-[12px] text-ink-muted">{totalCostLabel(f.costIsEstimate)}</span>
             {f.annualCostRate === null ? (
               <span className="text-[14px] text-ink-muted">ไม่พบในเอกสาร</span>
             ) : (

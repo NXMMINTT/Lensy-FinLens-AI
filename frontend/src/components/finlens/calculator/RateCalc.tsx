@@ -20,11 +20,19 @@ export type RateRow = {
 
 const AMOUNTS = [10_000, 100_000, 500_000, 1_000_000];
 
-/** Money earned per rate, for a chosen amount and number of years, before tax. Formula only, no AI. */
-export function RateCalc({ rows }: { rows: RateRow[] }) {
+/**
+ * Money earned for a chosen amount and number of years, before tax. Formula only, no AI.
+ * The person types the rate they were offered; preset rates (`rows`) show only for topics whose
+ * figures the team's audit allows on the site.
+ */
+export function RateCalc({ rows, compoundByDefault, topicsHref }: { rows: RateRow[]; compoundByDefault: boolean; topicsHref: string }) {
   const [amount, setAmount] = useState(100_000);
   const [years, setYears] = useState(3);
+  const [ownRate, setOwnRate] = useState("");
+  const [compound, setCompound] = useState(compoundByDefault);
   const principal = Math.max(0, Math.min(100_000_000, Math.round(amount) || 0));
+  const rate = Number(ownRate.replace(",", "."));
+  const rateOk = ownRate.trim() !== "" && Number.isFinite(rate) && rate >= 0 && rate <= 30;
 
   return (
     <div className="flex flex-col gap-6">
@@ -69,6 +77,55 @@ export function RateCalc({ rows }: { rows: RateRow[] }) {
         <h2 id="rate-result" className="m-0 text-[19px] font-bold leading-snug sm:text-[22px]">
           ได้ดอกเบี้ยหรือผลตอบแทนประมาณกี่บาท ใน {years} ปี
         </h2>
+        {/* the rate the person was offered */}
+        <div className="grid gap-4 rounded-[20px] border-2 border-brand/30 bg-brand-tint p-5 md:grid-cols-[1fr_1.2fr]">
+          <div className="flex flex-col gap-3">
+            <label className="flex flex-col gap-2">
+              <span className="font-semibold">อัตราที่คุณได้รับ (% ต่อปี)</span>
+              <input
+                type="text"
+                inputMode="decimal"
+                placeholder="เช่น 1.5"
+                value={ownRate}
+                onChange={(e) => setOwnRate(e.target.value)}
+                className="min-h-[44px] rounded-xl border border-line bg-surface px-3 text-[17px] text-ink focus:border-brand"
+              />
+            </label>
+            <span className="flex flex-wrap gap-2 text-[14px]">
+              {[
+                { on: true, label: "ทบต้นทุกปี (เงินฝาก)" },
+                { on: false, label: "ไม่ทบต้น (ดอกเบี้ยพันธบัตร)" },
+              ].map((o) => (
+                <button
+                  key={o.label}
+                  type="button"
+                  aria-pressed={compound === o.on}
+                  onClick={() => setCompound(o.on)}
+                  className={`rounded-full border px-3 py-1 ${compound === o.on ? "border-brand bg-brand-soft font-semibold text-brand" : "border-line bg-surface text-ink-muted hover:border-brand"}`}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </span>
+          </div>
+          <div className="flex flex-col justify-center gap-1">
+            <div className="text-[13px] text-ink-muted">ได้ประมาณ (ก่อนหักภาษี)</div>
+            <div className="font-heading text-[34px] font-bold leading-tight text-brand">{rateOk ? baht(earned(principal, rate, years, compound)) : "–"}</div>
+            <p className="m-0 text-[13px] text-ink-muted">
+              {rateOk ? `${rate}% ต่อปี · ${compound ? "ทบต้นปีละครั้ง" : "ดอกเบี้ยไม่ทบต้น"} · ${years} ปี` : "ใส่อัตราจากธนาคารหรือหนังสือชี้ชวนของคุณ (0–30%)"}
+            </p>
+          </div>
+        </div>
+
+        {rows.length === 0 && (
+          <p className="m-0 text-[14px] text-ink-body">
+            อัตราจากตารางอ้างอิงของหมวดนี้ยังไม่ได้เทียบกับเอกสารต้นทาง จึงยังไม่ใส่ให้ ดูคำอธิบายและแหล่งที่มาได้ที่{" "}
+            <Link href={topicsHref} className="font-semibold text-brand">
+              หัวข้อของหมวดนี้
+            </Link>
+          </p>
+        )}
+
         <ul className="m-0 grid list-none gap-4 p-0 md:grid-cols-2">
           {rows.map((r) => (
             <li key={r.key} className="flex flex-col gap-2 rounded-[20px] border border-line bg-surface p-5">

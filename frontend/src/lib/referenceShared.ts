@@ -2,12 +2,18 @@
  * Types, labels and small helpers for the investment reference that client components can import
  * without pulling the whole reference-data.json into the browser bundle. Data lives in reference.ts.
  */
-export type RefStatus = "official" | "media" | "partial" | "stale" | "unchecked";
+export type RefStatus = "official" | "source-checked" | "definition" | "media" | "partial" | "stale" | "unchecked";
 
+/**
+ * Status words say what was checked, never that an authority approved it ("ตรงกับ", not "รับรอง"):
+ * checking a document is not certification by the SEC or the Bank of Thailand.
+ */
 export const REF_STATUS_LABEL: Record<RefStatus, string> = {
-  official: "ยืนยันจากแหล่งทางการ",
+  official: "ตรงกับแหล่งทางการ",
+  "source-checked": "ตรวจกับต้นทางแล้ว เฉพาะข้อที่ระบุ",
+  definition: "นิยามจากเอกสารทางการ ตัวเลขต้องตรวจแยก",
   media: "จากสื่อ/ผู้ให้บริการ ยังไม่เทียบต้นทาง",
-  partial: "ยืนยันบางส่วน ขาดตัวเลขสำคัญ",
+  partial: "ตรวจได้บางส่วน ขาดตัวเลขสำคัญ",
   stale: "ข้อมูลเก่าหรือขัดแย้ง ต้องเช็กซ้ำ",
   unchecked: "ยังไม่ได้ตรวจสอบ",
 };
@@ -21,6 +27,8 @@ export type RefCardData = {
   headline: { value: string; label: string } | null;
   summary: string;
   asOf: string;
+  /** false: the team's audit says this topic's figures may not be shown yet (they are left out) */
+  showFigures: boolean;
 };
 
 /** Anchor id of one topic line on /explain, e.g. "ref-4-14". */

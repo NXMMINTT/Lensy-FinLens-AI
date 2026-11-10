@@ -13,7 +13,8 @@ describe("session cookie", () => {
     const [body, sig] = t.split(".");
     const forged = Buffer.from(JSON.stringify({ sub: "someone-else", demo: false, exp: 9999999999 })).toString("base64url");
     expect(await verifySession(`${forged}.${sig}`)).toBeNull();
-    expect(await verifySession(`${body}.x${sig.slice(1)}`)).toBeNull();
+    // change the first character for real (a signature that already starts with "x" stayed valid)
+    expect(await verifySession(`${body}.${sig[0] === "x" ? "y" : "x"}${sig.slice(1)}`)).toBeNull();
     expect(await verifySession(t, Date.now() + 8 * 24 * 3600 * 1000)).toBeNull();
     expect(await verifySession("garbage")).toBeNull();
     expect(await verifySession(undefined)).toBeNull();

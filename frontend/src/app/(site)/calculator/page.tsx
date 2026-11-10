@@ -21,8 +21,8 @@ const CALC_HINT: Record<number, string> = { 1: "ดอกเบี้ยเง�
 export default async function CalculatorPage({ searchParams }: { searchParams: Promise<{ funds?: string; cat?: string }> }) {
   const { funds: fundsParam, cat: catParam } = await searchParams;
   const funds = getVerifiedFunds().map(toCompareFund);
-  // only the groups that have a rate to calculate with
-  const groups = REFERENCE.filter((c) => RATE_ITEMS.some((r) => r.group === c.num));
+  // deposits and bonds: a rate turns into baht (preset rates only from topics whose figures may be shown)
+  const groups = REFERENCE.filter((c) => c.num in CALC_HINT);
   const cat = groups.find((c) => String(c.num) === catParam);
 
   const items: RailItem[] = [
@@ -31,13 +31,13 @@ export default async function CalculatorPage({ searchParams }: { searchParams: P
       key: String(c.num),
       label: c.title,
       hint: CALC_HINT[c.num] ?? "ได้ผลตอบแทนประมาณกี่บาท",
-      count: RATE_ITEMS.filter((r) => r.group === c.num).length,
+      count: 1,
       href: `/calculator?cat=${c.num}`,
     })),
   ];
 
   const rows: RateRow[] = cat
-    ? RATE_ITEMS.filter((r) => r.group === cat.num).map((r, i) => {
+    ? RATE_ITEMS.filter((r) => r.group === cat.num && refItem(r.topic)?.showFigures).map((r, i) => {
         const t = refItem(r.topic)!;
         return { key: `${r.topic}-${i}`, topic: r.topic, label: r.label, ratePct: r.ratePct, compound: r.compound, note: r.note, asOf: t.asOf, status: t.status };
       })
@@ -51,7 +51,7 @@ export default async function CalculatorPage({ searchParams }: { searchParams: P
         mark="กี่บาท"
         text={
           cat
-            ? "ใส่เงินและจำนวนปี แล้วดูว่าแต่ละอัตราให้ดอกเบี้ยหรือผลตอบแทนประมาณกี่บาท คำนวณด้วยสูตร ไม่ได้ให้ AI คิดตัวเลข"
+            ? "ใส่เงิน จำนวนปี และอัตราที่ได้รับจริง แล้วดูว่าได้ดอกเบี้ยหรือผลตอบแทนประมาณกี่บาท คำนวณด้วยสูตร ไม่ได้ให้ AI คิดตัวเลข"
             : "ปรับเงินลงทุน จำนวนปี และผลตอบแทนสมมติ แล้วดูว่าค่าใช้จ่ายทุกชั้นรวมกันเป็นเงินเท่าไหร่ คำนวณด้วยสูตร ไม่ได้ให้ AI คิดตัวเลข"
         }
         pose="coins"
@@ -66,7 +66,7 @@ export default async function CalculatorPage({ searchParams }: { searchParams: P
           <CompareTool funds={funds} initialCodes={fundsParam ? pickInitialCodes(funds, fundsParam, 1) : []} mode="money" />
         )
       ) : (
-        <RateCalc rows={rows} />
+        <RateCalc rows={rows} compoundByDefault={cat.num === 1} topicsHref={`/explain?cat=${cat.num}`} />
       )}
     </AppShell>
   );

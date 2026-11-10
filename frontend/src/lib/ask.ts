@@ -6,8 +6,8 @@
  */
 import { z } from "zod";
 
-import { MASTER_COST_NOTE, NO_MASTER_NOTE, NOT_FOUND } from "./disclaimer";
-import { FEATURED_FUND_CODES, totalAnnualCostRate } from "./funds";
+import { ESTIMATE_NOTE, MASTER_COST_NOTE, NO_MASTER_NOTE, NOT_FOUND, totalCostLabel } from "./disclaimer";
+import { annualCostIsEstimate, FEATURED_FUND_CODES, totalAnnualCostRate } from "./funds";
 import { baht, pct } from "./money";
 import { findQuotePage, skeleton } from "./pdfText";
 import { pctToRate, sourcedEntries, type DocSource, type Fund, type Sourced } from "./schema";
@@ -182,12 +182,13 @@ export function moneyAnswer(funds: Fund[], q: string): AskResponse {
       backEnd: f.fees.backEnd.value === null ? 0 : pctToRate(f.fees.backEnd.value),
       annualCost: annual,
     });
-    lines.push(`${name}: เสียค่าธรรมเนียมและค่าใช้จ่ายรวมราว ${baht(r.feeCost)} เหลือเงินเมื่อขายราว ${baht(r.end)} (ต้นทุนต่อปีรวม ${pct(annual)})`);
+    lines.push(`${name}: เสียค่าธรรมเนียมและค่าใช้จ่ายรวมราว ${baht(r.feeCost)} เหลือเงินเมื่อขายราว ${baht(r.end)} (${totalCostLabel(annualCostIsEstimate(f))} ${pct(annual)})`);
     refs.push(...refOf(f, f.fees.ter), ...refOf(f, f.fees.masterFundExpense), ...refOf(f, f.fees.frontEnd), ...refOf(f, f.fees.backEnd));
   }
   const assumptions = [
     `ลงทุน ${principal.toLocaleString("th-TH")} บาท ถือ ${years} ปี สมมติผลตอบแทนก่อนหักค่าใช้จ่าย ${returnPct}% ต่อปี (สมมติฐาน ไม่ใช่การคาดการณ์)`,
     ...(defaulted.length ? [`คำถามไม่ได้ระบุ จึงใช้ค่าเริ่มต้น: ${defaulted.join(", ")}`] : []),
+    ...(funds.some(annualCostIsEstimate) ? [ESTIMATE_NOTE] : []),
     "คำนวณด้วยสูตรในระบบ ไม่ได้ให้ AI คิดตัวเลข",
   ];
   return { kind: "money", answer: `น้อง Lensy คำนวณให้แล้วค่ะ\n${lines.join("\n")}`, refs: mergeRefs(refs), assumptions };
@@ -282,7 +283,7 @@ export function fundContext(f: Fund): string {
   const master = f.fees.masterFundExpense;
   if (direct) lines.push(`หมายเหตุ: ${NO_MASTER_NOTE} (ไม่ใช่กองฟีดเดอร์) ห้ามพูดว่าไม่พบค่าใช้จ่ายกองหลัก และห้ามพูดว่า Factsheet ไม่ได้แสดงค่าใช้จ่ายกองหลัก`);
   if (master.value !== null && master.source !== "factsheet") lines.push(`หมายเหตุ: ${MASTER_COST_NOTE} (ค่าใช้จ่ายกองหลักมาจาก${SOURCE_LABEL[master.source]})`);
-  if (master.value !== null && f.fees.terIncludesMasterFund.value === null) lines.push("หมายเหตุ: เอกสารไม่ระบุว่า TER รวมค่าใช้จ่ายกองทุนหลักแล้วหรือไม่");
+  if (master.value !== null && f.fees.terIncludesMasterFund.value === null) lines.push("หมายเหตุ: เอกสารไม่ระบุว่า TER รวมค่าใช้จ่ายกองทุนหลักแล้วหรือไม่ ถ้าพูดถึงต้นทุนรวม ให้บอกว่าเป็นตัวเลขประมาณ และยังไม่ได้หักเงินคืนจากกองหลัก (ถ้ามี)");
   if (f.fees.rebate.value !== null) lines.push("หมายเหตุ: กองนี้ได้เงินคืนจากกองหลัก (rebate) ต้นทุนรวม = TER + ค่าใช้จ่ายกองหลัก − เงินที่ได้คืน เมื่อถามเรื่องค่าใช้จ่ายให้บอกเรื่องนี้ด้วย");
   return lines.join("\n");
 }

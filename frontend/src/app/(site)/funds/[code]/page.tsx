@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { CommunityCard } from "@/components/finlens/CommunityCard";
+import { FundReferralCard } from "@/components/finlens/FundReferralCard";
 import { AppShell } from "@/components/finlens/app/AppShell";
 import { Card, RiskBadge, RiskMeter } from "@/components/finlens/app/ui";
 import { Icon } from "@/components/finlens/Icon";
@@ -10,9 +12,9 @@ import { RefCardGrid } from "@/components/finlens/reference/RefCard";
 import { SampleBadge } from "@/components/finlens/SampleBadge";
 import { toCompareFund } from "@/lib/compare";
 import { fundDataStatus, thaiDate } from "@/lib/dataStatus";
-import { MASTER_COST_NOTE, NOT_FOUND, NOT_IN_DOCS, REBATE_LABEL } from "@/lib/disclaimer";
+import { ESTIMATE_NOTE, MASTER_COST_NOTE, NOT_FOUND, NOT_IN_DOCS, REBATE_LABEL, totalCostLabel } from "@/lib/disclaimer";
 import { SOURCE_LABEL } from "@/lib/sources";
-import { getFund, getVerifiedFunds } from "@/lib/funds";
+import { factsheetUrl, getFund, getVerifiedFunds } from "@/lib/funds";
 import { baht, docPct, pct } from "@/lib/money";
 import { REFERENCE_ACCESSED, referenceForFund, toRefCard } from "@/lib/reference";
 import { riskAlerts, RISK_TOPIC_LABEL } from "@/lib/riskRules";
@@ -132,7 +134,7 @@ export default async function FundPage({ params }: Props) {
           </div>
 
           <div className="mt-4 rounded-2xl bg-brand-tint p-4">
-            <div className="text-[14px] text-ink-muted">ต้นทุนต่อปีรวม</div>
+            <div className="text-[14px] text-ink-muted">{totalCostLabel(c.costIsEstimate)}</div>
             {total === null ? (
               <p className="m-0 text-ink-body">{NOT_FOUND} (ค่าใช้จ่ายรวมของกอง) จึงรวมไม่ได้</p>
             ) : (
@@ -175,9 +177,7 @@ export default async function FundPage({ params }: Props) {
               <b><Icon name="warn" className="mr-1" />{MASTER_COST_NOTE}</b> ถ้าดูแค่ Factsheet จะเห็นค่าใช้จ่ายไม่ครบ
             </p>
           )}
-          {c.masterInclusionUnknown && (
-            <p className="m-0 mt-2 text-[13.5px] text-ink-muted">เอกสารไม่ระบุว่า TER รวมค่าใช้จ่ายของกองทุนหลักแล้วหรือไม่ ตัวเลขรวมนี้ถือว่ายังไม่รวม</p>
-          )}
+          {c.costIsEstimate && <p className="m-0 mt-2 text-[13.5px] text-ink-muted">{ESTIMATE_NOTE}</p>}
 
           <h3 className="m-0 mt-5 text-[16px] font-bold">ค่าธรรมเนียมทุกรายการ</h3>
           <ul className="m-0 mt-2 flex list-none flex-col p-0">
@@ -312,6 +312,10 @@ export default async function FundPage({ params }: Props) {
           {f.meta.verifiedBy && <li>ตรวจข้อมูลโดย: {f.meta.verifiedBy}</li>}
         </ul>
       </Card>
+
+      {/* real funds only: the fund's Factsheet link with a referral code, then the free LINE community */}
+      {!f.meta.isSample && <FundReferralCard code={f.code} nameTh={f.nameTh.value ?? f.code} factsheetUrl={factsheetUrl(f)} />}
+      {!f.meta.isSample && <CommunityCard />}
     </AppShell>
   );
 }

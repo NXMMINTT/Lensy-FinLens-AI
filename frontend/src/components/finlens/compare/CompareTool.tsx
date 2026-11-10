@@ -5,7 +5,7 @@ import { Fragment, useEffect, useMemo, useState } from "react";
 
 import type { CompareFund } from "@/lib/compare";
 import { FEE_PHASES } from "@/lib/feePhases";
-import { NOT_FOUND, NOT_IN_DOCS } from "@/lib/disclaimer";
+import { ESTIMATE_NOTE, NOT_FOUND, NOT_IN_DOCS, totalCostLabel } from "@/lib/disclaimer";
 import { baht, docPct, pct } from "@/lib/money";
 import { useTheme } from "@/lib/theme";
 import { ASSET_CLASS_LABEL, DEFAULT_ANNUAL_RETURN, defaultReturnFor, feeGapBaht, MAX_YEARS, MIN_YEARS, trueCost, type TrueCostResult } from "@/lib/trueCost";
@@ -273,7 +273,7 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
     ...chosen.flatMap((s) => [
       ...(s.fund.frontEndRate === null ? [`${s.fund.nameTh}: ${NOT_FOUND} สำหรับค่าธรรมเนียมการขาย คำนวณโดยถือว่าเป็น 0`] : []),
       ...(s.fund.backEndRate === null ? [`${s.fund.nameTh}: ${NOT_FOUND} สำหรับค่าธรรมเนียมการรับซื้อคืน คำนวณโดยถือว่าเป็น 0`] : []),
-      ...(s.fund.masterInclusionUnknown ? [`${s.fund.nameTh}: เอกสารไม่ระบุว่า TER รวมค่าใช้จ่ายกองทุนหลักแล้วหรือไม่ คำนวณโดยถือว่ายังไม่รวม`] : []),
+      ...(s.fund.costIsEstimate ? [`${s.fund.nameTh}: ${ESTIMATE_NOTE}`] : []),
     ]),
   ];
 
@@ -388,7 +388,7 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
                     <b className="text-ink">{baht(x.r.end)}</b>
                   </div>
                   <div className="flex justify-between gap-2 text-[14px] text-ink-body">
-                    <span>ต้นทุนต่อปีรวม</span>
+                    <span>{totalCostLabel(x.fund.costIsEstimate)}</span>
                     <b className="text-ink">{pct(x.fund.annualCostRate!)}</b>
                   </div>
                 </>
@@ -458,7 +458,7 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
                 {s.fund.status.kind !== "verified" && <DataStatusBadge status={s.fund.status} chipOnly />}
               </div>
               <div className="flex items-center justify-between gap-3 border-b-2 border-brand/20 bg-brand-soft px-4 py-3">
-                <span className="text-[15px] font-bold text-ink">ต้นทุนต่อปีรวม</span>
+                <span className="text-[15px] font-bold text-ink">{totalCostLabel(s.fund.costIsEstimate)}</span>
                 {s.fund.annualCostRate === null ? (
                   <span className="text-[13px] text-ink-muted">คำนวณไม่ได้</span>
                 ) : (
@@ -518,7 +518,7 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
               {/* the number that matters, first */}
               <tr className="border-b-2 border-brand/20 bg-brand-soft">
                 <th scope="row" className="p-3 text-left font-bold text-ink">
-                  ต้นทุนต่อปีรวม
+                  {totalCostLabel(chosen.some((s) => s.fund.costIsEstimate))}
                 </th>
                 {chosen.map((s) => (
                   <td key={s.code} className="p-3">
@@ -562,6 +562,7 @@ export function CompareTool({ funds, initialCodes, mode }: { funds: CompareFund[
         </div>
         <p className="m-0 border-t border-line px-5 py-3 text-[13.5px] text-ink-muted md:px-6">
           ต้นทุนต่อปีรวม = ค่าใช้จ่ายรวมของกอง (TER) + ค่าใช้จ่ายของกองทุนหลัก ถ้าเอกสารระบุว่า TER ยังไม่รวม · เทียบเฉพาะค่าธรรมเนียม ไม่ได้บอกว่ากองไหนดีกว่า
+          {chosen.some((s) => s.fund.costIsEstimate) && <> · {ESTIMATE_NOTE}</>}
         </p>
       </section>
 

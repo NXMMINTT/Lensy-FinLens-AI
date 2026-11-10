@@ -4,7 +4,7 @@
  * trueCost (lib/trueCost.ts) and riskAlerts (lib/riskRules.ts). Nothing here is typed in by hand.
  * Server-side only (reads the fund files).
  */
-import { FEATURED_FUND_CODES, getFund, totalAnnualCostRate } from "./funds";
+import { FEATURED_FUND_CODES, getFund, annualCostIsEstimate, totalAnnualCostRate } from "./funds";
 import { RISK_LEVEL_LABEL, RISK_TOPIC_LABEL, riskAlerts, type RiskLevel } from "./riskRules";
 import { pctToRate, type DocSource, type Fund, type Sourced } from "./schema";
 import { DEFAULT_ANNUAL_RETURN, feeGapBaht, trueCost, type TrueCostResult } from "./trueCost";
@@ -29,6 +29,8 @@ export type HomeFund = {
   annualCostRate: number;
   /** the documents don't say whether the TER already includes the master fund's cost */
   masterInclusionUnknown: boolean;
+  /** the total is an estimate (see annualCostIsEstimate) */
+  costIsEstimate: boolean;
   /** the fund's own record, for the app's rules */
   fund: Fund;
 };
@@ -52,6 +54,7 @@ function toHomeFund(f: Fund, short: string): HomeFund {
     backEnd: figure(f.fees.backEnd),
     annualCostRate: annual,
     masterInclusionUnknown: f.fees.masterFundExpense.value !== null && f.fees.terIncludesMasterFund.value === null,
+    costIsEstimate: annualCostIsEstimate(f),
     fund: f,
   };
 }

@@ -1,7 +1,7 @@
 /* "น้อง Lensy ใน LINE": three chat screens that follow the steps as the page scrolls.
  * Every figure, source and label comes from the two real example funds through the app's own
  * functions (lib/homeFunds.ts → totalAnnualCostRate, trueCost, riskRules), never typed in here. */
-import { NOT_FOUND } from "@/lib/disclaimer";
+import { NOT_FOUND, totalCostLabel } from "@/lib/disclaimer";
 import { HOME_CALC, homeFeeDifference, homeFunds, homeRisks, homeTrueCost, MASTER_COST_NOTE, RISK_TAG } from "@/lib/homeFunds";
 import { baht, docPct, pct } from "@/lib/money";
 
@@ -54,7 +54,7 @@ function CompareScreen() {
               <span className="text-ink-muted">กองทุนหลัก: {NOT_FOUND}</span>
             )}
             <span className="mt-0.5 flex items-baseline justify-between gap-2 border-t border-line-subtle pt-1">
-              <b>ต้นทุนต่อปีรวม</b>
+              <b>{totalCostLabel(f.costIsEstimate)}</b>
               <b className="text-[14px] text-brand">{pct(f.annualCostRate)}</b>
             </span>
           </div>

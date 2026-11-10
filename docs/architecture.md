@@ -56,7 +56,7 @@ flowchart LR
 | ตอบคำถาม | `src/lib/askService.ts`, `src/lib/ask.ts` | เส้นทางคำตอบ (ดูหัวข้อถัดไป) การตรวจตัวเลขและถ้อยคำในคำตอบของ AI และแคชคำตอบที่ตรวจแล้ว 1 ชั่วโมง |
 | จำกัดคำถามต่อคน | `src/lib/rateLimit.ts` | 8 คำถามต่อนาทีต่อคน (นับจาก session บนเว็บ และ userId ใน LINE) เก็บในหน่วยความจำ ไม่บันทึกลงที่ใด |
 | หากองและหัวข้อจากข้อความ | `src/lib/subjects.ts`, `topicsInText` ใน `src/lib/reference.ts` | ใช้ร่วมกันทั้งเว็บและ LINE ผู้ใช้จึงไม่ต้องเลือกจากรายการก่อนถาม |
-| คำนวณเป็นเงิน | `src/lib/trueCost.ts`, `src/lib/rateCalc.ts` | สูตรในโค้ด ไม่ให้ AI คิดตัวเลข: ค่าธรรมเนียมกองเป็นบาท และดอกเบี้ยเงินฝาก/พันธบัตรเป็นบาท |
+| คำนวณเป็นเงิน | `src/lib/trueCost.ts`, `src/lib/rateCalc.ts` | สูตรในโค้ด ไม่ให้ AI คิดตัวเลข: ค่าธรรมเนียมกองเป็นบาท (ต้นทุนรวมติดคำว่า "ประมาณ" เมื่อเอกสารไม่ระบุว่า TER รวมกองหลักแล้ว หรือไม่เปิดเผยเงินคืน: `annualCostIsEstimate` ใน `funds.ts`) และดอกเบี้ยเงินฝาก/พันธบัตรเป็นบาทจากอัตราที่ผู้ใช้ใส่เอง |
 | เตือนความเสี่ยง | `src/lib/riskRules.ts` | กฎตายตัว ไม่ใช้ AI |
 | อ่านข้อมูล | `src/lib/funds.ts`, `reference.ts`, `stocks.ts`, `learn.ts`, `glossary.ts` | อ่านไฟล์ข้อมูลและตรวจรูปแบบด้วย Zod (`src/lib/schema.ts`) ไฟล์ที่ไม่ผ่านจะทำให้ build ล้ม แทนที่จะแสดงข้อมูลผิด |
 | เรียก AI | `src/lib/ai.ts` | Gemini API (`@google/genai`) ตั้งเวลาหมดและจำนวนครั้งที่ลองใหม่ คืนผลเป็น JSON |
@@ -98,8 +98,8 @@ flowchart TD
 | กองที่ตรวจทีละหน้า | `frontend/data/verified/*.json` | ดึงจาก PDF (`npm run extract`) แล้วทีมตรวจทีละค่าก่อนย้ายมาที่นี่ |
 | กองจากตารางของทีม | `frontend/data/funds/real/funds.json` | `npm run import-funds` จาก `funds.csv` (Factsheet / ข้อมูล ก.ล.ต.) |
 | PDF ต้นฉบับ | `frontend/docs/pdfs/<รหัสกอง>/` | ใช้ให้ AI อ่านและใช้ตรวจข้อความที่ AI อ้าง |
-| ข้อมูลอ้างอิงการลงทุน 10 หมวด | `frontend/src/lib/reference-data.json` | แปลงจากไฟล์ `FinLens_Investment_Reference.xlsx` (รอบที่ 1 ค้นเมื่อ 9 พ.ย. 2569) แต่ละหัวข้อมีสถานะการตรวจสอบและแหล่งที่มา |
-| อัตราที่ใช้คำนวณดอกเบี้ย | `frontend/src/lib/rateCalc.ts` | เลือกจากหัวข้ออ้างอิง เทสต์ตรวจว่าตัวเลขตรงกับข้อความของหัวข้อนั้น |
+| ข้อมูลอ้างอิงการลงทุน 10 หมวด | `frontend/src/lib/reference-data.json` | `python scripts/import-reference.py` จากไฟล์ตรวจของทีม (รอบที่ 2 ตรวจเมื่อ 10 พ.ย. 2569) แต่ละหัวข้อมีสถานะการตรวจสอบ แหล่งที่มา กฎหมายที่เกี่ยวข้อง และ `showFigures` (ผลตรวจว่านำตัวเลขขึ้นเว็บได้หรือยัง) ถ้ายังไม่ได้ `shownFacts` ตัดบรรทัดที่มีตัวเลขออกก่อนถึงหน้าเว็บและแชต |
+| อัตราที่ใช้คำนวณดอกเบี้ย | `frontend/src/lib/rateCalc.ts` | อัตราตั้งต้นจากหัวข้ออ้างอิง แสดงเฉพาะหัวข้อที่ `showFigures` เป็นจริง (รอบนี้ยังไม่มี ผู้ใช้จึงใส่อัตราเอง) |
 | ข้อมูลหุ้น | `frontend/data/stocks/stocks.csv` | จาก Settrade ใช้อธิบายตัวเลขในแชต |
 | คำถามก่อนลงทุน · คลังศัพท์ | `frontend/src/lib/learn-data.json`, `glossary.ts` | เนื้อหาความรู้ทั่วไป |
 | ข้อความมาตรฐานเรื่องภาษี | `frontend/data/knowledge/tax-funds.md` | ให้ AI สรุปจากข้อความนี้เท่านั้น |
@@ -109,7 +109,7 @@ flowchart LR
   PDF["PDF กอง"] -->|npm run extract| EX["data/extracted<br/>รอตรวจ"]
   EX -->|ทีมตรวจทีละค่า| VER["data/verified"]
   CSV["funds.csv"] -->|npm run import-funds| REAL["data/funds/real/funds.json"]
-  XLSX["ไฟล์อ้างอิง .xlsx"] -->|สคริปต์แปลง| REF["reference-data.json"]
+  XLSX["ไฟล์ตรวจข้อมูลอ้างอิง .xlsx"] -->|scripts/import-reference.py| REF["reference-data.json"]
   VER --> APP["เว็บ + LINE"]
   REAL --> APP
   REF --> APP
@@ -135,6 +135,7 @@ flowchart LR
 | `SESSION_SECRET` | เซ็นคุกกี้ล็อกอิน (เว็บจริงต้องมี) |
 | `NEXT_PUBLIC_SITE_URL` | ลิงก์ในการ์ด LINE |
 | `NEXT_PUBLIC_LINE_ADD_FRIEND_URL` | ปุ่มเพิ่มเพื่อน |
+| `NEXT_PUBLIC_LINE_COMMUNITY_URL` | ลิงก์ LINE OpenChat ของ FinLens Community (การ์ดท้ายหน้ากอง) ไม่ใส่ = ไม่แสดงการ์ดบนเว็บจริง |
 
 ## โครงสร้างโฟลเดอร์
 

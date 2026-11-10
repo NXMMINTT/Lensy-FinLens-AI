@@ -8,7 +8,7 @@ import { Icon } from "@/components/finlens/Icon";
 import { Lensy } from "@/components/finlens/Lensy";
 import { RefStatusBadge } from "@/components/finlens/reference/RefCard";
 import { Linked, SourceList } from "@/components/finlens/reference/RefItem";
-import { REFERENCE, REFERENCE_ACCESSED, refCategory, refFromSlug, refHref, refSlug } from "@/lib/reference";
+import { FIGURES_HELD_BACK, REFERENCE, REFERENCE_ACCESSED, refCategory, refFromSlug, refHref, refSlug, shownFacts, shownNote } from "@/lib/reference";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -86,7 +86,7 @@ export default async function ReferencePage({ params }: Props) {
             <Lensy pose="magnifier" size={64} />
           </div>
 
-          {item.headline && (
+          {item.showFigures && item.headline && (
             <div className="mt-4 rounded-2xl bg-brand-tint p-4">
               <div className="text-[14px] text-ink-muted">{item.headline.label}</div>
               <div className="font-heading text-[44px] font-bold leading-none text-brand">{item.headline.value}</div>
@@ -94,23 +94,38 @@ export default async function ReferencePage({ params }: Props) {
             </div>
           )}
 
-          <h3 className="m-0 mt-5 text-[16px] font-bold">ตัวเลขทุกรายการ</h3>
+          {/* the audit holds some topics' figures back: say so instead of showing them */}
+          {!item.showFigures && (
+            <p className="m-0 mt-4 flex items-start gap-2 rounded-2xl border border-line bg-sky/60 p-3.5 text-[14.5px] text-ink-body">
+              <Icon name="info" className="mt-0.5 shrink-0" />
+              {FIGURES_HELD_BACK}
+            </p>
+          )}
+
+          <h3 className="m-0 mt-5 text-[16px] font-bold">{item.showFigures ? "ตัวเลขทุกรายการ" : "ข้อเท็จจริงที่แสดงได้"}</h3>
           <ul className="m-0 mt-2 flex list-none flex-col p-0">
-            {item.facts.map((t) => (
+            {shownFacts(item).length === 0 && <li className="py-2.5 text-[14.5px] text-ink-muted">ยังไม่มีข้อเท็จจริงที่แสดงได้ในรอบนี้</li>}
+            {shownFacts(item).map((t) => (
               <li key={t} className="border-b border-line-subtle py-2.5 text-[14.5px] text-ink-body last:border-0">
                 <Linked text={t} />
               </li>
             ))}
           </ul>
-          {!item.headline && item.asOf && <p className="m-0 mt-2 text-[13.5px] text-ink-muted">ข้อมูล ณ {item.asOf}</p>}
+          {!(item.showFigures && item.headline) && item.asOf && <p className="m-0 mt-2 text-[13.5px] text-ink-muted">ข้อมูล ณ {item.asOf}</p>}
 
-          {item.note && (
+          {shownNote(item) && (
             <p className="m-0 mt-3 rounded-xl bg-sun-soft px-3 py-2 text-[14px] text-sun-ink">
               <b>
                 <Icon name="warn" className="mr-1" />
                 หมายเหตุ:
               </b>{" "}
-              <Linked text={item.note} />
+              <Linked text={shownNote(item)} />
+            </p>
+          )}
+          {item.law && (
+            <p className="m-0 mt-3 text-[13.5px] text-ink-muted">
+              <b className="text-ink-body">กฎหมายที่เกี่ยวข้อง:</b> {item.law}
+              {item.checkedOn && <> · ตรวจข้อมูลเมื่อ {thaiDate(item.checkedOn)}</>}
             </p>
           )}
         </Card>
@@ -181,4 +196,12 @@ export default async function ReferencePage({ params }: Props) {
       </Card>
     </AppShell>
   );
+}
+
+const TH_MONTHS = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+
+/** "2026-11-10" -> "10 พ.ย. 2569" */
+function thaiDate(iso: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  return m ? `${Number(m[3])} ${TH_MONTHS[Number(m[2]) - 1]} ${Number(m[1]) + 543}` : iso;
 }

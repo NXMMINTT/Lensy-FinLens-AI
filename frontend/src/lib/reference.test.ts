@@ -6,7 +6,7 @@ import { REFERENCE, REFERENCE_COUNT, refItem, referenceForFund, REF_STATUS_LABEL
 
 const items = REFERENCE.flatMap((c) => c.items);
 
-describe("investment reference (round 1)", () => {
+describe("investment reference (round 2, audited 10 Nov 2569)", () => {
   it("has 10 groups and 123 topics with unique ids", () => {
     expect(REFERENCE).toHaveLength(10);
     expect(REFERENCE_COUNT).toBe(123);

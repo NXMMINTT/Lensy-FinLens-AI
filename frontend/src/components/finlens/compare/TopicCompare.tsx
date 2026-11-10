@@ -40,16 +40,20 @@ export function TopicCompare({ catNum, catTitle, items, initialIds }: { catNum: 
     { label: "คืออะไร", render: (t) => t.what || <span className="text-ink-muted">ยังไม่มีข้อมูล</span> },
     {
       label: "ตัวเลขทุกรายการ",
-      render: (t) =>
-        t.facts.length ? (
-          <ul className="m-0 flex flex-col gap-1 pl-4">
-            {t.facts.map((f) => (
-              <li key={f}>{f}</li>
-            ))}
-          </ul>
-        ) : (
-          <span className="text-ink-muted">ยังไม่มีตัวเลข</span>
-        ),
+      render: (t) => (
+        <>
+          {!t.showFigures && <p className="m-0 mb-1 text-[13px] text-ink-muted">ยังไม่แสดงตัวเลข เพราะยังไม่ได้เทียบกับเอกสารต้นทาง</p>}
+          {t.facts.length ? (
+            <ul className="m-0 flex flex-col gap-1 pl-4">
+              {t.facts.map((f) => (
+                <li key={f}>{f}</li>
+              ))}
+            </ul>
+          ) : (
+            t.showFigures && <span className="text-ink-muted">ยังไม่มีตัวเลข</span>
+          )}
+        </>
+      ),
     },
     { label: "ข้อมูล ณ วันที่", render: (t) => t.asOf || <span className="text-ink-muted">ไม่ระบุ</span> },
     { label: "ความเสี่ยงที่ควรรู้", render: (t) => t.risk || <span className="text-ink-muted">ยังไม่มีข้อมูล</span> },

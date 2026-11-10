@@ -5,8 +5,8 @@
 import type { messagingApi } from "@line/bot-sdk";
 
 import type { AskResponse } from "../ask";
-import { DISCLAIMER, MASTER_COST_NOTE, REBATE_LABEL, SAMPLE_DATA_LABEL } from "../disclaimer";
-import { totalAnnualCostRate } from "../funds";
+import { DISCLAIMER, MASTER_COST_NOTE, REBATE_LABEL, SAMPLE_DATA_LABEL, totalCostLabel } from "../disclaimer";
+import { annualCostIsEstimate, totalAnnualCostRate } from "../funds";
 import { docPct, pct } from "../money";
 import { riskAlerts, RISK_LEVEL_LABEL, type RiskLevel } from "../riskRules";
 import type { DocSource, Fund, Sourced } from "../schema";
@@ -104,9 +104,9 @@ export function fundCard(f: Fund): messagingApi.FlexMessage {
       margin: "md",
       contents:
         total === null
-          ? [text("ต้นทุนต่อปีรวม", { size: "xs", color: C.muted }), text("ไม่พบข้อมูลนี้ในเอกสาร", { color: C.body })]
+          ? [text(totalCostLabel(false), { size: "xs", color: C.muted }), text("ไม่พบข้อมูลนี้ในเอกสาร", { color: C.body })]
           : [
-              text("ต้นทุนต่อปีรวม", { size: "xs", color: C.muted }),
+              text(totalCostLabel(annualCostIsEstimate(f)), { size: "xs", color: C.muted }),
               text(pct(total), { size: "xxl", weight: "bold", color: C.brand }),
               // a Flex text may not be empty
               ...(refsLine([f.fees.ter, master]) ? [text(`ที่มา: ${refsLine([f.fees.ter, master])}`, { size: "xxs", color: C.muted })] : []),
@@ -159,7 +159,7 @@ export function fundCard(f: Fund): messagingApi.FlexMessage {
 
   return {
     type: "flex",
-    altText: `${name}: ต้นทุนต่อปีรวม ${total === null ? "ไม่พบข้อมูล" : pct(total)}`,
+    altText: `${name}: ${totalCostLabel(total !== null && annualCostIsEstimate(f))} ${total === null ? "ไม่พบข้อมูล" : pct(total)}`,
     contents: {
       type: "bubble",
       size: "mega",

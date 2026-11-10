@@ -19,3 +19,17 @@ export const MASTER_COST_NOTE = "Factsheet ของกองไทยไม่�
 
 /** Rule 7: label for sample (non-real) fund data. */
 export const SAMPLE_DATA_LABEL = "ข้อมูลตัวอย่าง";
+
+/**
+ * A fund's total yearly cost is an estimate when it adds a master fund expense that the documents do
+ * not confirm is outside the TER, or when a rebate from the master fund is not known (never taken as 0
+ * on purpose: the team's audit of 10 Nov 2569). Shown next to every such total.
+ */
+export const ESTIMATE_WORD = "ประมาณ";
+export const ESTIMATE_NOTE =
+  "ตัวเลขประมาณ: เอกสารไม่ระบุว่า TER รวมค่าใช้จ่ายกองหลักแล้วหรือยัง ระบบจึงบวกให้ และยังไม่ได้หักเงินคืนจากกองหลัก (ถ้ามี) ต้นทุนจริงอาจต่ำกว่านี้";
+
+/** "ต้นทุนต่อปีรวม" or "ต้นทุนต่อปีรวม (ประมาณ)" */
+export function totalCostLabel(estimate: boolean): string {
+  return estimate ? `ต้นทุนต่อปีรวม (${ESTIMATE_WORD})` : "ต้นทุนต่อปีรวม";
+}

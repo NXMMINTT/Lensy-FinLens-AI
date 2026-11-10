@@ -5,7 +5,7 @@
 import { fundDataStatus, type DataStatus } from "./dataStatus";
 import { NO_MASTER_NOTE, REBATE_LABEL } from "./disclaimer";
 import type { FeePhase } from "./feePhases";
-import { totalAnnualCostRate } from "./funds";
+import { annualCostIsEstimate, totalAnnualCostRate } from "./funds";
 import { pctToRate, type Fund, type Sourced } from "./schema";
 import { assetClassOf, type AssetClass } from "./trueCost";
 import { MAX_COMPARE_FUNDS } from "./limits";
@@ -55,6 +55,8 @@ export type CompareFund = {
   annualCostRate: number | null;
   /** The master fund expense was added because the documents don't say whether the TER includes it */
   masterInclusionUnknown: boolean;
+  /** the total is an estimate (see annualCostIsEstimate) */
+  costIsEstimate: boolean;
   /** rates; null = not in the documents */
   frontEndRate: number | null;
   backEndRate: number | null;
@@ -90,6 +92,7 @@ export function toCompareFund(f: Fund): CompareFund {
     }),
     annualCostRate: totalAnnualCostRate(f),
     masterInclusionUnknown: f.fees.masterFundExpense.value !== null && f.fees.terIncludesMasterFund.value === null,
+    costIsEstimate: annualCostIsEstimate(f),
     frontEndRate: rate(f.fees.frontEnd),
     backEndRate: rate(f.fees.backEnd),
     status: fundDataStatus(f),

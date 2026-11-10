@@ -72,6 +72,23 @@ export function getFund(code: string, dir = VERIFIED_DIR): Fund | undefined {
  * A rebate the Thai fund gets back from its master fund is subtracted: TER + master − rebate.
  * The result is a rate (0.0187 = 1.87%).
  */
+/**
+ * The fund's Factsheet on its management company's site (from the team's fund sheet), or null when
+ * only a copy inside the project is known (that file is not served, so there is nothing to link to).
+ */
+export function factsheetUrl(f: Fund): string | null {
+  const own = f.meta.sourceFiles.find((s) => s.source === "factsheet" && /^https:\/\//.test(s.file));
+  if (own) return own.file;
+  const imported = importedFunds().find((x) => x.code === f.code);
+  return imported?.meta.sourceFiles.find((s) => s.source === "factsheet" && /^https:\/\//.test(s.file))?.file ?? null;
+}
+
+/** The total adds a master fund expense the documents do not confirm, or no rebate figure is known. */
+export function annualCostIsEstimate(f: Fund): boolean {
+  if (f.fees.masterFundExpense.value === null || f.fees.terIncludesMasterFund.value === true) return false;
+  return f.fees.terIncludesMasterFund.value === null || f.fees.rebate.value === null;
+}
+
 export function totalAnnualCostRate(f: Fund): number | null {
   const ter = f.fees.ter.value;
   if (ter === null) return null;

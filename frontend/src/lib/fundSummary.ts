@@ -1,6 +1,6 @@
 /** Card data for the fund list (plain and serializable for the client search). */
 import { fundDataStatus, type DataStatus } from "./dataStatus";
-import { totalAnnualCostRate } from "./funds";
+import { annualCostIsEstimate, totalAnnualCostRate } from "./funds";
 import { riskAlerts, type RiskLevel } from "./riskRules";
 import type { DocSource, Fund } from "./schema";
 
@@ -17,6 +17,7 @@ export type FundSummary = {
   /** ref is null when the figure has no page yet (imported SEC data): show `source` instead */
   riskLevel: { value: number; ref: PageRefLite | null; source: DocSource } | null;
   annualCostRate: number | null;
+  costIsEstimate: boolean;
   costRefs: PageRefLite[];
   /** sources of cost figures that have no page yet */
   costSourcesWithoutPage: DocSource[];
@@ -48,6 +49,7 @@ export function toFundSummary(f: Fund): FundSummary {
     asOfDate: f.asOfDate.value,
     riskLevel: rl.value !== null ? { value: rl.value, ref: rl.page !== null ? { page: rl.page, source: rl.source, quote: rl.quote } : null, source: rl.source } : null,
     annualCostRate: totalAnnualCostRate(f),
+    costIsEstimate: annualCostIsEstimate(f),
     costRefs: [...lite(f.fees.ter), ...lite(f.fees.masterFundExpense)],
     costSourcesWithoutPage: [...new Set([f.fees.ter, f.fees.masterFundExpense].filter((s) => s.value !== null && s.page === null).map((s) => s.source))],
     status: fundDataStatus(f),

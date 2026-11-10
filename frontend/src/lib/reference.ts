@@ -1,8 +1,10 @@
 /**
- * Investment reference table (round 1): 123 investment types in 10 groups, each with the latest
- * figures found, their dates, risks, how to check yourself, sources and a verification status.
- * reference-data.json is converted from the team's workbook FinLens_Investment_Reference.xlsx
- * (figures read from search results on 9 Nov 2569, not yet from every full source page).
+ * Investment reference table (round 2): 123 investment types in 10 groups, each with the latest
+ * figures found, their dates, risks, how to check yourself, sources, a verification status and the
+ * law that applies. reference-data.json comes from the team's audit workbook
+ * (FinLens_Investment_Reference_Audit_Legal_2026-11-10.xlsx) via scripts/import-reference.py.
+ * The audit's "นำตัวเลขขึ้นเว็บ" column is `showFigures`: when false, figures are left out everywhere
+ * (pages, comparison, chat); the description, risk, check steps and sources still show.
  * General knowledge, not figures the app checked page by page, and not investment advice.
  */
 import data from "./reference-data.json";
@@ -25,11 +27,19 @@ export type RefItem = {
   sources: RefSource[];
   status: RefStatus;
   note: string;
+  /** the audit allows this topic's figures on the site */
+  showFigures: boolean;
+  /** the audit's rule for this topic's figures, as written */
+  figuresRule: string;
+  /** the law or rule that covers this kind of investment */
+  law: string;
+  /** YYYY-MM-DD the audit checked this row */
+  checkedOn: string;
 };
 export type RefCategory = { id: string; num: number; title: string; items: RefItem[] };
 
 export const REFERENCE: RefCategory[] = data.categories as RefCategory[];
-export const REFERENCE_ACCESSED = "9 พ.ย. 2569";
+export const REFERENCE_ACCESSED = "10 พ.ย. 2569";
 export const REFERENCE_COUNT = REFERENCE.reduce((n, c) => n + c.items.length, 0);
 
 const BY_ID = new Map(REFERENCE.flatMap((c) => c.items.map((it) => [it.id, it] as const)));
@@ -52,6 +62,21 @@ export function refHref(id: string): string {
   return refPath(id, it?.status ?? "unchecked");
 }
 
+const HAS_DIGIT = /\d/;
+
+/** Fact lines that may be shown: all of them, or only those without a number when figures are held back. */
+export function shownFacts(it: RefItem): string[] {
+  return it.showFigures ? it.facts : it.facts.filter((f) => !HAS_DIGIT.test(f));
+}
+
+/** The note, unless it carries figures that are held back. */
+export function shownNote(it: RefItem): string {
+  return it.showFigures || !HAS_DIGIT.test(it.note) ? it.note : "";
+}
+
+/** Said where a topic's figures are held back. */
+export const FIGURES_HELD_BACK = "ตัวเลขของหัวข้อนี้ยังไม่ได้เทียบกับเอกสารต้นทาง จึงยังไม่แสดง ตรวจได้จากแหล่งที่มาด้านล่าง";
+
 /** The slim card data (what the client list needs), so the full texts stay on the server. */
 export function toRefCard(it: RefItem): RefCardData {
   return {
@@ -59,15 +84,16 @@ export function toRefCard(it: RefItem): RefCardData {
     cat: Number(it.id.split(".")[0]),
     title: it.title,
     status: it.status,
-    headline: it.headline,
-    summary: it.facts[0] ?? it.what,
+    headline: it.showFigures ? it.headline : null,
+    summary: shownFacts(it)[0] ?? it.what,
     asOf: it.asOf,
+    showFigures: it.showFigures,
   };
 }
 
 /** The data one column of the topic comparison needs. */
 export function toRefCompare(it: RefItem): RefCompareData {
-  return { ...toRefCard(it), what: it.what, facts: it.facts, risk: it.risk, note: it.note, sourceCount: it.sources.length };
+  return { ...toRefCard(it), what: it.what, facts: shownFacts(it), risk: it.risk, note: shownNote(it), sourceCount: it.sources.length };
 }
 
 /** Rules from what the fund's own data says (type text, feeder flag, risk level) to reference topics. */
@@ -104,9 +130,11 @@ export function referenceForFund(f: Fund): RefItem[] {
 export function topicFacts(t: RefItem): { text: string; note: string } {
   const lines = [`## หัวข้อ ${t.id}: ${t.title} | ข้อมูล ณ ${t.asOf || "ไม่ระบุ"} | สถานะ: ${REF_STATUS_LABEL[t.status]}`];
   if (t.what) lines.push(`- คืออะไร: ${t.what}`);
-  for (const f of t.facts) lines.push(`- ${f}`);
+  // figures the audit holds back never reach the model, so the number check rejects them too
+  for (const f of shownFacts(t)) lines.push(`- ${f}`);
+  if (!t.showFigures) lines.push(`- ${FIGURES_HELD_BACK.replace("ด้านล่าง", "ของหัวข้อนี้")}`);
   if (t.risk) lines.push(`- ความเสี่ยง: ${t.risk}`);
-  if (t.note) lines.push(`- หมายเหตุ: ${t.note}`);
+  if (shownNote(t)) lines.push(`- หมายเหตุ: ${shownNote(t)}`);
   if (t.sources.length) lines.push(`- แหล่งที่มา: ${t.sources.map((s) => s.name).join("; ")}`);
   return {
     text: lines.join("\n"),
