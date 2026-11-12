@@ -299,8 +299,9 @@ export function LandingHeader({
             </button>
           )}
           {/* phones: no button in the header (the ☰ menu has the way in), so the bar stays uncluttered */}
-          {signedIn ? (
-            // signed in: straight to น้อง Lensy's LINE account (add friend), in a new tab
+          {signedIn || inApp ? (
+            // signed in, or already inside the app ("เข้าใช้งาน" would lead back to /funds): straight to
+            // น้อง Lensy's LINE account (add friend), in a new tab
             <a
               href={LINE_ADD_FRIEND_URL}
               target="_blank"
